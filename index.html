@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -57,7 +58,7 @@
   
   body {
     margin: 0;
-    padding: env(safe-area-inset-top, 8px) 8px calc(env(safe-area-inset-bottom, 10px) + 74px);
+    padding: env(safe-area-inset-top, 8px) 8px calc(env(safe-area-inset-bottom, 10px) + 76px);
     background: var(--bg-base);
     min-height: 100vh;
     color: var(--text);
@@ -70,16 +71,15 @@
     max-width: 600px;
     margin: 0 auto;
     position: relative;
-    padding-right: 42px; /* Platz für den Schacht rechts */
+    padding-right: 44px; /* Space for fixed shaft navigation mini-map */
   }
 
-  /* Header */
   header.top-bar {
     position: sticky;
     top: 0;
     z-index: 20;
     background: rgba(10, 14, 23, 0.94);
-    padding: 6px 0 8px;
+    padding: 8px 0 10px;
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
   }
@@ -91,7 +91,7 @@
   }
 
   .title-group h1 {
-    font-size: 1.55rem;
+    font-size: 1.65rem;
     font-weight: 900;
     letter-spacing: -0.02em;
     margin: 0;
@@ -100,178 +100,6 @@
     text-shadow: 0 2px 4px rgba(0,0,0,0.6);
   }
 
-  /* Parameter Dropdown */
-  details.settings-card {
-    background: var(--card-surface);
-    border: 1.5px solid var(--card-border);
-    border-radius: var(--radius-md);
-    margin: 8px 0 10px;
-    box-shadow: var(--shadow-raised);
-    overflow: hidden;
-  }
-
-  details.settings-card summary {
-    list-style: none;
-    padding: 8px 12px;
-    cursor: pointer;
-    font-weight: 800;
-    font-size: 0.82rem;
-    color: var(--text-muted);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  details.settings-card summary::-webkit-details-marker { display: none; }
-  details.settings-card summary .icon-arrow {
-    transition: transform 0.2s;
-    fill: currentColor;
-  }
-  details.settings-card[open] summary .icon-arrow { transform: rotate(180deg); }
-
-  .settings-content {
-    padding: 6px 12px 12px;
-    border-top: 1px solid var(--card-border);
-    background: rgba(0,0,0,0.3);
-  }
-
-  .settings-grid {
-    display: grid;
-    grid-template-columns: 1.2fr 0.8fr 1.2fr;
-    gap: 8px;
-  }
-
-  .setting-item {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    font-size: 0.68rem;
-    font-weight: 800;
-    color: var(--text-muted);
-    text-transform: uppercase;
-  }
-
-  .setting-item input {
-    height: 36px;
-    width: 100%;
-    border: 1.5px solid var(--card-border);
-    border-radius: var(--radius-sm);
-    background: #090d16;
-    color: #fff;
-    font-family: var(--font-display);
-    font-size: 1rem;
-    font-weight: 900;
-    text-align: center;
-    box-shadow: var(--shadow-sunken);
-  }
-
-  .setting-toggle-row {
-    margin-top: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: #090d16;
-    border: 1.5px solid var(--card-border);
-    border-radius: var(--radius-sm);
-    padding: 6px 10px;
-    box-shadow: var(--shadow-sunken);
-  }
-
-  .toggle-label {
-    font-size: 0.72rem;
-    font-weight: 800;
-    color: var(--text-muted);
-    text-transform: uppercase;
-  }
-
-  .switch {
-    position: relative;
-    display: inline-block;
-    width: 40px;
-    height: 22px;
-  }
-
-  .switch input { opacity: 0; width: 0; height: 0; }
-
-  .slider {
-    position: absolute;
-    cursor: pointer;
-    inset: 0;
-    background-color: #1e293b;
-    border: 1px solid var(--card-border);
-    border-radius: 99px;
-    transition: .2s;
-  }
-
-  .slider:before {
-    position: absolute;
-    content: "";
-    height: 14px;
-    width: 14px;
-    left: 3px;
-    bottom: 3px;
-    background-color: var(--text-muted);
-    border-radius: 50%;
-    transition: .2s;
-  }
-
-  input:checked + .slider {
-    background-color: var(--accent);
-    border-color: #b45309;
-  }
-
-  input:checked + .slider:before {
-    transform: translateX(18px);
-    background-color: #000;
-  }
-
-  .presets-wrap {
-    margin-top: 8px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .presets-title {
-    font-size: 0.65rem;
-    font-weight: 800;
-    color: var(--text-muted);
-    text-transform: uppercase;
-  }
-
-  .presets-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 5px;
-  }
-
-  .btn-preset {
-    height: 28px;
-    border: 1px solid var(--card-border);
-    border-radius: var(--radius-sm);
-    background: #1e293b;
-    color: var(--text-muted);
-    font-family: var(--font-display);
-    font-size: 0.7rem;
-    font-weight: 800;
-    cursor: pointer;
-    box-shadow: var(--shadow-raised);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .btn-preset:active { transform: translateY(1px); }
-  .btn-preset.active {
-    background: rgba(245, 158, 11, 0.15);
-    border-color: var(--accent);
-    color: var(--accent);
-    box-shadow: 0 0 6px var(--accent-glow);
-  }
-
-  /* Spaltenköpfe */
   .grid-header {
     position: sticky;
     top: 50px;
@@ -314,7 +142,6 @@
   body[data-active-dir="up"] .header-pill.up .led-arrow { animation: pulseUp 0.8s infinite ease-in-out; }
   body[data-active-dir="down"] .header-pill.down .led-arrow { animation: pulseDown 0.8s infinite ease-in-out; }
 
-  /* Etagenliste */
   .floor-list {
     display: flex;
     flex-direction: column;
@@ -461,7 +288,6 @@
     box-shadow: 0 0 0 2px var(--down-glow), var(--shadow-sunken);
   }
 
-  /* Pegelanzeige */
   .gauge-container {
     flex: none;
     width: 12px;
@@ -529,7 +355,6 @@
   .cell-card.ok .gauge-pointer { display: block; background: #10b981; box-shadow: 0 0 6px #10b981; }
   .cell-card.bad .gauge-pointer { display: block; background: #ef4444; box-shadow: 0 0 6px #ef4444; }
 
-  /* Statustext */
   .status-text {
     font-size: 0.85rem;
     font-weight: 900;
@@ -559,9 +384,6 @@
     text-shadow: 0 1px 2px rgba(0,0,0,0.7);
   }
 
-  /* ========================================================
-     DIE SCHNELL-NAVIGATIONS-SÄULE (MINI-MAP RECHTS)
-     ======================================================== */
   .shaft-panel {
     position: fixed;
     right: max(6px, calc((100vw - 600px) / 2 + 6px));
@@ -654,7 +476,6 @@
     margin-right: -6px;
   }
 
-  /* Floating Bottom Bar */
   .bottom-bar {
     position: fixed;
     bottom: 0;
@@ -724,24 +545,49 @@
   .bottom-actions {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     flex: none;
+  }
+
+  /* Gear settings button in bottom bar */
+  .btn-thumb-settings {
+    height: 40px;
+    width: 40px;
+    border-radius: var(--radius-md);
+    background: #1e293b;
+    border: 1.5px solid var(--card-border);
+    color: var(--accent);
+    font-size: 1.15rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.1s, border-color 0.15s, box-shadow 0.15s;
+    box-shadow: var(--shadow-raised);
+    padding: 0;
+  }
+
+  .btn-thumb-settings:active {
+    transform: translateY(2px) rotate(45deg);
+    border-color: var(--accent);
+    box-shadow: var(--shadow-sunken);
   }
 
   .btn-thumb-reset {
     height: 40px;
-    padding: 0 12px;
+    padding: 0 11px;
     border-radius: var(--radius-md);
     background: #1e293b;
     border: 1.5px solid var(--bad-border);
     color: var(--bad-text);
     font-weight: 900;
-    font-size: 0.78rem;
+    font-size: 0.76rem;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 5px;
     text-transform: uppercase;
+    box-shadow: var(--shadow-raised);
   }
 
   .btn-thumb-reset:active { transform: translateY(2px); }
@@ -755,17 +601,17 @@
 
   .btn-thumb-protocol {
     height: 40px;
-    padding: 0 16px;
+    padding: 0 14px;
     border-radius: var(--radius-md);
     background: linear-gradient(135deg, #f59e0b, #d97706);
     border: 1.5px solid #b45309;
     color: #000;
     font-weight: 900;
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 5px;
     box-shadow: 0 3px 12px var(--accent-glow);
     text-transform: uppercase;
     letter-spacing: 0.02em;
@@ -773,7 +619,6 @@
 
   .btn-thumb-protocol:active { transform: translateY(2px); }
 
-  /* Modal */
   .modal-overlay {
     position: fixed;
     inset: 0;
@@ -824,6 +669,9 @@
     margin: 0;
     color: #fff;
     text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
 
   .modal-close {
@@ -837,6 +685,144 @@
 
   .modal-body { padding: 12px 14px; overflow-y: auto; }
 
+  /* Settings Modal Elements */
+  .settings-form-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr 1.2fr;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .setting-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.68rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+
+  .setting-item input {
+    height: 38px;
+    width: 100%;
+    border: 1.5px solid var(--card-border);
+    border-radius: var(--radius-sm);
+    background: #090d16;
+    color: #fff;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 900;
+    text-align: center;
+    box-shadow: var(--shadow-sunken);
+  }
+
+  .setting-toggle-row {
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #070b14;
+    border: 1.5px solid var(--card-border);
+    border-radius: var(--radius-sm);
+    padding: 8px 12px;
+    box-shadow: var(--shadow-sunken);
+  }
+
+  .toggle-label {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 22px;
+  }
+
+  .switch input { opacity: 0; width: 0; height: 0; }
+
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background-color: #1e293b;
+    border: 1px solid var(--card-border);
+    border-radius: 99px;
+    transition: .2s;
+  }
+
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    left: 3px;
+    bottom: 3px;
+    background-color: var(--text-muted);
+    border-radius: 50%;
+    transition: .2s;
+  }
+
+  input:checked + .slider {
+    background-color: var(--accent);
+    border-color: #b45309;
+  }
+
+  input:checked + .slider:before {
+    transform: translateX(18px);
+    background-color: #000;
+  }
+
+  .presets-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+
+  .presets-title {
+    font-size: 0.68rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+
+  .presets-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+
+  .btn-preset {
+    height: 32px;
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-sm);
+    background: #1e293b;
+    color: var(--text-muted);
+    font-family: var(--font-display);
+    font-size: 0.74rem;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: var(--shadow-raised);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+  }
+
+  .btn-preset:active { transform: translateY(1px); }
+  .btn-preset.active {
+    background: rgba(245, 158, 11, 0.15);
+    border-color: var(--accent);
+    color: var(--accent);
+    box-shadow: 0 0 6px var(--accent-glow);
+  }
+
+  /* Report Styles */
   .report-meta {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -972,7 +958,7 @@
 <body data-active-dir="">
 
 <div class="layout-wrap">
-  <!-- Header -->
+  <!-- Clean Header without Settings dropdown -->
   <header class="top-bar">
     <div class="nav-header">
       <div class="title-group">
@@ -981,14 +967,64 @@
     </div>
   </header>
 
-  <!-- Parameter Dropdown -->
-  <details class="settings-card" id="settingsDetails">
-    <summary>
-      <span>⚙️ Parameter & Richtlinien</span>
-      <svg class="icon-arrow" width="16" height="16" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
-    </summary>
-    <div class="settings-content">
-      <div class="settings-grid">
+  <!-- Directional column pills -->
+  <div class="grid-header">
+    <div class="header-pill">Et.</div>
+    <div class="header-pill up">
+      <span class="led-arrow">▲</span>
+      <span>Auf</span>
+    </div>
+    <div class="header-pill down">
+      <span class="led-arrow">▼</span>
+      <span>Ab</span>
+    </div>
+  </div>
+
+  <!-- Floor input list -->
+  <main class="floor-list" id="listContainer"></main>
+
+  <!-- Right fixed quick-navigation mini-map / shaft -->
+  <aside class="shaft-panel" id="shaftPanel" aria-label="Schacht-Navigation">
+    <div class="shaft-track" id="shaftTrack">
+      <div class="shaft-cable"></div>
+      <div class="elevator-car" id="elevatorCar" style="display:none;"></div>
+      <div id="shaftNodes" style="display:flex; flex-direction:column; gap:4px; width:100%; align-items:center;"></div>
+    </div>
+  </aside>
+</div>
+
+<nav class="bottom-bar">
+  <div class="bottom-progress-edge" aria-hidden="true">
+    <div class="bottom-progress-fill" id="bottomProgressBar"></div>
+  </div>
+  <div class="bottom-bar-inner">
+    <div class="bottom-info">
+      <span class="bottom-info-title">Status</span>
+      <span class="bottom-info-val" id="bottomStatus">0 / 0 gemessen</span>
+    </div>
+    <div class="bottom-actions">
+      <!-- Dedicated settings gear icon button -->
+      <button type="button" class="btn-thumb-settings" id="openSettingsBtn" title="Einstellungen">
+        ⚙️
+      </button>
+      <button type="button" class="btn-thumb-reset" id="resetBtn" title="Alle Werte löschen">
+        <span>🗑</span> <span id="resetBtnText">Leeren</span>
+      </button>
+      <button type="button" class="btn-thumb-protocol" id="openReportBtn">
+        <span>📊</span> Protokoll
+      </button>
+    </div>
+  </div>
+</nav>
+
+<div class="modal-overlay" id="settingsModal" onclick="closeModalOnOutsideClick(event, 'settingsModal')">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h2>⚙️ Einstellungen</h2>
+      <button type="button" class="modal-close" onclick="closeSettingsModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="settings-form-grid">
         <label class="setting-item">
           Etagen
           <input id="floorCount" type="number" min="1" max="50" inputmode="numeric" value="5">
@@ -1021,57 +1057,13 @@
         </div>
       </div>
     </div>
-  </details>
-
-  <!-- Spaltenköpfe -->
-  <div class="grid-header">
-    <div class="header-pill">Et.</div>
-    <div class="header-pill up">
-      <span class="led-arrow">▲</span>
-      <span>Auf</span>
-    </div>
-    <div class="header-pill down">
-      <span class="led-arrow">▼</span>
-      <span>Ab</span>
+    <div class="modal-actions">
+      <button type="button" class="btn-modal print" onclick="closeSettingsModal()">Fertig</button>
     </div>
   </div>
-
-  <!-- Etagenliste -->
-  <main class="floor-list" id="listContainer"></main>
-
-  <!-- Rechts fest verankerte Mini-Map / Schacht -->
-  <aside class="shaft-panel" id="shaftPanel" aria-label="Schacht-Navigation">
-    <div class="shaft-track" id="shaftTrack">
-      <div class="shaft-cable"></div>
-      <div class="elevator-car" id="elevatorCar" style="display:none;"></div>
-      <div id="shaftNodes" style="display:flex; flex-direction:column; gap:4px; width:100%; align-items:center;"></div>
-    </div>
-  </aside>
 </div>
 
-<!-- Floating Bottom Bar -->
-<nav class="bottom-bar">
-  <div class="bottom-progress-edge" aria-hidden="true">
-    <div class="bottom-progress-fill" id="bottomProgressBar"></div>
-  </div>
-  <div class="bottom-bar-inner">
-    <div class="bottom-info">
-      <span class="bottom-info-title">Status</span>
-      <span class="bottom-info-val" id="bottomStatus">0 / 0 gemessen</span>
-    </div>
-    <div class="bottom-actions">
-      <button type="button" class="btn-thumb-reset" id="resetBtn" title="Alle Werte löschen">
-        <span>🗑️️</span> <span id="resetBtnText">Leeren</span>
-      </button>
-      <button type="button" class="btn-thumb-protocol" id="openReportBtn">
-        <span>📊</span> Protokoll
-      </button>
-    </div>
-  </div>
-</nav>
-
-<!-- Modal Pop-up Protokoll -->
-<div class="modal-overlay" id="reportModal" onclick="closeModalOnOutsideClick(event)">
+<div class="modal-overlay" id="reportModal" onclick="closeModalOnOutsideClick(event, 'reportModal')">
   <div class="modal-card">
     <div class="modal-header">
       <h2>📋 Messprotokoll</h2>
@@ -1088,7 +1080,7 @@
 <script>
   if ('serviceWorker' in navigator) {
     const swCode = `
-      const CACHE_NAME = 'buendigkeit-elev-v14';
+      const CACHE_NAME = 'buendigkeit-elev-v15';
       self.addEventListener('install', e => {
         e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll([self.location.href])));
         self.skipWaiting();
@@ -1101,7 +1093,7 @@
     navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
   }
 
-  const STORAGE_KEY = 'buendigkeit-elev-v14';
+  const STORAGE_KEY = 'buendigkeit-elev-v15';
   let state = {
     floorCount: 5,
     startFloor: 0,
@@ -1320,7 +1312,6 @@
 
   const container = $('listContainer');
 
-  /* Fokus & Fahrkorb-Animation */
   container.addEventListener('focusin', e => {
     const card = e.target.closest('.floor-card');
     if (!card) return;
@@ -1348,12 +1339,10 @@
     document.body.dataset.activeDir = '';
   });
 
-  /* Tastatur-Erkennung: Hält den Schacht immer perfekt im sichtbaren Fenster */
   if (window.visualViewport) {
     window.visualViewport.addEventListener('resize', () => {
       const panel = $('shaftPanel');
       if (!panel) return;
-      // Passt die maximale Schafthöhe an den tatsächlichen sichtbaren Bereich an
       const availableH = window.visualViewport.height - 120;
       panel.style.maxHeight = `${Math.max(120, availableH)}px`;
     });
@@ -1483,6 +1472,16 @@
     $(id).addEventListener('input', renderList);
   });
 
+  const settingsModal = $('settingsModal');
+  $('openSettingsBtn').addEventListener('click', () => {
+    settingsModal.classList.add('active');
+  });
+
+  window.closeSettingsModal = function() {
+    settingsModal.classList.remove('active');
+  };
+
+  /* Two-step safety verification for reset */
   let armTimer = null;
   const resetBtn = $('resetBtn');
   const resetBtnText = $('resetBtnText');
@@ -1504,15 +1503,19 @@
     renderList();
   });
 
-  const modal = $('reportModal');
+  const reportModal = $('reportModal');
 
   $('openReportBtn').addEventListener('click', () => {
     buildReportHtml();
-    modal.classList.add('active');
+    reportModal.classList.add('active');
   });
 
-  window.closeReportModal = function() { modal.classList.remove('active'); };
-  window.closeModalOnOutsideClick = function(e) { if (e.target === modal) closeReportModal(); };
+  window.closeReportModal = function() { reportModal.classList.remove('active'); };
+
+  window.closeModalOnOutsideClick = function(e, modalId) {
+    const m = $(modalId);
+    if (e.target === m) m.classList.remove('active');
+  };
 
   function buildReportHtml() {
     const body = $('reportBody');
@@ -1659,8 +1662,8 @@
       }
     });
 
-    const upPath = pointsUp.length > 1 ? `d="M ${pointsUp.map(p => `${p.x}${p.y}`).join(' L ')}"` : '';
-    const downPath = pointsDown.length > 1 ? `d="M ${pointsDown.map(p => `${p.x}${p.y}`).join(' L ')}"` : '';
+    const upPath = pointsUp.length > 1 ? `d="M ${pointsUp.map(p => `${p.x} ${p.y}`).join(' L ')}"` : '';
+    const downPath = pointsDown.length > 1 ? `d="M ${pointsDown.map(p => `${p.x} ${p.y}`).join(' L ')}"` : '';
 
     return `
       <svg class="curve-chart-svg" viewBox="0 0 ${W} ${H}">
@@ -1701,6 +1704,7 @@
     }
   };
 
+  /* Initial bootstrap */
   loadState();
   $('floorCount').value = state.floorCount;
   $('startFloor').value = state.startFloor;
@@ -1710,3 +1714,4 @@
 </script>
 </body>
 </html>
+```
