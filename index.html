@@ -3,79 +3,49 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
-<meta name="theme-color" content="#0f172a">
+<meta name="theme-color" content="#0b0f19">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Bündigkeiten">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='25' fill='%230284c7'/><text y='.9em' x='20' font-size='68' fill='white'>⇕</text></svg>">
-<title>Bündigkeiten</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%231e293b'/><rect x='10' y='10' width='80' height='80' rx='14' fill='%230f172a' stroke='%23f59e0b' stroke-width='4'/><text y='.9em' x='22' font-size='68' fill='%23f59e0b'>⇕</text></svg>">
+<title>Bündigkeiten - Aufzugservice</title>
 <style>
   :root {
-    --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
-    --bg-grad-start: #e2e8f0;
-    --bg-grad-end: #cbd5e1;
-    --card-surface: linear-gradient(145deg, #ffffff, #f1f5f9);
-    --card-border: rgba(255, 255, 255, 0.7);
-    --border-dark: #94a3b8;
-    --text: #0f172a;
-    --text-muted: #64748b;
+    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    
+    /* Industrie-Look: Schacht-Anthrazit & Sicherheits-Gelb */
+    --bg-base: #0b0f19;
+    --card-surface: linear-gradient(160deg, #1e293b 0%, #111827 100%);
+    --card-border: #334155;
+    --border-subtle: #1e293b;
+    --text: #f8fafc;
+    --text-muted: #94a3b8;
 
-    --primary-grad: linear-gradient(135deg, #0284c7, #0369a1);
-    --primary-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
+    /* Signalgelb wie im Aufzugbau */
+    --accent: #f59e0b;
+    --accent-glow: rgba(245, 158, 11, 0.3);
+    --accent-bg: rgba(245, 158, 11, 0.12);
 
-    --ok-glow: rgba(16, 185, 129, 0.25);
-    --ok-card: linear-gradient(145deg, #ecfdf5, #d1fae5);
-    --ok-border: #6ee7b7;
-    --ok-text: #065f46;
+    --ok: #10b981;
+    --ok-bg: rgba(16, 185, 129, 0.15);
+    --ok-border: #059669;
+    --ok-text: #34d399;
 
-    --bad-glow: rgba(239, 68, 68, 0.25);
-    --bad-card: linear-gradient(145deg, #fef2f2, #fee2e2);
-    --bad-border: #fca5a5;
-    --bad-text: #991b1b;
+    --bad: #ef4444;
+    --bad-bg: rgba(239, 68, 68, 0.18);
+    --bad-border: #dc2626;
+    --bad-text: #f87171;
 
     --shadow-raised: 
-      0 4px 6px -1px rgba(0, 0, 0, 0.08), 
-      0 2px 4px -2px rgba(0, 0, 0, 0.06),
-      inset 0 1px 0 rgba(255, 255, 255, 0.9);
+      0 4px 8px -1px rgba(0, 0, 0, 0.5), 
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
     --shadow-sunken: 
-      inset 0 2px 4px rgba(0, 0, 0, 0.12),
-      inset 0 -1px 0 rgba(255, 255, 255, 0.8);
-    --shadow-float: 0 10px 25px -3px rgba(0, 0, 0, 0.12), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
-
-    --radius-sm: 8px;
-    --radius-md: 12px;
-    --radius-lg: 16px;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg-grad-start: #0a0f18;
-      --bg-grad-end: #111827;
-      --card-surface: linear-gradient(145deg, #1e293b, #151e2e);
-      --card-border: rgba(255, 255, 255, 0.08);
-      --border-dark: #334155;
-      --text: #f8fafc;
-      --text-muted: #94a3b8;
-
-      --ok-glow: rgba(16, 185, 129, 0.15);
-      --ok-card: linear-gradient(145deg, #064e3b33, #022c2244);
-      --ok-border: #059669;
-      --ok-text: #6ee7b7;
-
-      --bad-glow: rgba(239, 68, 68, 0.15);
-      --bad-card: linear-gradient(145deg, #7f1d1d33, #450a0a44);
-      --bad-border: #dc2626;
-      --bad-text: #fca5a5;
-
-      --shadow-raised: 
-        0 4px 8px -1px rgba(0, 0, 0, 0.4), 
-        0 2px 4px -2px rgba(0, 0, 0, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
-      --shadow-sunken: 
-        inset 0 2px 5px rgba(0, 0, 0, 0.6),
-        inset 0 -1px 0 rgba(255, 255, 255, 0.05);
-      --shadow-float: 0 14px 30px rgba(0, 0, 0, 0.6);
-    }
+      inset 0 2px 5px rgba(0, 0, 0, 0.7),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.04);
+    
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
   }
 
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -83,7 +53,7 @@
   body {
     margin: 0;
     padding: env(safe-area-inset-top, 10px) 8px calc(env(safe-area-inset-bottom, 16px) + 24px);
-    background: linear-gradient(180deg, var(--bg-grad-start), var(--bg-grad-end));
+    background: var(--bg-base);
     min-height: 100vh;
     color: var(--text);
     font-family: var(--font);
@@ -100,20 +70,17 @@
     position: relative;
   }
 
-  .app-container {
-    flex: 1;
-    min-width: 0;
-  }
+  .app-container { flex: 1; min-width: 0; }
 
-  /* 3D-Schacht Visualisierung */
+  /* Schacht-Säule */
   .shaft-panel {
-    width: 30px;
+    width: 32px;
     flex: none;
     position: sticky;
-    top: calc(env(safe-area-inset-top, 10px) + 60px);
+    top: calc(env(safe-area-inset-top, 10px) + 64px);
     align-self: flex-start;
-    background: var(--card-surface);
-    border: 1px solid var(--card-border);
+    background: #0f172a;
+    border: 1.5px solid var(--card-border);
     border-radius: var(--radius-md);
     padding: 6px 3px;
     display: flex;
@@ -127,113 +94,94 @@
   .shaft-title {
     font-size: 0.55rem;
     font-weight: 900;
-    color: var(--text-muted);
+    color: var(--accent);
     text-align: center;
-    line-height: 1;
-    margin-bottom: 2px;
     text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
 
   .shaft-node {
-    width: 22px;
+    width: 24px;
     height: 18px;
-    border-radius: 5px;
-    background: var(--card-surface);
-    border: 1px solid var(--border-dark);
+    border-radius: 4px;
+    background: #1e293b;
+    border: 1px solid #334155;
     font-size: 0.65rem;
-    font-weight: 800;
+    font-weight: 900;
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--text-muted);
     cursor: pointer;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.4);
-    transition: transform 0.1s, box-shadow 0.15s, background-color 0.2s;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    transition: transform 0.1s;
   }
 
-  .shaft-node:active {
-    transform: scale(0.88);
-    box-shadow: var(--shadow-sunken);
-  }
-  .shaft-node.ok {
-    background: linear-gradient(135deg, #10b981, #059669);
-    border-color: #047857;
-    color: #fff;
-    box-shadow: 0 2px 5px var(--ok-glow);
-  }
-  .shaft-node.bad {
-    background: linear-gradient(135deg, #ef4444, #dc2626);
-    border-color: #b91c1c;
-    color: #fff;
-    box-shadow: 0 2px 5px var(--bad-glow);
-  }
-  .shaft-node.partial {
-    background: linear-gradient(135deg, #38bdf8, #0284c7);
-    border-color: #0369a1;
-    color: #fff;
-  }
+  .shaft-node:active { transform: scale(0.88); }
+  .shaft-node.ok { background: #065f46; border-color: #10b981; color: #fff; }
+  .shaft-node.bad { background: #7f1d1d; border-color: #ef4444; color: #fff; box-shadow: 0 0 8px rgba(239, 68, 68, 0.4); }
+  .shaft-node.partial { background: #1e3a8a; border-color: #3b82f6; color: #fff; }
 
-  /* 3D-Header */
+  /* Tableau-Header */
   header.top-bar {
     position: sticky;
     top: 0;
     z-index: 20;
-    background: transparent;
+    background: rgba(11, 15, 25, 0.88);
     padding-top: 6px;
     padding-bottom: 8px;
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
   }
 
   .nav-header {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: 6px;
-    margin-bottom: 8px;
+    gap: 5px;
+    margin-bottom: 6px;
+  }
+
+  .title-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
 
   .title-group h1 {
-    font-size: 1.75rem;
+    font-size: 1.65rem;
     font-weight: 900;
-    letter-spacing: -0.04em;
+    letter-spacing: -0.02em;
     margin: 0;
-    text-align: center;
-    background: linear-gradient(180deg, var(--text), var(--text-muted));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    text-transform: uppercase;
+    color: #fff;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.6);
   }
 
-  .badges { display: flex; gap: 8px; justify-content: center; }
+  .badges { display: flex; gap: 6px; }
 
   .badge {
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     font-weight: 800;
-    padding: 4px 10px;
-    border-radius: 99px;
-    background: var(--card-surface);
-    border: 1px solid var(--card-border);
+    padding: 3px 8px;
+    border-radius: var(--radius-sm);
+    background: #1e293b;
+    border: 1px solid #334155;
     color: var(--text-muted);
     box-shadow: var(--shadow-raised);
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
+    text-transform: uppercase;
   }
 
   .badge.alert {
-    background: var(--bad-card);
+    background: var(--bad-bg);
     color: var(--bad-text);
     border-color: var(--bad-border);
-    box-shadow: 0 2px 8px var(--bad-glow);
   }
 
-  /* 3D Progress Bar (Eingelassene Rinne mit Leuchtbalken) */
+  /* Statusbalken */
   .progress-wrap {
-    height: 7px;
-    background: var(--card-surface);
-    border: 1px solid var(--card-border);
+    height: 5px;
+    background: #1e293b;
     border-radius: 99px;
     overflow: hidden;
     box-shadow: var(--shadow-sunken);
@@ -241,100 +189,147 @@
   .progress-fill {
     height: 100%;
     width: 0%;
-    background: linear-gradient(90deg, #0284c7, #6366f1);
-    box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
-    border-radius: 99px;
-    transition: width 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    background: linear-gradient(90deg, var(--accent), #eab308);
+    box-shadow: 0 0 10px var(--accent-glow);
+    transition: width 0.25s ease;
   }
 
-  /* 3D Settings Card */
+  /* Einstellungen */
   details.settings-card {
     background: var(--card-surface);
-    border: 1px solid var(--card-border);
+    border: 1.5px solid var(--card-border);
     border-radius: var(--radius-lg);
     margin: 8px 0 12px;
     box-shadow: var(--shadow-raised);
     overflow: hidden;
-    transition: box-shadow 0.2s;
   }
 
   details.settings-card summary {
     list-style: none;
-    padding: 11px 16px;
+    padding: 10px 14px;
     cursor: pointer;
     font-weight: 800;
-    font-size: 0.88rem;
+    font-size: 0.85rem;
     color: var(--text-muted);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    user-select: none;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
 
   details.settings-card summary::-webkit-details-marker { display: none; }
   details.settings-card summary .icon-arrow {
-    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition: transform 0.2s;
     fill: currentColor;
   }
   details.settings-card[open] summary .icon-arrow { transform: rotate(180deg); }
 
   .settings-content {
-    padding: 4px 16px 16px;
-    border-top: 1px solid rgba(0,0,0,0.06);
-    background: rgba(0,0,0,0.02);
+    padding: 6px 14px 14px;
+    border-top: 1px solid var(--card-border);
+    background: rgba(0,0,0,0.3);
   }
 
   .settings-grid {
     display: grid;
-    grid-template-columns: 1.3fr 0.85fr 1.3fr;
+    grid-template-columns: 1.2fr 0.8fr 1.2fr;
     gap: 8px;
-    margin-top: 10px;
+    margin-top: 6px;
   }
 
   .setting-item {
     display: flex;
     flex-direction: column;
     gap: 4px;
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     font-weight: 800;
     color: var(--text-muted);
+    text-transform: uppercase;
   }
 
   .setting-item input {
-    height: 40px;
+    height: 38px;
     width: 100%;
-    border: 1px solid var(--border-dark);
+    border: 1.5px solid var(--card-border);
     border-radius: var(--radius-sm);
-    background: var(--card-surface);
-    color: var(--text);
+    background: #0f172a;
+    color: #fff;
     font: inherit;
-    font-size: 1rem;
-    font-weight: 800;
+    font-size: 1.05rem;
+    font-weight: 900;
     text-align: center;
     box-shadow: var(--shadow-sunken);
   }
 
+  /* Schnellauswahl-Chips für Normen */
+  .presets-wrap {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .presets-title {
+    font-size: 0.68rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .presets-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
+  }
+
+  .btn-preset {
+    height: 30px;
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-sm);
+    background: #1e293b;
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: var(--shadow-raised);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.1s;
+  }
+
+  .btn-preset:active { transform: translateY(1px); }
+  .btn-preset.active {
+    background: var(--accent-bg);
+    border-color: var(--accent);
+    color: var(--accent);
+    box-shadow: 0 0 6px var(--accent-glow);
+  }
+
   .action-row { display: flex; gap: 8px; margin-top: 12px; }
 
-  /* 3D Taktile Buttons */
+  /* Taktile Buttons */
   .btn {
     flex: 1;
-    height: 42px;
+    height: 40px;
     border-radius: var(--radius-md);
     font: inherit;
-    font-size: 0.84rem;
-    font-weight: 800;
+    font-size: 0.82rem;
+    font-weight: 900;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 6px;
-    transition: all 0.12s ease;
-    border: 1px solid var(--card-border);
-    background: var(--card-surface);
-    color: var(--text);
+    transition: all 0.1s;
+    border: 1.5px solid var(--card-border);
+    background: #1e293b;
+    color: #fff;
     box-shadow: var(--shadow-raised);
-    position: relative;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
   }
 
   .btn:active {
@@ -343,149 +338,116 @@
   }
 
   .btn.primary {
-    background: var(--primary-grad);
-    border-color: rgba(255, 255, 255, 0.2);
-    color: #fff;
-    box-shadow: var(--primary-shadow);
-  }
-  .btn.primary:active {
-    transform: translateY(2px);
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    border-color: #b45309;
+    color: #000;
+    box-shadow: 0 3px 10px var(--accent-glow);
   }
 
   .btn.danger {
-    background: var(--bad-card);
+    background: var(--bad-bg);
     border-color: var(--bad-border);
     color: var(--bad-text);
   }
   .btn.danger.armed {
-    background: linear-gradient(135deg, #ef4444, #b91c1c);
+    background: #dc2626;
     color: #fff;
-    box-shadow: 0 4px 14px var(--bad-glow);
+    border-color: #991b1b;
   }
 
-  /* 3D Tabellenkopf */
+  /* Spaltenköpfe */
   .grid-header {
     position: sticky;
     top: 76px;
     z-index: 15;
     display: grid;
     grid-template-columns: 44px 1fr 1fr;
-    gap: 8px;
+    gap: 6px;
     padding: 4px 0 8px;
   }
 
   .header-pill {
-    background: var(--card-surface);
-    border: 1px solid var(--card-border);
-    border-radius: var(--radius-md);
-    padding: 8px 2px;
+    background: #1e293b;
+    border: 1.5px solid var(--card-border);
+    border-radius: var(--radius-sm);
+    padding: 7px 2px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.88rem;
+    font-size: 0.85rem;
     font-weight: 900;
-    color: var(--text);
+    color: #fff;
     box-shadow: var(--shadow-raised);
-    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
   }
 
-  .header-pill.up {
-    color: #0284c7;
-    background: linear-gradient(145deg, #f0f9ff, #e0f2fe);
-    border-color: rgba(2, 132, 199, 0.3);
-  }
-
-  .header-pill.down {
-    color: #8b5cf6;
-    background: linear-gradient(145deg, #faf5ff, #f3e8ff);
-    border-color: rgba(139, 92, 246, 0.3);
-  }
-
-  @media (prefers-color-scheme: dark) {
-    .header-pill.up { background: linear-gradient(145deg, #072a40, #0c4a6e); }
-    .header-pill.down { background: linear-gradient(145deg, #271444, #4c1d95); }
-  }
+  .header-pill.up { color: #38bdf8; border-color: rgba(56, 189, 248, 0.4); }
+  .header-pill.down { color: #fbbf24; border-color: rgba(251, 191, 36, 0.4); }
 
   /* Etagenliste */
-  .floor-list { display: flex; flex-direction: column; gap: 10px; }
+  .floor-list { display: flex; flex-direction: column; gap: 8px; }
 
-  /* 3D Etagen-Karte */
   .floor-card {
     background: var(--card-surface);
-    border: 1px solid var(--card-border);
-    border-radius: var(--radius-lg);
+    border: 1.5px solid var(--card-border);
+    border-radius: var(--radius-md);
     box-shadow: var(--shadow-raised);
     display: grid;
     grid-template-columns: 44px 1fr 1fr;
     overflow: hidden;
     scroll-margin-top: 125px;
-    transition: transform 0.2s, box-shadow 0.2s;
   }
 
   .floor-label {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.25rem;
+    font-size: 1.3rem;
     font-weight: 900;
-    background: rgba(0, 0, 0, 0.03);
-    border-right: 1px solid rgba(0, 0, 0, 0.06);
-    color: var(--text);
+    background: #0f172a;
+    border-right: 1.5px solid var(--card-border);
+    color: #fff;
     user-select: none;
-    box-shadow: inset -2px 0 4px rgba(0,0,0,0.02);
+    box-shadow: inset -2px 0 5px rgba(0,0,0,0.5);
   }
 
   .cell-card {
     margin: 0;
-    padding: 10px 8px 8px;
+    padding: 8px 6px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     position: relative;
     background: transparent;
-    transition: background 0.25s, box-shadow 0.25s;
+    transition: background 0.2s;
   }
 
-  .cell-card.dir-down {
-    border-left: 1.5px dashed var(--border-dark);
-  }
-
-  .cell-card.ok {
-    background: var(--ok-card);
-    box-shadow: inset 0 0 12px var(--ok-glow);
-  }
-  .cell-card.bad {
-    background: var(--bad-card);
-    box-shadow: inset 0 0 12px var(--bad-glow);
-  }
+  .cell-card.dir-down { border-left: 1.5px dashed #334155; }
+  .cell-card.ok { background: var(--ok-bg); }
+  .cell-card.bad { background: var(--bad-bg); }
 
   .cell-card.na {
-    background: rgba(0,0,0,0.03);
-    color: var(--text-muted);
-    font-size: 0.72rem;
+    background: rgba(15, 23, 42, 0.6);
+    color: #475569;
+    font-size: 0.7rem;
     font-weight: 800;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: var(--shadow-sunken);
+    text-transform: uppercase;
   }
 
-  .cell-main {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
+  .cell-main { display: flex; align-items: center; gap: 5px; }
 
-  /* 3D Vorzeichen Button */
   .btn-sign {
     flex: none;
-    width: 34px;
+    width: 32px;
     height: 42px;
     border-radius: var(--radius-sm);
     border: 1px solid var(--card-border);
-    background: var(--card-surface);
-    color: var(--text);
+    background: #1e293b;
+    color: #fff;
     font-size: 1rem;
     font-weight: 900;
     cursor: pointer;
@@ -493,7 +455,6 @@
     align-items: center;
     justify-content: center;
     box-shadow: var(--shadow-raised);
-    transition: transform 0.1s, box-shadow 0.1s;
   }
 
   .btn-sign:active {
@@ -503,14 +464,13 @@
 
   .input-wrapper { flex: 1; min-width: 0; }
 
-  /* Eingelassenes 3D-Zahlenfeld */
   .val-input {
     width: 100%;
     height: 42px;
-    border: 1px solid var(--border-dark);
+    border: 1.5px solid var(--card-border);
     border-radius: var(--radius-sm);
-    background: var(--card-surface);
-    color: var(--text);
+    background: #090d16;
+    color: #fff;
     font: inherit;
     font-size: 1.25rem;
     font-weight: 900;
@@ -518,20 +478,20 @@
     padding: 0;
     outline: none;
     box-shadow: var(--shadow-sunken);
-    transition: border-color 0.2s, box-shadow 0.2s;
   }
 
   .val-input:focus {
-    border-color: #0284c7;
-    box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.25), var(--shadow-sunken);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent-glow), var(--shadow-sunken);
   }
 
-  /* 3D Pegelanzeige (Gleitschiene) */
+  /* Pegelanzeige / Messkeil-Schiene */
   .gauge-container {
     flex: none;
     width: 12px;
     height: 42px;
-    background: rgba(0, 0, 0, 0.08);
+    background: #090d16;
+    border: 1px solid #1e293b;
     border-radius: 99px;
     position: relative;
     overflow: hidden;
@@ -543,17 +503,15 @@
     position: absolute;
     left: 0; right: 0;
     background: #10b981;
-    opacity: 0.55;
-    box-shadow: 0 0 4px #10b981;
+    opacity: 0.45;
   }
 
   .gauge-center-line {
     position: absolute;
     left: 0; right: 0;
     top: calc(50% - 0.5px);
-    height: 1px;
-    background: var(--text);
-    opacity: 0.6;
+    height: 1.5px;
+    background: #f8fafc;
   }
 
   .gauge-pointer {
@@ -561,29 +519,20 @@
     left: 1px;
     width: 10px;
     height: 6px;
-    border-radius: 3px;
-    background: var(--text);
+    border-radius: 2px;
+    background: #fff;
     top: calc(50% - 3px);
     display: none;
-    transition: top 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    transition: top 0.15s ease-out;
   }
 
-  .cell-card.ok .gauge-pointer {
-    display: block;
-    background: #10b981;
-    box-shadow: 0 0 6px #10b981;
-  }
-  .cell-card.bad .gauge-pointer {
-    display: block;
-    background: #ef4444;
-    box-shadow: 0 0 6px #ef4444;
-  }
+  .cell-card.ok .gauge-pointer { display: block; background: #10b981; box-shadow: 0 0 6px #10b981; }
+  .cell-card.bad .gauge-pointer { display: block; background: #ef4444; box-shadow: 0 0 6px #ef4444; }
 
   .status-text {
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     font-weight: 800;
-    margin-top: 4px;
+    margin-top: 3px;
     text-align: center;
     color: var(--text-muted);
     min-height: 14px;
@@ -595,57 +544,53 @@
   .cell-card.ok .status-text { color: var(--ok-text); }
   .cell-card.bad .status-text { color: var(--bad-text); }
 
-  /* 3D Pop-up Modal */
+  /* Modal Pop-up */
   .modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(15, 23, 42, 0.65);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 16px;
+    padding: 14px;
     z-index: 100;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.25s ease;
+    transition: opacity 0.2s ease;
   }
 
   .modal-overlay.active { opacity: 1; pointer-events: auto; }
 
   .modal-card {
-    background: var(--card-surface);
-    border: 1px solid var(--card-border);
+    background: #111827;
+    border: 1.5px solid var(--card-border);
     border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-float);
+    box-shadow: 0 20px 30px rgba(0,0,0,0.8);
     width: 100%;
     max-width: 440px;
     max-height: 90vh;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    transform: translateY(20px) scale(0.96);
-    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-
-  .modal-overlay.active .modal-card {
-    transform: translateY(0) scale(1);
   }
 
   .modal-header {
-    padding: 14px 16px;
-    border-bottom: 1px solid rgba(0,0,0,0.06);
+    padding: 12px 16px;
+    border-bottom: 1.5px solid var(--card-border);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: rgba(0,0,0,0.02);
+    background: #0f172a;
   }
 
   .modal-header h2 {
-    font-size: 1.15rem;
+    font-size: 1.1rem;
     font-weight: 900;
     margin: 0;
+    color: #fff;
+    text-transform: uppercase;
   }
 
   .modal-close {
@@ -655,24 +600,19 @@
     color: var(--text-muted);
     cursor: pointer;
     padding: 2px 6px;
-    border-radius: 6px;
   }
 
-  .modal-body {
-    padding: 14px 16px;
-    overflow-y: auto;
-  }
+  .modal-body { padding: 12px 16px; overflow-y: auto; }
 
   .report-meta {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 8px;
     margin-bottom: 12px;
-    background: rgba(0,0,0,0.02);
-    padding: 12px;
-    border-radius: var(--radius-md);
+    background: #0f172a;
+    padding: 10px;
+    border-radius: var(--radius-sm);
     border: 1px solid var(--card-border);
-    box-shadow: var(--shadow-sunken);
     font-size: 0.78rem;
     color: var(--text-muted);
   }
@@ -683,17 +623,16 @@
     border-radius: var(--radius-sm);
     font-weight: 900;
     text-align: center;
-    font-size: 0.84rem;
-    box-shadow: var(--shadow-raised);
+    font-size: 0.82rem;
   }
 
   .report-status-badge.ok {
-    background: var(--ok-card);
+    background: var(--ok-bg);
     color: var(--ok-text);
     border: 1px solid var(--ok-border);
   }
   .report-status-badge.bad {
-    background: var(--bad-card);
+    background: var(--bad-bg);
     color: var(--bad-text);
     border: 1px solid var(--bad-border);
   }
@@ -706,36 +645,42 @@
   }
 
   .report-table th {
-    background: rgba(0,0,0,0.03);
-    padding: 8px;
-    font-size: 0.75rem;
+    background: #0f172a;
+    padding: 7px;
+    font-size: 0.72rem;
     font-weight: 900;
     color: var(--text-muted);
-    border-bottom: 2px solid var(--border-dark);
+    border-bottom: 2px solid var(--card-border);
+    text-transform: uppercase;
   }
 
   .report-table td {
-    padding: 8px;
-    border-bottom: 1px solid rgba(0,0,0,0.05);
+    padding: 7px 4px;
+    border-bottom: 1px solid #1e293b;
     font-weight: 800;
-    font-size: 0.88rem;
+    font-size: 0.85rem;
   }
 
   .report-val {
     display: inline-block;
-    padding: 3px 8px;
-    border-radius: 6px;
+    padding: 2px 6px;
+    border-radius: 4px;
     font-size: 0.8rem;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.08);
   }
-  .report-val.ok { color: var(--ok-text); background: var(--ok-card); border: 1px solid var(--ok-border); }
-  .report-val.bad { color: var(--bad-text); background: var(--bad-card); border: 1px solid var(--bad-border); font-weight: 900; }
-  .report-val.na { color: var(--text-muted); box-shadow: none; }
+  .report-val.ok { color: var(--ok-text); background: var(--ok-bg); }
+  .report-val.bad { color: var(--bad-text); background: var(--bad-bg); font-weight: 900; }
+  .report-val.na { color: #475569; }
+
+  .diff-tag {
+    font-size: 0.75rem;
+    font-weight: 900;
+    color: var(--accent);
+  }
 
   .modal-actions {
     padding: 12px 16px;
-    border-top: 1px solid rgba(0,0,0,0.06);
-    background: rgba(0,0,0,0.02);
+    border-top: 1.5px solid var(--card-border);
+    background: #0f172a;
     display: flex;
     gap: 8px;
   }
@@ -745,7 +690,7 @@
 
 <div class="layout-wrap">
   <div class="app-container">
-    <!-- Sticky 3D-Header -->
+    <!-- Sticky Tableau-Header -->
     <header class="top-bar">
       <div class="nav-header">
         <div class="title-group">
@@ -761,16 +706,16 @@
       </div>
     </header>
 
-    <!-- Einstellungen -->
+    <!-- Einstellungen & Norm-Toleranzen -->
     <details class="settings-card" id="settingsDetails">
       <summary>
-        <span>⚙️ Einstellungen</span>
+        <span>⚙️ Parameter & Richtlinien</span>
         <svg class="icon-arrow" width="16" height="16" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
       </summary>
       <div class="settings-content">
         <div class="settings-grid">
           <label class="setting-item">
-            Etagenanzahl
+            Etagen
             <input id="floorCount" type="number" min="1" max="50" inputmode="numeric" value="5">
           </label>
           <label class="setting-item">
@@ -778,21 +723,30 @@
             <input id="startFloor" type="number" inputmode="numeric" value="0">
           </label>
           <label class="setting-item">
-            Toleranz (± mm)
-            <input id="tolerance" type="number" min="0" step="1" inputmode="numeric" value="5">
+            Toleranz ± mm
+            <input id="tolerance" type="number" min="0" step="1" inputmode="numeric" value="10">
           </label>
         </div>
+
+        <!-- Schnellauswahl Normen & Aufzugstypen -->
+        <div class="presets-wrap">
+          <div class="presets-title">Richtwerte / Norm-Toleranz</div>
+          <div class="presets-grid">
+            <button type="button" class="btn-preset" data-tol="3" title="Klinik / Präzision">± 3 mm</button>
+            <button type="button" class="btn-preset" data-tol="5" title="Seil / High-Speed">± 5 mm</button>
+            <button type="button" class="btn-preset active" data-tol="10" title="DIN EN 81-20 Standard">± 10 mm</button>
+            <button type="button" class="btn-preset" data-tol="20" title="Nachregulierung / Güter">± 20 mm</button>
+          </div>
+        </div>
+
         <div class="action-row">
           <button type="button" class="btn primary" id="openReportBtn">📊 Protokoll</button>
           <button type="button" class="btn danger" id="resetBtn">Werte leeren</button>
         </div>
-        <div style="text-align: center; margin-top: 8px; font-size: 0.7rem; color: var(--text-muted); font-weight: 700;">
-          <span id="pwaStatus">● Offline-Betrieb aktiv</span>
-        </div>
       </div>
     </details>
 
-    <!-- Tabellenkopf -->
+    <!-- Spaltenköpfe -->
     <div class="grid-header">
       <div class="header-pill">Et.</div>
       <div class="header-pill up">▲ Aufwärts</div>
@@ -803,7 +757,7 @@
     <main class="floor-list" id="listContainer"></main>
   </div>
 
-  <!-- 3D-Schachtanzeige -->
+  <!-- Schachtsäule -->
   <aside class="shaft-panel" id="shaftPanel" aria-label="Schacht-Übersicht">
     <div class="shaft-title">Et.</div>
     <div id="shaftNodes" style="display:flex; flex-direction:column; gap:4px; width:100%; align-items:center;"></div>
@@ -826,34 +780,27 @@
 </div>
 
 <script>
-  /* ========================================================
-     PWA OFFLINE-REGISTRIERUNG (INLINE CACHE)
-     ======================================================== */
+  /* Offline Cache Worker */
   if ('serviceWorker' in navigator) {
     const swCode = `
-      const CACHE_NAME = 'buendigkeit-pwa-v1';
+      const CACHE_NAME = 'buendigkeit-elev-v1';
       self.addEventListener('install', e => {
-        e.waitUntil(
-          caches.open(CACHE_NAME).then(c => c.addAll([self.location.href]))
-        );
+        e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll([self.location.href])));
         self.skipWaiting();
       });
       self.addEventListener('fetch', e => {
-        e.respondWith(
-          caches.match(e.request).then(res => res || fetch(e.request).catch(() => caches.match(self.location.href)))
-        );
+        e.respondWith(caches.match(e.request).then(res => res || fetch(e.request).catch(() => caches.match(self.location.href))));
       });
     `;
     const swBlob = new Blob([swCode], { type: 'application/javascript' });
-    const swUrl = URL.createObjectURL(swBlob);
-    navigator.serviceWorker.register(swUrl).catch(() => {});
+    navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
   }
 
-  const STORAGE_KEY = 'buendigkeit-v9';
+  const STORAGE_KEY = 'buendigkeit-elev-data';
   let state = {
     floorCount: 5,
     startFloor: 0,
-    tolerance: 5,
+    tolerance: 10,
     values: {}
   };
 
@@ -882,7 +829,14 @@
     state.floorCount = Math.min(50, Math.max(1, parseInt($('floorCount').value, 10) || 1));
     state.startFloor = parseInt($('startFloor').value, 10) || 0;
     const t = parseInt($('tolerance').value, 10);
-    state.tolerance = isNaN(t) ? 5 : Math.abs(t);
+    state.tolerance = isNaN(t) ? 10 : Math.abs(t);
+    updatePresetButtons();
+  }
+
+  function updatePresetButtons() {
+    document.querySelectorAll('.btn-preset').forEach(btn => {
+      btn.classList.toggle('active', parseInt(btn.dataset.tol, 10) === state.tolerance);
+    });
   }
 
   function renderCell(floor, dir) {
@@ -891,7 +845,7 @@
     const dirClass = dir === 'down' ? 'dir-down' : 'dir-up';
 
     if ((dir === 'up' && isBottom) || (dir === 'down' && isTop)) {
-      return `<div class="cell-card ${dirClass} na">Nicht anfahrbar</div>`;
+      return `<div class="cell-card ${dirClass} na">Endhalt</div>`;
     }
 
     const key = `${floor}:${dir}`;
@@ -970,7 +924,7 @@
     card.classList.add(isExceeded ? 'bad' : 'ok');
 
     if (n === 0) {
-      status.textContent = 'bündig';
+      status.textContent = 'bündig (0 mm)';
     } else if (n > 0) {
       status.textContent = `+${n} mm zu hoch`;
     } else {
@@ -978,7 +932,7 @@
     }
 
     const tolerance = Math.max(state.tolerance, 1);
-    const range = Math.max(12, tolerance * 1.6);
+    const range = Math.max(14, tolerance * 1.5);
     const tolPercent = Math.min(50, (tolerance / range) * 50);
 
     tolBand.style.top = (50 - tolPercent) + '%';
@@ -1006,7 +960,7 @@
     const chipBad = $('chipBad');
     if (bad > 0) {
       chipBad.hidden = false;
-      chipBad.textContent = `${bad} Toleranzfehler`;
+      chipBad.textContent = `${bad} Abweichungen`;
     } else {
       chipBad.hidden = true;
     }
@@ -1066,9 +1020,7 @@
     }
   });
 
-  window.handleMobileNext = function(card) {
-    advanceDirectional(card);
-  };
+  window.handleMobileNext = function(card) { advanceDirectional(card); };
 
   container.addEventListener('keydown', e => {
     if (e.key === 'Enter') {
@@ -1129,6 +1081,14 @@
     saveState();
   });
 
+  // Preset Buttons Event
+  document.querySelectorAll('.btn-preset').forEach(btn => {
+    btn.addEventListener('click', () => {
+      $('tolerance').value = btn.dataset.tol;
+      renderList();
+    });
+  });
+
   ['floorCount', 'startFloor', 'tolerance'].forEach(id => {
     $(id).addEventListener('input', renderList);
   });
@@ -1151,7 +1111,7 @@
     renderList();
   });
 
-  /* Modal Pop-up */
+  /* Modal Pop-up Protokoll mit Schleppfehler (Hysterese) */
   const modal = $('reportModal');
 
   $('openReportBtn').addEventListener('click', () => {
@@ -1159,13 +1119,8 @@
     modal.classList.add('active');
   });
 
-  window.closeReportModal = function() {
-    modal.classList.remove('active');
-  };
-
-  window.closeModalOnOutsideClick = function(e) {
-    if (e.target === modal) closeReportModal();
-  };
+  window.closeReportModal = function() { modal.classList.remove('active'); };
+  window.closeModalOnOutsideClick = function(e) { if (e.target === modal) closeReportModal(); };
 
   function buildReportHtml() {
     const body = $('reportBody');
@@ -1215,18 +1170,27 @@
         }
       }
 
+      // Berechnung Schleppfehler (Differenz Auf vs. Ab)
+      let diffHtml = '<span class="report-val na">—</span>';
+      if (upVal !== null && dnVal !== null) {
+        const diff = Math.abs(upVal - dnVal);
+        diffHtml = `<span class="diff-tag">Δ ${diff} mm</span>`;
+      }
+
       tableRows += `
         <tr>
           <td><strong>${f}</strong></td>
           <td>${upHtml}</td>
           <td>${dnHtml}</td>
+          <td>${diffHtml}</td>
         </tr>
       `;
     }
 
+    const normLabel = state.tolerance === 10 ? ' (gemäß DIN EN 81-20)' : '';
     const statusText = badCount > 0 
-      ? `⚠️ ${badCount} Abweichung(en) außerhalb der Toleranz`
-      : (measuredCount === totalCells ? `✓ Alle Werte innerhalb der Toleranz (Bestanden)` : `ℹ️ ${measuredCount} von ${totalCells} Haltestellen erfasst`);
+      ? `⚠️ ${badCount} Mangel: Toleranzgrenze überschritten`
+      : (measuredCount === totalCells ? `✓ Bestanden: Alle Haltepunkte im Toleranzbereich${normLabel}` : `ℹ️ ${measuredCount} von ${totalCells} Messwerten erfasst`);
 
     body.innerHTML = `
       <div class="report-meta">
@@ -1239,9 +1203,10 @@
       <table class="report-table">
         <thead>
           <tr>
-            <th style="width: 50px;">Etage</th>
-            <th>▲ Aufwärts</th>
-            <th>▼ Abwärts</th>
+            <th style="width: 44px;">Et.</th>
+            <th>▲ Auf</th>
+            <th>▼ Ab</th>
+            <th>Δ Diff</th>
           </tr>
         </thead>
         <tbody>
@@ -1252,8 +1217,8 @@
   }
 
   window.copyReportText = async function() {
-    let report = `BÜNDIGKEITSMESSUNG - PROTOKOLL\n`;
-    report += `Datum: ${new Date().toLocaleDateString('de-DE')} | Toleranz: ±${state.tolerance} mm\n`;
+    let report = `BÜNDIGKEITSMESSUNG PROTOKOLL\n`;
+    report += `Datum: ${new Date().toLocaleDateString('de-DE')} | Grenz-Toleranz: ±${state.tolerance} mm\n`;
     report += `------------------------------------\n`;
     for (let f = state.startFloor + state.floorCount - 1; f >= state.startFloor; f--) {
       const up = state.values[`${f}:up`] !== undefined ? `${state.values[`${f}:up`]} mm` : (f === state.startFloor ? '—' : 'offen');
@@ -1263,7 +1228,7 @@
 
     try {
       await navigator.clipboard.writeText(report);
-      alert('Protokoll als Text in Zwischenablage kopiert!');
+      alert('Protokoll in die Zwischenablage kopiert!');
     } catch(err) {
       alert(report);
     }
