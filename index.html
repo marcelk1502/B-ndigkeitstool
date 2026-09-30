@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
-<meta name="theme-color" content="#0b0f19">
+<meta name="theme-color" content="#0a0e17">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Bündigkeiten">
@@ -22,14 +22,14 @@
 
     --up-color: #38bdf8;
     --up-border: rgba(56, 189, 248, 0.35);
-    --up-glow: rgba(56, 189, 248, 0.15);
+    --up-glow: rgba(56, 189, 248, 0.2);
 
     --down-color: #f59e0b;
     --down-border: rgba(245, 158, 11, 0.35);
-    --down-glow: rgba(245, 158, 11, 0.15);
+    --down-glow: rgba(245, 158, 11, 0.2);
 
     --accent: #f59e0b;
-    --accent-glow: rgba(245, 158, 11, 0.35);
+    --accent-glow: rgba(245, 158, 11, 0.4);
 
     --ok: #10b981;
     --ok-bg: rgba(16, 185, 129, 0.18);
@@ -77,17 +77,19 @@
 
   .app-container { flex: 1; min-width: 0; }
 
-  /* 3D-Schachtsäule */
+  /* ========================================================
+     ANIMIERTE 3D-SCHACHTSÄULE MIT GLEITENDEM FAHRKORB
+     ======================================================== */
   .shaft-panel {
-    width: 32px;
+    width: 36px;
     flex: none;
     position: sticky;
     top: calc(env(safe-area-inset-top, 10px) + 64px);
     align-self: flex-start;
-    background: #0f172a;
+    background: #070b14;
     border: 1.5px solid var(--card-border);
     border-radius: var(--radius-md);
-    padding: 6px 3px;
+    padding: 6px 3px 8px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -105,12 +107,33 @@
     letter-spacing: 0.05em;
   }
 
+  .shaft-track {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: center;
+  }
+
+  /* Schachtseil im Hintergrund */
+  .shaft-cable {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 2px;
+    background: #1e293b;
+    transform: translateX(-50%);
+    z-index: 0;
+  }
+
   .shaft-node {
     width: 24px;
     height: 18px;
     border-radius: 4px;
-    background: #1e293b;
-    border: 1px solid #334155;
+    background: #131d2e;
+    border: 1px solid #23344d;
     font-family: var(--font-display);
     font-size: 0.65rem;
     font-weight: 800;
@@ -120,8 +143,9 @@
     color: var(--text-muted);
     cursor: pointer;
     box-shadow: 0 1px 2px rgba(0,0,0,0.5);
-    transition: all 0.15s ease;
+    transition: all 0.2s ease;
     position: relative;
+    z-index: 1;
   }
 
   .shaft-node:active { transform: scale(0.88); }
@@ -129,22 +153,31 @@
   .shaft-node.bad { background: #7f1d1d; border-color: #ef4444; color: #fff; box-shadow: 0 0 8px rgba(239, 68, 68, 0.5); }
   .shaft-node.partial { background: #1e3a8a; border-color: #3b82f6; color: #fff; }
 
-  .shaft-node.current-pos {
-    outline: 2px solid var(--accent);
-    outline-offset: 1px;
-    color: #fff;
-    font-weight: 900;
-    box-shadow: 0 0 10px var(--accent-glow);
-  }
-  .shaft-node.current-pos::after {
-    content: "◀";
+  /* Der gleitende Fahrkorb-Körper */
+  .elevator-car {
     position: absolute;
-    right: -10px;
-    font-size: 7px;
+    left: 2px;
+    right: 2px;
+    height: 22px;
+    border-radius: 4px;
+    border: 1.5px solid var(--accent);
+    background: rgba(245, 158, 11, 0.15);
+    box-shadow: 0 0 10px var(--accent-glow), inset 0 0 6px var(--accent-glow);
+    pointer-events: none;
+    z-index: 2;
+    transition: top 0.4s cubic-bezier(0.34, 1.3, 0.64, 1);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  .elevator-car::after {
+    content: "◀";
+    font-size: 8px;
     color: var(--accent);
+    margin-right: -7px;
   }
 
-  /* Header - Schlank & zentriert ohne Badges */
+  /* Header */
   header.top-bar {
     position: sticky;
     top: 0;
@@ -275,6 +308,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: all 0.15s;
   }
 
   .btn-preset:active { transform: translateY(1px); }
@@ -285,7 +319,7 @@
     box-shadow: 0 0 6px var(--accent-glow);
   }
 
-  /* Spaltenköpfe */
+  /* Spaltenköpfe mit animierten Tableau-LEDs */
   .grid-header {
     position: sticky;
     top: 56px;
@@ -304,15 +338,34 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 6px;
     font-size: 0.85rem;
     font-weight: 900;
     box-shadow: var(--shadow-raised);
     text-transform: uppercase;
     letter-spacing: 0.03em;
+    transition: all 0.2s ease;
   }
 
   .header-pill.up { color: var(--up-color); border-color: var(--up-border); background: #0c1a2e; }
   .header-pill.down { color: var(--down-color); border-color: var(--down-border); background: #23190b; }
+
+  /* Animiertes LED-Lauflicht bei Fahrtrichtung */
+  @keyframes pulseUp {
+    0%, 100% { transform: translateY(0); opacity: 0.8; }
+    50% { transform: translateY(-2px); opacity: 1; filter: drop-shadow(0 0 4px var(--up-color)); }
+  }
+  @keyframes pulseDown {
+    0%, 100% { transform: translateY(0); opacity: 0.8; }
+    50% { transform: translateY(2px); opacity: 1; filter: drop-shadow(0 0 4px var(--down-color)); }
+  }
+
+  body[data-active-dir="up"] .header-pill.up .led-arrow {
+    animation: pulseUp 0.8s infinite ease-in-out;
+  }
+  body[data-active-dir="down"] .header-pill.down .led-arrow {
+    animation: pulseDown 0.8s infinite ease-in-out;
+  }
 
   /* Etagenliste */
   .floor-list { display: flex; flex-direction: column; gap: 8px; }
@@ -326,13 +379,14 @@
     grid-template-columns: 46px 1fr 1fr;
     overflow: hidden;
     scroll-margin-top: 130px;
-    transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+    transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s cubic-bezier(0.34, 1.4, 0.64, 1);
   }
 
+  /* Aktive Etage (Fokus) */
   .floor-card.active-floor {
     border-color: var(--accent);
     box-shadow: 0 0 16px rgba(245, 158, 11, 0.4), var(--shadow-raised);
-    transform: scale(1.01);
+    transform: scale(1.015);
     z-index: 5;
   }
 
@@ -359,7 +413,7 @@
     justify-content: center;
     position: relative;
     background: transparent;
-    transition: background 0.2s;
+    transition: background 0.25s;
   }
 
   .cell-card.dir-up { background: rgba(56, 189, 248, 0.02); }
@@ -370,6 +424,26 @@
 
   .cell-card.ok { background: var(--ok-bg) !important; }
   .cell-card.bad { background: var(--bad-bg) !important; }
+
+  /* Schüttel-Animation bei Toleranzüberschreitung */
+  @keyframes shakeWarn {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-3px); }
+    40%, 80% { transform: translateX(3px); }
+  }
+  .cell-card.shake {
+    animation: shakeWarn 0.35s ease-in-out;
+  }
+
+  /* Erfolgs-Pulsieren bei glatt 0 */
+  @keyframes okPulse {
+    0% { box-shadow: inset 0 0 0 rgba(16, 185, 129, 0); }
+    50% { box-shadow: inset 0 0 16px rgba(16, 185, 129, 0.6); }
+    100% { box-shadow: inset 0 0 0 rgba(16, 185, 129, 0); }
+  }
+  .cell-card.success-pulse {
+    animation: okPulse 0.6s ease-out;
+  }
 
   .cell-card.na {
     background: rgba(15, 23, 42, 0.6) !important;
@@ -408,10 +482,12 @@
     justify-content: center;
     cursor: pointer;
     user-select: none;
+    transition: transform 0.1s;
   }
   .sign-quick-toggle:active {
     background: var(--accent);
     color: #000;
+    transform: scale(0.92);
   }
 
   .val-input {
@@ -442,7 +518,7 @@
     box-shadow: 0 0 0 2px var(--down-glow), var(--shadow-sunken);
   }
 
-  /* Pegelanzeige mit gefräster Skala */
+  /* Pegelanzeige mit federnder Zeigernadel */
   .gauge-container {
     flex: none;
     width: 14px;
@@ -494,6 +570,7 @@
     opacity: 0.8;
   }
 
+  /* Mechanisch federnder Indikator */
   .gauge-pointer {
     position: absolute;
     left: 1px;
@@ -503,7 +580,7 @@
     background: #fff;
     top: calc(50% - 2.5px);
     display: none;
-    transition: top 0.15s ease-out;
+    transition: top 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
     box-shadow: 0 1px 3px rgba(0,0,0,0.8);
   }
 
@@ -541,9 +618,7 @@
     text-shadow: 0 1px 2px rgba(0,0,0,0.7);
   }
 
-  /* ========================================================
-     SCHWEBENDE DAUMEN-LEISTE MIT INTEGRIERTEM FORTSCHRITTSBALKEN
-     ======================================================== */
+  /* Floating Bottom Bar */
   .bottom-bar {
     position: fixed;
     bottom: 0;
@@ -558,7 +633,6 @@
     box-shadow: 0 -8px 24px rgba(0,0,0,0.6);
   }
 
-  /* Statusbalken direkt an der Oberkante des Daumen-Boards */
   .bottom-progress-edge {
     position: absolute;
     top: 0;
@@ -669,32 +743,38 @@
   .modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
+    background: rgba(0, 0, 0, 0.82);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 14px;
+    padding: 12px;
     z-index: 100;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.2s ease;
+    transition: opacity 0.25s ease;
   }
 
   .modal-overlay.active { opacity: 1; pointer-events: auto; }
 
   .modal-card {
-    background: #111827;
+    background: #0f172a;
     border: 1.5px solid var(--card-border);
     border-radius: var(--radius-lg);
-    box-shadow: 0 20px 30px rgba(0,0,0,0.8);
+    box-shadow: 0 20px 35px rgba(0,0,0,0.85);
     width: 100%;
-    max-width: 440px;
-    max-height: 90vh;
+    max-width: 460px;
+    max-height: 92vh;
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    transform: translateY(12px) scale(0.97);
+    transition: transform 0.25s cubic-bezier(0.34, 1.4, 0.64, 1);
+  }
+
+  .modal-overlay.active .modal-card {
+    transform: translateY(0) scale(1);
   }
 
   .modal-header {
@@ -703,7 +783,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: #0f172a;
+    background: #070b14;
   }
 
   .modal-header h2 {
@@ -723,14 +803,14 @@
     padding: 2px 6px;
   }
 
-  .modal-body { padding: 12px 16px; overflow-y: auto; }
+  .modal-body { padding: 12px 14px; overflow-y: auto; }
 
   .report-meta {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 8px;
     margin-bottom: 12px;
-    background: #0f172a;
+    background: #070b14;
     padding: 10px;
     border-radius: var(--radius-sm);
     border: 1px solid var(--card-border);
@@ -758,15 +838,54 @@
     border: 1px solid var(--bad-border);
   }
 
+  /* ========================================================
+     MINI-DIAGRAMM (BÜNDIGKEITSKURVE IM PROTOKOLL)
+     ======================================================== */
+  .chart-section {
+    background: #070b14;
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-sm);
+    padding: 10px;
+    margin-bottom: 12px;
+  }
+  .chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 0.7rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .chart-legend {
+    display: flex;
+    gap: 10px;
+  }
+  .chart-legend span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.65rem;
+  }
+  .legend-dot-up { width: 8px; height: 8px; border-radius: 2px; background: var(--up-color); }
+  .legend-dot-down { width: 8px; height: 8px; border-radius: 2px; background: var(--down-color); }
+
+  .curve-chart-svg {
+    width: 100%;
+    height: 130px;
+    overflow: visible;
+  }
+
   .report-table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 8px;
+    margin-top: 4px;
     text-align: center;
   }
 
   .report-table th {
-    background: #0f172a;
+    background: #070b14;
     padding: 7px;
     font-size: 0.72rem;
     font-weight: 900;
@@ -802,7 +921,7 @@
   .modal-actions {
     padding: 12px 16px;
     border-top: 1.5px solid var(--card-border);
-    background: #0f172a;
+    background: #070b14;
     display: flex;
     gap: 8px;
   }
@@ -824,11 +943,11 @@
   .btn-modal.print { background: var(--accent); color: #000; border-color: #b45309; }
 </style>
 </head>
-<body>
+<body data-active-dir="">
 
 <div class="layout-wrap">
   <div class="app-container">
-    <!-- Header: Sauber & fokussiert -->
+    <!-- Header -->
     <header class="top-bar">
       <div class="nav-header">
         <div class="title-group">
@@ -871,27 +990,35 @@
       </div>
     </details>
 
-    <!-- Spaltenköpfe -->
+    <!-- Spaltenköpfe mit LED-Pfeilen -->
     <div class="grid-header">
       <div class="header-pill">Et.</div>
-      <div class="header-pill up">▲ Aufwärts</div>
-      <div class="header-pill down">▼ Abwärts</div>
+      <div class="header-pill up">
+        <span class="led-arrow">▲</span>
+        <span>Aufwärts</span>
+      </div>
+      <div class="header-pill down">
+        <span class="led-arrow">▼</span>
+        <span>Abwärts</span>
+      </div>
     </div>
 
     <!-- Etagenliste -->
     <main class="floor-list" id="listContainer"></main>
   </div>
 
-  <!-- Schachtsäule -->
+  <!-- Schachtsäule mit gleitendem Fahrkorb -->
   <aside class="shaft-panel" id="shaftPanel" aria-label="Schacht-Übersicht">
     <div class="shaft-title">Et.</div>
-    <div id="shaftNodes" style="display:flex; flex-direction:column; gap:4px; width:100%; align-items:center;"></div>
+    <div class="shaft-track" id="shaftTrack">
+      <div class="shaft-cable"></div>
+      <div class="elevator-car" id="elevatorCar" style="display:none;"></div>
+      <div id="shaftNodes" style="display:flex; flex-direction:column; gap:5px; width:100%; align-items:center;"></div>
+    </div>
   </aside>
 </div>
 
-<!-- ========================================================
-     SCHWEBENDE DAUMEN-LEISTE MIT INTEGRIERTEM STATUSBALKEN OBEN
-     ======================================================== -->
+<!-- Floating Bottom Bar -->
 <nav class="bottom-bar">
   <div class="bottom-progress-edge" aria-hidden="true">
     <div class="bottom-progress-fill" id="bottomProgressBar"></div>
@@ -912,7 +1039,7 @@
   </div>
 </nav>
 
-<!-- Modal Pop-up Protokoll -->
+<!-- Modal Pop-up Protokoll mit Bündigkeitskurve -->
 <div class="modal-overlay" id="reportModal" onclick="closeModalOnOutsideClick(event)">
   <div class="modal-card">
     <div class="modal-header">
@@ -930,7 +1057,7 @@
 <script>
   if ('serviceWorker' in navigator) {
     const swCode = `
-      const CACHE_NAME = 'buendigkeit-elev-v8';
+      const CACHE_NAME = 'buendigkeit-elev-v9';
       self.addEventListener('install', e => {
         e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll([self.location.href])));
         self.skipWaiting();
@@ -943,7 +1070,7 @@
     navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
   }
 
-  const STORAGE_KEY = 'buendigkeit-elev-v8';
+  const STORAGE_KEY = 'buendigkeit-elev-v9';
   let state = {
     floorCount: 5,
     startFloor: 0,
@@ -1106,13 +1233,11 @@
 
     const total = cells.length;
     
-    // Statusanzeige im Daumen-Board
     const statusText = bad > 0 
       ? `${filled} / ${total} (${bad} Fehler)` 
       : `${filled} / ${total} gemessen`;
     $('bottomStatus').textContent = statusText;
 
-    // Fortschrittsbalken oben an der Daumenleiste
     const pct = total ? (filled / total * 100) : 0;
     $('bottomProgressBar').style.width = pct + '%';
 
@@ -1146,16 +1271,30 @@
 
   const container = $('listContainer');
 
+  /* Gleitender Fahrkorb & Fokus-Handling */
   container.addEventListener('focusin', e => {
     const card = e.target.closest('.floor-card');
     if (!card) return;
     document.querySelectorAll('.floor-card.active-floor').forEach(c => c.classList.remove('active-floor'));
     card.classList.add('active-floor');
 
+    const cell = e.target.closest('.cell-card');
+    const dir = cell ? cell.dataset.dir : '';
+    document.body.dataset.activeDir = dir; // Steuert LED-Pulsieren im Header
+
     const floor = card.dataset.floor;
-    document.querySelectorAll('.shaft-node.current-pos').forEach(n => n.classList.remove('current-pos'));
     const shaftNode = $(`shaft-node-${floor}`);
-    if (shaftNode) shaftNode.classList.add('current-pos');
+    const elevatorCar = $('elevatorCar');
+
+    if (shaftNode && elevatorCar) {
+      elevatorCar.style.display = 'flex';
+      const offsetTop = shaftNode.offsetTop;
+      elevatorCar.style.top = `${offsetTop - 2}px`;
+    }
+  });
+
+  container.addEventListener('focusout', () => {
+    document.body.dataset.activeDir = '';
   });
 
   container.addEventListener('click', e => {
@@ -1182,6 +1321,12 @@
     if (input) {
       input.value = '0';
       input.dispatchEvent(new Event('input', { bubbles: true }));
+      
+      // Erfolgs-Pulsieren
+      card.classList.remove('success-pulse');
+      void card.offsetWidth;
+      card.classList.add('success-pulse');
+      
       advanceDirectional(card);
     }
   });
@@ -1249,6 +1394,19 @@
     }
 
     applyCellStyles(card);
+
+    // Schüttel-Effekt bei Grenzüberschreitung
+    const num = parseVal(input.value);
+    if (num !== null && Math.abs(num) > state.tolerance) {
+      card.classList.remove('shake');
+      void card.offsetWidth;
+      card.classList.add('shake');
+    } else if (num === 0) {
+      card.classList.remove('success-pulse');
+      void card.offsetWidth;
+      card.classList.add('success-pulse');
+    }
+
     updateMetrics();
     saveState();
   });
@@ -1286,7 +1444,7 @@
     renderList();
   });
 
-  /* Modal Pop-up Protokoll */
+  /* Modal Pop-up Protokoll mit Mini-Diagramm */
   const modal = $('reportModal');
 
   $('openReportBtn').addEventListener('click', () => {
@@ -1308,12 +1466,17 @@
     let totalCells = 0;
     let tableRows = '';
 
+    // Daten für Diagramm sammeln
+    const chartData = [];
+
     for (let f = state.startFloor + state.floorCount - 1; f >= state.startFloor; f--) {
       const isTop = f === state.startFloor + state.floorCount - 1;
       const isBottom = f === state.startFloor;
 
       const upVal = parseVal(state.values[`${f}:up`]);
       const dnVal = parseVal(state.values[`${f}:down`]);
+
+      chartData.push({ floor: f, up: upVal, down: dnVal, isTop, isBottom });
 
       let upHtml = '';
       if (isBottom) {
@@ -1364,7 +1527,10 @@
     const normLabel = state.tolerance === 10 ? ' (gemäß DIN EN 81-20)' : '';
     const statusText = badCount > 0 
       ? `⚠️ ${badCount} Mangel: Toleranzgrenze überschritten`
-      : (measuredCount === totalCells ? `✓ Bestanden: Alle Haltepunkte im Toleranzbereich${normLabel}` : `ℹ️ ${measuredCount} von ${totalCells} Messwerten erfasst`);
+      : (measuredCount === totalCells ? `✓ Bestanden: Alle Haltepunkte im Toleranzbereich${normLabel}` : `ℹ️️ ${measuredCount} von ${totalCells} Messwerten erfasst`);
+
+    // SVG-Bündigkeitsdiagramm generieren
+    const chartSvg = generateCurveChart(chartData, state.tolerance);
 
     body.innerHTML = `
       <div class="report-meta">
@@ -1374,6 +1540,18 @@
           ${statusText}
         </div>
       </div>
+
+      <div class="chart-section">
+        <div class="chart-header">
+          <span>Bündigkeits-Verlauf (Schachtkurve)</span>
+          <div class="chart-legend">
+            <span><i class="legend-dot-up"></i> Auf</span>
+            <span><i class="legend-dot-down"></i> Ab</span>
+          </div>
+        </div>
+        ${chartSvg}
+      </div>
+
       <table class="report-table">
         <thead>
           <tr>
@@ -1387,6 +1565,69 @@
           ${tableRows}
         </tbody>
       </table>
+    `;
+  }
+
+  /* Generiert das dynamische SVG-Mini-Diagramm */
+  function generateCurveChart(data, tol) {
+    const W = 380;
+    const H = 130;
+    const padX = 35;
+    const padY = 18;
+    const maxTol = Math.max(16, tol * 1.5);
+    const midX = W / 2;
+
+    const count = data.length;
+    const stepY = (H - 2 * padY) / Math.max(1, count - 1);
+
+    // Toleranzkorridor (grüner Bereich)
+    const tolWidth = (tol / maxTol) * (W / 2 - padX);
+    const tolLeft = midX - tolWidth;
+    const tolRight = midX + tolWidth;
+
+    let pointsUp = [];
+    let pointsDown = [];
+    let labelsY = '';
+
+    data.forEach((d, i) => {
+      const y = padY + i * stepY;
+      labelsY += `<text x="14" y="${y + 3}" fill="#64748b" font-size="9" font-family="ui-monospace" font-weight="900" text-anchor="middle">${d.floor}</text>`;
+
+      if (d.up !== null && !d.isBottom) {
+        const x = midX + (Math.max(-maxTol, Math.min(maxTol, d.up)) / maxTol) * (W / 2 - padX);
+        pointsUp.push({ x, y });
+      }
+      if (d.down !== null && !d.isTop) {
+        const x = midX + (Math.max(-maxTol, Math.min(maxTol, d.down)) / maxTol) * (W / 2 - padX);
+        pointsDown.push({ x, y });
+      }
+    });
+
+    const upPath = pointsUp.length > 1 ? `d="M ${pointsUp.map(p => `${p.x}${p.y}`).join(' L ')}"` : '';
+    const downPath = pointsDown.length > 1 ? `d="M ${pointsDown.map(p => `${p.x}${p.y}`).join(' L ')}"` : '';
+
+    return `
+      <svg class="curve-chart-svg" viewBox="0 0 ${W} ${H}">
+        <!-- Toleranzband -->
+        <rect x="${tolLeft}" y="${padY - 4}" width="${tolRight - tolLeft}" height="${H - 2 * padY + 8}" fill="rgba(16, 185, 129, 0.12)" rx="4" />
+        <line x1="${tolLeft}" y1="${padY - 4}" x2="${tolLeft}" y2="${H - padY + 4}" stroke="rgba(16, 185, 129, 0.4)" stroke-dasharray="2 2" />
+        <line x1="${tolRight}" y1="${padY - 4}" x2="${tolRight}" y2="${H - padY + 4}" stroke="rgba(16, 185, 129, 0.4)" stroke-dasharray="2 2" />
+
+        <!-- Null-Referenzlinie -->
+        <line x1="${midX}" y1="${padY - 8}" x2="${midX}" y2="${H - padY + 8}" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.8" />
+        <text x="${midX}" y="${padY - 10}" fill="#f59e0b" font-size="8" font-family="ui-monospace" font-weight="900" text-anchor="middle">0 mm</text>
+
+        <!-- Etagen-Linien & Beschriftung -->
+        ${labelsY}
+
+        <!-- Linienzüge -->
+        ${upPath ? `<path ${upPath} fill="none" stroke="var(--up-color)" stroke-width="2" stroke-linecap="round" />` : ''}
+        ${downPath ? `<path ${downPath} fill="none" stroke="var(--down-color)" stroke-width="2" stroke-linecap="round" />` : ''}
+
+        <!-- Messpunkte -->
+        ${pointsUp.map(p => `<circle cx="${p.x}" cy="${p.y}" r="3.5" fill="var(--up-color)" stroke="#070b14" stroke-width="1.5" />`).join('')}
+        ${pointsDown.map(p => `<circle cx="${p.x}" cy="${p.y}" r="3.5" fill="var(--down-color)" stroke="#070b14" stroke-width="1.5" />`).join('')}
+      </svg>
     `;
   }
 
