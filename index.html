@@ -2,41 +2,46 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
-<meta name="theme-color" content="#0284c7">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#0f172a">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Bündigkeiten">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230284c7'/><text y='.9em' x='18' font-size='70' fill='white'>⇕</text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='25' fill='%230284c7'/><text y='.9em' x='20' font-size='68' fill='white'>⇕</text></svg>">
 <title>Bündigkeiten</title>
 <style>
   :root {
-    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    --bg: #f1f5f9;
-    --surface: #ffffff;
-    --surface-elevated: #ffffff;
-    --border: #e2e8f0;
-    --border-strong: #cbd5e1;
+    --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+    --bg-grad-start: #e2e8f0;
+    --bg-grad-end: #cbd5e1;
+    --card-surface: linear-gradient(145deg, #ffffff, #f1f5f9);
+    --card-border: rgba(255, 255, 255, 0.7);
+    --border-dark: #94a3b8;
     --text: #0f172a;
     --text-muted: #64748b;
-    --text-subtle: #94a3b8;
-    
-    --primary: #0284c7;
-    --primary-bg: #e0f2fe;
-    
-    --ok: #10b981;
-    --ok-bg: #ecfdf5;
-    --ok-border: #a7f3d0;
+
+    --primary-grad: linear-gradient(135deg, #0284c7, #0369a1);
+    --primary-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
+
+    --ok-glow: rgba(16, 185, 129, 0.25);
+    --ok-card: linear-gradient(145deg, #ecfdf5, #d1fae5);
+    --ok-border: #6ee7b7;
     --ok-text: #065f46;
 
-    --bad: #ef4444;
-    --bad-bg: #fef2f2;
-    --bad-border: #fecaca;
+    --bad-glow: rgba(239, 68, 68, 0.25);
+    --bad-card: linear-gradient(145deg, #fef2f2, #fee2e2);
+    --bad-border: #fca5a5;
     --bad-text: #991b1b;
 
-    --na-bg: #f8fafc;
-    --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
-    --shadow-lg: 0 10px 25px -5px rgba(0,0,0,0.2), 0 8px 10px -6px rgba(0,0,0,0.15);
+    --shadow-raised: 
+      0 4px 6px -1px rgba(0, 0, 0, 0.08), 
+      0 2px 4px -2px rgba(0, 0, 0, 0.06),
+      inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    --shadow-sunken: 
+      inset 0 2px 4px rgba(0, 0, 0, 0.12),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.8);
+    --shadow-float: 0 10px 25px -3px rgba(0, 0, 0, 0.12), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
+
     --radius-sm: 8px;
     --radius-md: 12px;
     --radius-lg: 16px;
@@ -44,38 +49,42 @@
 
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #0b111a;
-      --surface: #151e2b;
-      --surface-elevated: #1e293b;
-      --border: #243244;
-      --border-strong: #334458;
+      --bg-grad-start: #0a0f18;
+      --bg-grad-end: #111827;
+      --card-surface: linear-gradient(145deg, #1e293b, #151e2e);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --border-dark: #334155;
       --text: #f8fafc;
       --text-muted: #94a3b8;
-      --text-subtle: #64748b;
 
-      --primary: #38bdf8;
-      --primary-bg: #0c4a6e;
-
-      --ok: #34d399;
-      --ok-bg: #064e3b33;
-      --ok-border: #05966955;
+      --ok-glow: rgba(16, 185, 129, 0.15);
+      --ok-card: linear-gradient(145deg, #064e3b33, #022c2244);
+      --ok-border: #059669;
       --ok-text: #6ee7b7;
 
-      --bad: #f87171;
-      --bad-bg: #7f1d1d33;
-      --bad-border: #dc262655;
+      --bad-glow: rgba(239, 68, 68, 0.15);
+      --bad-card: linear-gradient(145deg, #7f1d1d33, #450a0a44);
+      --bad-border: #dc2626;
       --bad-text: #fca5a5;
 
-      --na-bg: #11182755;
-      --shadow-sm: none;
+      --shadow-raised: 
+        0 4px 8px -1px rgba(0, 0, 0, 0.4), 
+        0 2px 4px -2px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      --shadow-sunken: 
+        inset 0 2px 5px rgba(0, 0, 0, 0.6),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.05);
+      --shadow-float: 0 14px 30px rgba(0, 0, 0, 0.6);
     }
   }
 
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  
   body {
     margin: 0;
     padding: env(safe-area-inset-top, 10px) 8px calc(env(safe-area-inset-bottom, 16px) + 24px);
-    background: var(--bg);
+    background: linear-gradient(180deg, var(--bg-grad-start), var(--bg-grad-end));
+    min-height: 100vh;
     color: var(--text);
     font-family: var(--font);
     font-variant-numeric: tabular-nums;
@@ -96,28 +105,28 @@
     min-width: 0;
   }
 
-  /* Grafischer Mini-Schacht */
+  /* 3D-Schacht Visualisierung */
   .shaft-panel {
-    width: 28px;
+    width: 30px;
     flex: none;
     position: sticky;
-    top: calc(env(safe-area-inset-top, 10px) + 54px);
+    top: calc(env(safe-area-inset-top, 10px) + 60px);
     align-self: flex-start;
-    background: var(--surface);
-    border: 1.5px solid var(--border-strong);
+    background: var(--card-surface);
+    border: 1px solid var(--card-border);
     border-radius: var(--radius-md);
-    padding: 6px 2px;
+    padding: 6px 3px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
-    box-shadow: var(--shadow-sm);
+    gap: 5px;
+    box-shadow: var(--shadow-raised);
     z-index: 10;
   }
 
   .shaft-title {
     font-size: 0.55rem;
-    font-weight: 800;
+    font-weight: 900;
     color: var(--text-muted);
     text-align: center;
     line-height: 1;
@@ -128,8 +137,9 @@
   .shaft-node {
     width: 22px;
     height: 18px;
-    border-radius: 4px;
-    background: var(--border);
+    border-radius: 5px;
+    background: var(--card-surface);
+    border: 1px solid var(--border-dark);
     font-size: 0.65rem;
     font-weight: 800;
     display: flex;
@@ -137,23 +147,42 @@
     justify-content: center;
     color: var(--text-muted);
     cursor: pointer;
-    transition: transform 0.1s, background-color 0.2s;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.4);
+    transition: transform 0.1s, box-shadow 0.15s, background-color 0.2s;
   }
 
-  .shaft-node:active { transform: scale(0.9); }
-  .shaft-node.ok { background: var(--ok); color: #fff; }
-  .shaft-node.bad { background: var(--bad); color: #fff; }
-  .shaft-node.partial { background: var(--primary); color: #fff; }
+  .shaft-node:active {
+    transform: scale(0.88);
+    box-shadow: var(--shadow-sunken);
+  }
+  .shaft-node.ok {
+    background: linear-gradient(135deg, #10b981, #059669);
+    border-color: #047857;
+    color: #fff;
+    box-shadow: 0 2px 5px var(--ok-glow);
+  }
+  .shaft-node.bad {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    border-color: #b91c1c;
+    color: #fff;
+    box-shadow: 0 2px 5px var(--bad-glow);
+  }
+  .shaft-node.partial {
+    background: linear-gradient(135deg, #38bdf8, #0284c7);
+    border-color: #0369a1;
+    color: #fff;
+  }
 
-  /* Header Sticky & Zentriert */
+  /* 3D-Header */
   header.top-bar {
     position: sticky;
     top: 0;
     z-index: 20;
-    background: var(--bg);
+    background: transparent;
     padding-top: 6px;
     padding-bottom: 8px;
-    backdrop-filter: blur(12px);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
   }
 
   .nav-header {
@@ -166,61 +195,74 @@
   }
 
   .title-group h1 {
-    font-size: 1.65rem;
+    font-size: 1.75rem;
     font-weight: 900;
-    letter-spacing: -0.03em;
+    letter-spacing: -0.04em;
     margin: 0;
     text-align: center;
+    background: linear-gradient(180deg, var(--text), var(--text-muted));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.05);
   }
 
-  .badges { display: flex; gap: 6px; justify-content: center; }
+  .badges { display: flex; gap: 8px; justify-content: center; }
 
   .badge {
     font-size: 0.75rem;
-    font-weight: 700;
-    padding: 3px 10px;
+    font-weight: 800;
+    padding: 4px 10px;
     border-radius: 99px;
-    background: var(--surface);
-    border: 1px solid var(--border);
+    background: var(--card-surface);
+    border: 1px solid var(--card-border);
     color: var(--text-muted);
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-raised);
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
   }
 
   .badge.alert {
-    background: var(--bad-bg);
+    background: var(--bad-card);
     color: var(--bad-text);
     border-color: var(--bad-border);
+    box-shadow: 0 2px 8px var(--bad-glow);
   }
 
+  /* 3D Progress Bar (Eingelassene Rinne mit Leuchtbalken) */
   .progress-wrap {
-    height: 5px;
-    background: var(--border);
+    height: 7px;
+    background: var(--card-surface);
+    border: 1px solid var(--card-border);
     border-radius: 99px;
     overflow: hidden;
+    box-shadow: var(--shadow-sunken);
   }
   .progress-fill {
     height: 100%;
     width: 0%;
-    background: linear-gradient(90deg, var(--primary), #6366f1);
+    background: linear-gradient(90deg, #0284c7, #6366f1);
+    box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
     border-radius: 99px;
-    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: width 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
-  /* Settings Dropdown */
+  /* 3D Settings Card */
   details.settings-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
+    background: var(--card-surface);
+    border: 1px solid var(--card-border);
     border-radius: var(--radius-lg);
     margin: 8px 0 12px;
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-raised);
     overflow: hidden;
+    transition: box-shadow 0.2s;
   }
 
   details.settings-card summary {
     list-style: none;
-    padding: 10px 14px;
+    padding: 11px 16px;
     cursor: pointer;
-    font-weight: 700;
+    font-weight: 800;
     font-size: 0.88rem;
     color: var(--text-muted);
     display: flex;
@@ -231,15 +273,15 @@
 
   details.settings-card summary::-webkit-details-marker { display: none; }
   details.settings-card summary .icon-arrow {
-    transition: transform 0.2s;
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
     fill: currentColor;
   }
   details.settings-card[open] summary .icon-arrow { transform: rotate(180deg); }
 
   .settings-content {
-    padding: 4px 14px 14px;
-    border-top: 1px solid var(--border);
-    background: var(--bg);
+    padding: 4px 16px 16px;
+    border-top: 1px solid rgba(0,0,0,0.06);
+    background: rgba(0,0,0,0.02);
   }
 
   .settings-grid {
@@ -254,220 +296,255 @@
     flex-direction: column;
     gap: 4px;
     font-size: 0.72rem;
-    font-weight: 700;
+    font-weight: 800;
     color: var(--text-muted);
   }
 
   .setting-item input {
-    height: 38px;
+    height: 40px;
     width: 100%;
-    border: 1.5px solid var(--border-strong);
+    border: 1px solid var(--border-dark);
     border-radius: var(--radius-sm);
-    background: var(--surface);
+    background: var(--card-surface);
     color: var(--text);
     font: inherit;
-    font-size: 0.95rem;
-    font-weight: 700;
+    font-size: 1rem;
+    font-weight: 800;
     text-align: center;
+    box-shadow: var(--shadow-sunken);
   }
 
-  .action-row { display: flex; gap: 8px; margin-top: 10px; }
+  .action-row { display: flex; gap: 8px; margin-top: 12px; }
 
+  /* 3D Taktile Buttons */
   .btn {
     flex: 1;
-    height: 38px;
-    border-radius: var(--radius-sm);
+    height: 42px;
+    border-radius: var(--radius-md);
     font: inherit;
-    font-size: 0.82rem;
-    font-weight: 700;
+    font-size: 0.84rem;
+    font-weight: 800;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 6px;
-    transition: all 0.15s;
-    border: 1px solid var(--border);
-    background: var(--surface);
+    transition: all 0.12s ease;
+    border: 1px solid var(--card-border);
+    background: var(--card-surface);
     color: var(--text);
+    box-shadow: var(--shadow-raised);
+    position: relative;
   }
 
-  .btn:active { transform: scale(0.97); }
+  .btn:active {
+    transform: translateY(2px);
+    box-shadow: var(--shadow-sunken);
+  }
 
   .btn.primary {
-    background: var(--primary);
-    border-color: var(--primary);
+    background: var(--primary-grad);
+    border-color: rgba(255, 255, 255, 0.2);
     color: #fff;
+    box-shadow: var(--primary-shadow);
+  }
+  .btn.primary:active {
+    transform: translateY(2px);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
   }
 
   .btn.danger {
+    background: var(--bad-card);
     border-color: var(--bad-border);
-    background: var(--bad-bg);
     color: var(--bad-text);
   }
   .btn.danger.armed {
-    background: var(--bad);
+    background: linear-gradient(135deg, #ef4444, #b91c1c);
     color: #fff;
-    border-color: var(--bad);
+    box-shadow: 0 4px 14px var(--bad-glow);
   }
 
-  /* Spaltenköpfe */
+  /* 3D Tabellenkopf */
   .grid-header {
     position: sticky;
     top: 76px;
     z-index: 15;
-    background: var(--bg);
     display: grid;
-    grid-template-columns: 42px 1fr 1fr;
-    gap: 6px;
+    grid-template-columns: 44px 1fr 1fr;
+    gap: 8px;
     padding: 4px 0 8px;
   }
 
   .header-pill {
-    background: var(--surface);
-    border: 1.5px solid var(--border-strong);
+    background: var(--card-surface);
+    border: 1px solid var(--card-border);
     border-radius: var(--radius-md);
-    padding: 7px 2px;
+    padding: 8px 2px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 0.88rem;
-    font-weight: 800;
+    font-weight: 900;
     color: var(--text);
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-raised);
     letter-spacing: -0.01em;
   }
 
   .header-pill.up {
-    color: var(--primary);
-    border-color: rgba(2, 132, 199, 0.4);
-    background: linear-gradient(180deg, var(--surface), var(--primary-bg));
+    color: #0284c7;
+    background: linear-gradient(145deg, #f0f9ff, #e0f2fe);
+    border-color: rgba(2, 132, 199, 0.3);
   }
 
   .header-pill.down {
     color: #8b5cf6;
-    border-color: rgba(139, 92, 246, 0.4);
-    background: linear-gradient(180deg, var(--surface), rgba(139, 92, 246, 0.1));
+    background: linear-gradient(145deg, #faf5ff, #f3e8ff);
+    border-color: rgba(139, 92, 246, 0.3);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .header-pill.up { background: linear-gradient(145deg, #072a40, #0c4a6e); }
+    .header-pill.down { background: linear-gradient(145deg, #271444, #4c1d95); }
   }
 
   /* Etagenliste */
-  .floor-list { display: flex; flex-direction: column; gap: 8px; }
+  .floor-list { display: flex; flex-direction: column; gap: 10px; }
 
+  /* 3D Etagen-Karte */
   .floor-card {
-    background: var(--surface);
-    border: 1.5px solid var(--border-strong);
+    background: var(--card-surface);
+    border: 1px solid var(--card-border);
     border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-raised);
     display: grid;
-    grid-template-columns: 42px 1fr 1fr;
+    grid-template-columns: 44px 1fr 1fr;
     overflow: hidden;
-    scroll-margin-top: 120px;
+    scroll-margin-top: 125px;
+    transition: transform 0.2s, box-shadow 0.2s;
   }
 
   .floor-label {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
-    font-weight: 800;
-    background: var(--bg);
-    border-right: 1.5px solid var(--border);
+    font-size: 1.25rem;
+    font-weight: 900;
+    background: rgba(0, 0, 0, 0.03);
+    border-right: 1px solid rgba(0, 0, 0, 0.06);
     color: var(--text);
     user-select: none;
+    box-shadow: inset -2px 0 4px rgba(0,0,0,0.02);
   }
 
   .cell-card {
     margin: 0;
-    padding: 8px 6px 6px;
+    padding: 10px 8px 8px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     position: relative;
     background: transparent;
-    transition: background 0.2s;
+    transition: background 0.25s, box-shadow 0.25s;
   }
 
   .cell-card.dir-down {
-    border-left: 2px dashed var(--border-strong);
+    border-left: 1.5px dashed var(--border-dark);
   }
 
-  .cell-card.ok { background: var(--ok-bg); }
-  .cell-card.bad { background: var(--bad-bg); }
+  .cell-card.ok {
+    background: var(--ok-card);
+    box-shadow: inset 0 0 12px var(--ok-glow);
+  }
+  .cell-card.bad {
+    background: var(--bad-card);
+    box-shadow: inset 0 0 12px var(--bad-glow);
+  }
 
   .cell-card.na {
-    background: var(--na-bg);
-    color: var(--text-subtle);
+    background: rgba(0,0,0,0.03);
+    color: var(--text-muted);
     font-size: 0.72rem;
-    font-weight: 700;
+    font-weight: 800;
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: var(--shadow-sunken);
   }
 
   .cell-main {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
   }
 
+  /* 3D Vorzeichen Button */
   .btn-sign {
     flex: none;
-    width: 32px;
+    width: 34px;
     height: 42px;
     border-radius: var(--radius-sm);
-    border: 1px solid var(--border-strong);
-    background: var(--surface-elevated);
+    border: 1px solid var(--card-border);
+    background: var(--card-surface);
     color: var(--text);
-    font-size: 0.95rem;
-    font-weight: 800;
+    font-size: 1rem;
+    font-weight: 900;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-raised);
+    transition: transform 0.1s, box-shadow 0.1s;
   }
 
-  .btn-sign:active { transform: scale(0.92); }
+  .btn-sign:active {
+    transform: translateY(2px);
+    box-shadow: var(--shadow-sunken);
+  }
 
   .input-wrapper { flex: 1; min-width: 0; }
 
+  /* Eingelassenes 3D-Zahlenfeld */
   .val-input {
     width: 100%;
     height: 42px;
-    border: 1.5px solid var(--border-strong);
+    border: 1px solid var(--border-dark);
     border-radius: var(--radius-sm);
-    background: var(--surface-elevated);
+    background: var(--card-surface);
     color: var(--text);
     font: inherit;
-    font-size: 1.15rem;
-    font-weight: 800;
+    font-size: 1.25rem;
+    font-weight: 900;
     text-align: center;
     padding: 0;
     outline: none;
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-sunken);
+    transition: border-color 0.2s, box-shadow 0.2s;
   }
 
   .val-input:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+    border-color: #0284c7;
+    box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.25), var(--shadow-sunken);
   }
 
-  /* Pegelanzeige */
+  /* 3D Pegelanzeige (Gleitschiene) */
   .gauge-container {
     flex: none;
-    width: 11px;
+    width: 12px;
     height: 42px;
-    background: var(--border);
+    background: rgba(0, 0, 0, 0.08);
     border-radius: 99px;
     position: relative;
     overflow: hidden;
     cursor: pointer;
+    box-shadow: var(--shadow-sunken);
   }
 
   .gauge-tolerance {
     position: absolute;
     left: 0; right: 0;
-    background: var(--ok);
-    opacity: 0.45;
+    background: #10b981;
+    opacity: 0.55;
+    box-shadow: 0 0 4px #10b981;
   }
 
   .gauge-center-line {
@@ -475,30 +552,40 @@
     left: 0; right: 0;
     top: calc(50% - 0.5px);
     height: 1px;
-    background: var(--text-muted);
+    background: var(--text);
+    opacity: 0.6;
   }
 
   .gauge-pointer {
     position: absolute;
     left: 1px;
-    width: 9px;
+    width: 10px;
     height: 6px;
     border-radius: 3px;
     background: var(--text);
     top: calc(50% - 3px);
     display: none;
-    transition: top 0.18s cubic-bezier(0.1, 0.9, 0.2, 1);
+    transition: top 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.5);
   }
 
-  .cell-card.ok .gauge-pointer { display: block; background: var(--ok); }
-  .cell-card.bad .gauge-pointer { display: block; background: var(--bad); }
+  .cell-card.ok .gauge-pointer {
+    display: block;
+    background: #10b981;
+    box-shadow: 0 0 6px #10b981;
+  }
+  .cell-card.bad .gauge-pointer {
+    display: block;
+    background: #ef4444;
+    box-shadow: 0 0 6px #ef4444;
+  }
 
   .status-text {
-    font-size: 0.7rem;
-    font-weight: 700;
-    margin-top: 3px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    margin-top: 4px;
     text-align: center;
-    color: var(--text-subtle);
+    color: var(--text-muted);
     min-height: 14px;
     white-space: nowrap;
     overflow: hidden;
@@ -508,14 +595,13 @@
   .cell-card.ok .status-text { color: var(--ok-text); }
   .cell-card.bad .status-text { color: var(--bad-text); }
 
-  /* ========================================================
-     MODAL POP-UP / PRÜFPROTOKOLL STYLES
-     ======================================================== */
+  /* 3D Pop-up Modal */
   .modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(15, 23, 42, 0.6);
-    backdrop-filter: blur(4px);
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -523,65 +609,58 @@
     z-index: 100;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.2s ease-in-out;
+    transition: opacity 0.25s ease;
   }
 
-  .modal-overlay.active {
-    opacity: 1;
-    pointer-events: auto;
-  }
+  .modal-overlay.active { opacity: 1; pointer-events: auto; }
 
   .modal-card {
-    background: var(--surface);
-    border: 1.5px solid var(--border-strong);
+    background: var(--card-surface);
+    border: 1px solid var(--card-border);
     border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--shadow-float);
     width: 100%;
     max-width: 440px;
     max-height: 90vh;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    transform: scale(0.95);
-    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: translateY(20px) scale(0.96);
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
   .modal-overlay.active .modal-card {
-    transform: scale(1);
+    transform: translateY(0) scale(1);
   }
 
   .modal-header {
-    padding: 14px 16px 10px;
-    border-bottom: 1.5px solid var(--border);
+    padding: 14px 16px;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: var(--bg);
+    background: rgba(0,0,0,0.02);
   }
 
   .modal-header h2 {
     font-size: 1.15rem;
     font-weight: 900;
     margin: 0;
-    display: flex;
-    align-items: center;
-    gap: 8px;
   }
 
   .modal-close {
     background: transparent;
     border: none;
-    font-size: 1.3rem;
+    font-size: 1.4rem;
     color: var(--text-muted);
     cursor: pointer;
-    padding: 4px;
-    line-height: 1;
+    padding: 2px 6px;
+    border-radius: 6px;
   }
 
   .modal-body {
     padding: 14px 16px;
     overflow-y: auto;
-    font-size: 0.85rem;
   }
 
   .report-meta {
@@ -589,36 +668,32 @@
     grid-template-columns: 1fr 1fr;
     gap: 8px;
     margin-bottom: 12px;
-    background: var(--bg);
-    padding: 10px 12px;
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--border);
+    background: rgba(0,0,0,0.02);
+    padding: 12px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--card-border);
+    box-shadow: var(--shadow-sunken);
     font-size: 0.78rem;
     color: var(--text-muted);
   }
 
-  .report-meta strong {
-    color: var(--text);
-  }
-
   .report-status-badge {
     grid-column: span 2;
-    padding: 6px 10px;
+    padding: 8px;
     border-radius: var(--radius-sm);
-    font-weight: 800;
+    font-weight: 900;
     text-align: center;
-    margin-top: 4px;
-    font-size: 0.82rem;
+    font-size: 0.84rem;
+    box-shadow: var(--shadow-raised);
   }
 
   .report-status-badge.ok {
-    background: var(--ok-bg);
+    background: var(--ok-card);
     color: var(--ok-text);
     border: 1px solid var(--ok-border);
   }
-
   .report-status-badge.bad {
-    background: var(--bad-bg);
+    background: var(--bad-card);
     color: var(--bad-text);
     border: 1px solid var(--bad-border);
   }
@@ -631,57 +706,38 @@
   }
 
   .report-table th {
-    background: var(--bg);
-    padding: 8px 6px;
+    background: rgba(0,0,0,0.03);
+    padding: 8px;
     font-size: 0.75rem;
-    font-weight: 800;
+    font-weight: 900;
     color: var(--text-muted);
-    border-bottom: 2px solid var(--border-strong);
-    text-transform: uppercase;
+    border-bottom: 2px solid var(--border-dark);
   }
 
   .report-table td {
-    padding: 8px 6px;
-    border-bottom: 1px solid var(--border);
-    font-size: 0.88rem;
-    font-weight: 700;
-  }
-
-  .report-table td.etage-cell {
+    padding: 8px;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
     font-weight: 800;
-    background: var(--bg);
-    border-right: 1px solid var(--border);
+    font-size: 0.88rem;
   }
 
   .report-val {
     display: inline-block;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-size: 0.82rem;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.08);
   }
-
-  .report-val.ok { color: var(--ok-text); background: var(--ok-bg); }
-  .report-val.bad { color: var(--bad-text); background: var(--bad-bg); font-weight: 800; }
-  .report-val.na { color: var(--text-subtle); }
+  .report-val.ok { color: var(--ok-text); background: var(--ok-card); border: 1px solid var(--ok-border); }
+  .report-val.bad { color: var(--bad-text); background: var(--bad-card); border: 1px solid var(--bad-border); font-weight: 900; }
+  .report-val.na { color: var(--text-muted); box-shadow: none; }
 
   .modal-actions {
     padding: 12px 16px;
-    border-top: 1.5px solid var(--border);
-    background: var(--bg);
+    border-top: 1px solid rgba(0,0,0,0.06);
+    background: rgba(0,0,0,0.02);
     display: flex;
     gap: 8px;
-  }
-
-  @media print {
-    body * { visibility: hidden; }
-    .modal-overlay, .modal-card, .modal-body, .modal-body * { visibility: visible; }
-    .modal-overlay {
-      position: absolute; left: 0; top: 0; background: #fff; padding: 0;
-    }
-    .modal-card {
-      border: none; box-shadow: none; max-width: 100%;
-    }
-    .modal-header .modal-close, .modal-actions { display: none; }
   }
 </style>
 </head>
@@ -689,7 +745,7 @@
 
 <div class="layout-wrap">
   <div class="app-container">
-    <!-- Sticky Top Bar -->
+    <!-- Sticky 3D-Header -->
     <header class="top-bar">
       <div class="nav-header">
         <div class="title-group">
@@ -727,8 +783,11 @@
           </label>
         </div>
         <div class="action-row">
-          <button type="button" class="btn primary" id="openReportBtn">📊 Protokoll öffnen</button>
+          <button type="button" class="btn primary" id="openReportBtn">📊 Protokoll</button>
           <button type="button" class="btn danger" id="resetBtn">Werte leeren</button>
+        </div>
+        <div style="text-align: center; margin-top: 8px; font-size: 0.7rem; color: var(--text-muted); font-weight: 700;">
+          <span id="pwaStatus">● Offline-Betrieb aktiv</span>
         </div>
       </div>
     </details>
@@ -744,34 +803,53 @@
     <main class="floor-list" id="listContainer"></main>
   </div>
 
-  <!-- Grafischer Mini-Aufzug / Schacht (rechts) -->
+  <!-- 3D-Schachtanzeige -->
   <aside class="shaft-panel" id="shaftPanel" aria-label="Schacht-Übersicht">
     <div class="shaft-title">Et.</div>
     <div id="shaftNodes" style="display:flex; flex-direction:column; gap:4px; width:100%; align-items:center;"></div>
   </aside>
 </div>
 
-<!-- ========================================================
-     MODAL POP-UP / PROTOKOLL DIALOG
-     ======================================================== -->
+<!-- Modal Pop-up Protokoll -->
 <div class="modal-overlay" id="reportModal" onclick="closeModalOnOutsideClick(event)">
   <div class="modal-card">
     <div class="modal-header">
       <h2>📋 Messprotokoll</h2>
       <button type="button" class="modal-close" onclick="closeReportModal()">&times;</button>
     </div>
-    <div class="modal-body" id="reportBody">
-      <!-- Wird dynamisch mit JavaScript gefüllt -->
-    </div>
+    <div class="modal-body" id="reportBody"></div>
     <div class="modal-actions">
-      <button type="button" class="btn" onclick="copyReportText()">📋 Text kopieren</button>
+      <button type="button" class="btn" onclick="copyReportText()">📋 Kopieren</button>
       <button type="button" class="btn primary" onclick="window.print()">🖨️ PDF / Drucken</button>
     </div>
   </div>
 </div>
 
 <script>
-  const STORAGE_KEY = 'buendigkeit-v8';
+  /* ========================================================
+     PWA OFFLINE-REGISTRIERUNG (INLINE CACHE)
+     ======================================================== */
+  if ('serviceWorker' in navigator) {
+    const swCode = `
+      const CACHE_NAME = 'buendigkeit-pwa-v1';
+      self.addEventListener('install', e => {
+        e.waitUntil(
+          caches.open(CACHE_NAME).then(c => c.addAll([self.location.href]))
+        );
+        self.skipWaiting();
+      });
+      self.addEventListener('fetch', e => {
+        e.respondWith(
+          caches.match(e.request).then(res => res || fetch(e.request).catch(() => caches.match(self.location.href)))
+        );
+      });
+    `;
+    const swBlob = new Blob([swCode], { type: 'application/javascript' });
+    const swUrl = URL.createObjectURL(swBlob);
+    navigator.serviceWorker.register(swUrl).catch(() => {});
+  }
+
+  const STORAGE_KEY = 'buendigkeit-v9';
   let state = {
     floorCount: 5,
     startFloor: 0,
@@ -936,7 +1014,6 @@
     const pct = total ? (filled / total * 100) : 0;
     $('progressBar').style.width = pct + '%';
 
-    // Mini-Schacht Visualisierung
     for (let f = state.startFloor + state.floorCount - 1; f >= state.startFloor; f--) {
       const node = $(`shaft-node-${f}`);
       if (!node) continue;
@@ -967,7 +1044,6 @@
 
   const container = $('listContainer');
 
-  // Vorzeichen Toggle
   container.addEventListener('click', e => {
     const signBtn = e.target.closest('.btn-sign');
     if (signBtn) {
@@ -979,7 +1055,6 @@
     }
   });
 
-  // Doppelklick für Null-Bündig
   container.addEventListener('dblclick', e => {
     const card = e.target.closest('.cell-card');
     if (!card || card.classList.contains('na')) return;
@@ -1076,9 +1151,7 @@
     renderList();
   });
 
-  /* ========================================================
-     MODAL POP-UP LOGIK
-     ======================================================== */
+  /* Modal Pop-up */
   const modal = $('reportModal');
 
   $('openReportBtn').addEventListener('click', () => {
@@ -1103,7 +1176,6 @@
     let badCount = 0;
     let measuredCount = 0;
     let totalCells = 0;
-
     let tableRows = '';
 
     for (let f = state.startFloor + state.floorCount - 1; f >= state.startFloor; f--) {
@@ -1145,17 +1217,16 @@
 
       tableRows += `
         <tr>
-          <td class="etage-cell">${f}</td>
+          <td><strong>${f}</strong></td>
           <td>${upHtml}</td>
           <td>${dnHtml}</td>
         </tr>
       `;
     }
 
-    const isAllOk = badCount === 0 && measuredCount > 0;
     const statusText = badCount > 0 
       ? `⚠️ ${badCount} Abweichung(en) außerhalb der Toleranz`
-      : (measuredCount === totalCells ? `✓ Alle Werte innerhalb der Toleranz (Bestanden)` : `ℹ️ ${measuredCount} von ${totalCells} Haltestellen gemessen`);
+      : (measuredCount === totalCells ? `✓ Alle Werte innerhalb der Toleranz (Bestanden)` : `ℹ️ ${measuredCount} von ${totalCells} Haltestellen erfasst`);
 
     body.innerHTML = `
       <div class="report-meta">
