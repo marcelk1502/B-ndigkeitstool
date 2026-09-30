@@ -55,65 +55,311 @@
 
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   
-  body {
+  html, body {
     margin: 0;
-    padding: env(safe-area-inset-top, 10px) 8px calc(env(safe-area-inset-bottom, 16px) + 76px);
+    padding: 0;
+    height: 100%;
+    overflow: hidden; /* Hauptfenster scrollt nicht, nur die innere Liste */
     background: var(--bg-base);
-    min-height: 100vh;
     color: var(--text);
     font-family: var(--font-ui);
     font-variant-numeric: tabular-nums;
     -webkit-font-smoothing: antialiased;
   }
 
-  .layout-wrap {
-    max-width: 600px;
+  /* App Shell */
+  .app-shell {
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+    max-width: 620px;
     margin: 0 auto;
+    padding-top: env(safe-area-inset-top, 8px);
+    padding-bottom: calc(env(safe-area-inset-bottom, 10px) + 68px);
     position: relative;
   }
 
-  /* Platz rechts für den fixierten Schacht reservieren */
-  .app-container {
-    width: 100%;
-    padding-right: 44px;
+  /* Fester Header */
+  header.top-bar {
+    flex: none;
+    padding: 6px 10px 4px;
+    background: rgba(10, 14, 23, 0.95);
+    z-index: 20;
   }
 
+  .nav-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .title-group h1 {
+    font-size: 1.55rem;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    margin: 0;
+    text-transform: uppercase;
+    color: #fff;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+  }
+
+  /* Einstellungen Dropdown */
+  details.settings-card {
+    background: var(--card-surface);
+    border: 1.5px solid var(--card-border);
+    border-radius: var(--radius-md);
+    margin: 4px 10px 6px;
+    box-shadow: var(--shadow-raised);
+    overflow: hidden;
+    flex: none;
+  }
+
+  details.settings-card summary {
+    list-style: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-weight: 800;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  details.settings-card summary::-webkit-details-marker { display: none; }
+  details.settings-card summary .icon-arrow {
+    transition: transform 0.2s;
+    fill: currentColor;
+  }
+  details.settings-card[open] summary .icon-arrow { transform: rotate(180deg); }
+
+  .settings-content {
+    padding: 6px 12px 12px;
+    border-top: 1px solid var(--card-border);
+    background: rgba(0,0,0,0.3);
+  }
+
+  .settings-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr 1.2fr;
+    gap: 8px;
+  }
+
+  .setting-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.68rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+
+  .setting-item input {
+    height: 36px;
+    width: 100%;
+    border: 1.5px solid var(--card-border);
+    border-radius: var(--radius-sm);
+    background: #090d16;
+    color: #fff;
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 900;
+    text-align: center;
+    box-shadow: var(--shadow-sunken);
+  }
+
+  .setting-toggle-row {
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #090d16;
+    border: 1.5px solid var(--card-border);
+    border-radius: var(--radius-sm);
+    padding: 6px 10px;
+    box-shadow: var(--shadow-sunken);
+  }
+
+  .toggle-label {
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 22px;
+  }
+
+  .switch input { opacity: 0; width: 0; height: 0; }
+
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background-color: #1e293b;
+    border: 1px solid var(--card-border);
+    border-radius: 99px;
+    transition: .2s;
+  }
+
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    left: 3px;
+    bottom: 3px;
+    background-color: var(--text-muted);
+    border-radius: 50%;
+    transition: .2s;
+  }
+
+  input:checked + .slider {
+    background-color: var(--accent);
+    border-color: #b45309;
+  }
+
+  input:checked + .slider:before {
+    transform: translateX(18px);
+    background-color: #000;
+  }
+
+  .presets-wrap {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .presets-title {
+    font-size: 0.65rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+
+  .presets-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
+  }
+
+  .btn-preset {
+    height: 28px;
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-sm);
+    background: #1e293b;
+    color: var(--text-muted);
+    font-family: var(--font-display);
+    font-size: 0.7rem;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: var(--shadow-raised);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .btn-preset:active { transform: translateY(1px); }
+  .btn-preset.active {
+    background: rgba(245, 158, 11, 0.15);
+    border-color: var(--accent);
+    color: var(--accent);
+    box-shadow: 0 0 6px var(--accent-glow);
+  }
+
+  /* Spaltenköpfe */
+  .grid-header {
+    flex: none;
+    display: grid;
+    grid-template-columns: 46px 1fr 1fr 40px;
+    gap: 6px;
+    padding: 2px 10px 6px;
+  }
+
+  .header-pill {
+    background: #111827;
+    border: 1.5px solid var(--card-border);
+    border-radius: var(--radius-sm);
+    padding: 6px 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 0.82rem;
+    font-weight: 900;
+    box-shadow: var(--shadow-raised);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  .header-pill.up { color: var(--up-color); border-color: var(--up-border); background: #0c1a2e; }
+  .header-pill.down { color: var(--down-color); border-color: var(--down-border); background: #23190b; }
+  .header-pill.shaft-col {
+    color: var(--accent);
+    border-color: var(--card-border);
+    font-size: 0.7rem;
+  }
+
+  @keyframes pulseUp {
+    0%, 100% { transform: translateY(0); opacity: 0.8; }
+    50% { transform: translateY(-2px); opacity: 1; filter: drop-shadow(0 0 4px var(--up-color)); }
+  }
+  @keyframes pulseDown {
+    0%, 100% { transform: translateY(0); opacity: 0.8; }
+    50% { transform: translateY(2px); opacity: 1; filter: drop-shadow(0 0 4px var(--down-color)); }
+  }
+
+  body[data-active-dir="up"] .header-pill.up .led-arrow { animation: pulseUp 0.8s infinite ease-in-out; }
+  body[data-active-dir="down"] .header-pill.down .led-arrow { animation: pulseDown 0.8s infinite ease-in-out; }
+
   /* ========================================================
-     ECHTER FEST VERANKERTER SCHACHT (POSITION: FIXED)
-     Bleibt beim Scrollen & Tastatur immer voll sichtbar!
+     HAUPTBEREICH: LISTE SCROLLT LINKS, SCHACHT BLEIBT RECHTS STEHEN
      ======================================================== */
-  .shaft-panel {
-    position: fixed;
-    right: max(6px, calc((100vw - 600px) / 2 + 6px));
-    top: calc(env(safe-area-inset-top, 10px) + 64px);
-    width: 36px;
-    max-height: calc(100dvh - env(safe-area-inset-top, 10px) - env(safe-area-inset-bottom, 16px) - 146px);
+  .workspace {
+    flex: 1;
+    min-height: 0; /* Erlaubt vertikales Scrollen im Flex-Item */
+    display: grid;
+    grid-template-columns: 1fr 40px;
+    gap: 6px;
+    padding: 0 10px;
+  }
+
+  /* Nur diese Liste scrollt nach oben/unten */
+  .floor-scroll-area {
+    height: 100%;
     overflow-y: auto;
     overflow-x: hidden;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-bottom: 20px;
+  }
+
+  /* Schachtsäule rechts: Steht fest, scrollt nie mit der Liste mit */
+  .shaft-panel {
+    height: 100%;
     background: #070b14;
     border: 1.5px solid var(--card-border);
     border-radius: var(--radius-md);
-    padding: 6px 3px 6px;
+    padding: 6px 2px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.8);
-    z-index: 25;
+    box-shadow: var(--shadow-raised);
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none;
   }
   .shaft-panel::-webkit-scrollbar { display: none; }
-
-  .shaft-title {
-    font-size: 0.55rem;
-    font-weight: 900;
-    color: var(--accent);
-    text-align: center;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    flex: none;
-  }
 
   .shaft-track {
     position: relative;
@@ -136,13 +382,13 @@
   }
 
   .shaft-node {
-    width: 26px;
-    height: 18px;
+    width: 28px;
+    height: 20px;
     border-radius: 4px;
     background: #131d2e;
     border: 1px solid #23344d;
     font-family: var(--font-display);
-    font-size: 0.6rem;
+    font-size: 0.62rem;
     font-weight: 900;
     display: flex;
     align-items: center;
@@ -164,275 +410,28 @@
 
   .elevator-car {
     position: absolute;
-    left: 2px;
-    right: 2px;
-    height: 22px;
+    left: 1px;
+    right: 1px;
+    height: 24px;
     border-radius: 4px;
     border: 1.5px solid var(--accent);
-    background: rgba(245, 158, 11, 0.15);
-    box-shadow: 0 0 10px var(--accent-glow), inset 0 0 6px var(--accent-glow);
+    background: rgba(245, 158, 11, 0.2);
+    box-shadow: 0 0 8px var(--accent-glow), inset 0 0 4px var(--accent-glow);
     pointer-events: none;
     z-index: 2;
-    transition: top 0.4s cubic-bezier(0.34, 1.3, 0.64, 1);
+    transition: top 0.35s cubic-bezier(0.34, 1.3, 0.64, 1);
     display: flex;
     align-items: center;
     justify-content: flex-end;
   }
   .elevator-car::after {
     content: "◀";
-    font-size: 8px;
+    font-size: 7px;
     color: var(--accent);
-    margin-right: -7px;
+    margin-right: -6px;
   }
 
-  /* Header */
-  header.top-bar {
-    position: sticky;
-    top: 0;
-    z-index: 20;
-    background: rgba(10, 14, 23, 0.9);
-    padding-top: 8px;
-    padding-bottom: 8px;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-  }
-
-  .nav-header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .title-group h1 {
-    font-size: 1.65rem;
-    font-weight: 900;
-    letter-spacing: -0.02em;
-    margin: 0;
-    text-transform: uppercase;
-    color: #fff;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.6);
-  }
-
-  /* Parameter Dropdown */
-  details.settings-card {
-    background: var(--card-surface);
-    border: 1.5px solid var(--card-border);
-    border-radius: var(--radius-lg);
-    margin: 8px 0 12px;
-    box-shadow: var(--shadow-raised);
-    overflow: hidden;
-  }
-
-  details.settings-card summary {
-    list-style: none;
-    padding: 10px 14px;
-    cursor: pointer;
-    font-weight: 800;
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  details.settings-card summary::-webkit-details-marker { display: none; }
-  details.settings-card summary .icon-arrow {
-    transition: transform 0.2s;
-    fill: currentColor;
-  }
-  details.settings-card[open] summary .icon-arrow { transform: rotate(180deg); }
-
-  .settings-content {
-    padding: 6px 14px 14px;
-    border-top: 1px solid var(--card-border);
-    background: rgba(0,0,0,0.3);
-  }
-
-  .settings-grid {
-    display: grid;
-    grid-template-columns: 1.2fr 0.8fr 1.2fr;
-    gap: 8px;
-    margin-top: 6px;
-  }
-
-  .setting-item {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    font-size: 0.7rem;
-    font-weight: 800;
-    color: var(--text-muted);
-    text-transform: uppercase;
-  }
-
-  .setting-item input {
-    height: 38px;
-    width: 100%;
-    border: 1.5px solid var(--card-border);
-    border-radius: var(--radius-sm);
-    background: #090d16;
-    color: #fff;
-    font-family: var(--font-display);
-    font-size: 1.05rem;
-    font-weight: 900;
-    text-align: center;
-    box-shadow: var(--shadow-sunken);
-  }
-
-  .setting-toggle-row {
-    margin-top: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: #090d16;
-    border: 1.5px solid var(--card-border);
-    border-radius: var(--radius-sm);
-    padding: 8px 12px;
-    box-shadow: var(--shadow-sunken);
-  }
-
-  .toggle-label {
-    font-size: 0.75rem;
-    font-weight: 800;
-    color: var(--text-muted);
-    text-transform: uppercase;
-  }
-
-  .switch {
-    position: relative;
-    display: inline-block;
-    width: 44px;
-    height: 24px;
-  }
-
-  .switch input { opacity: 0; width: 0; height: 0; }
-
-  .slider {
-    position: absolute;
-    cursor: pointer;
-    inset: 0;
-    background-color: #1e293b;
-    border: 1px solid var(--card-border);
-    border-radius: 99px;
-    transition: .2s;
-  }
-
-  .slider:before {
-    position: absolute;
-    content: "";
-    height: 16px;
-    width: 16px;
-    left: 3px;
-    bottom: 3px;
-    background-color: var(--text-muted);
-    border-radius: 50%;
-    transition: .2s;
-  }
-
-  input:checked + .slider {
-    background-color: var(--accent);
-    border-color: #b45309;
-  }
-
-  input:checked + .slider:before {
-    transform: translateX(20px);
-    background-color: #000;
-  }
-
-  .presets-wrap {
-    margin-top: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
-
-  .presets-title {
-    font-size: 0.68rem;
-    font-weight: 800;
-    color: var(--text-muted);
-    text-transform: uppercase;
-  }
-
-  .presets-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 5px;
-  }
-
-  .btn-preset {
-    height: 30px;
-    border: 1px solid var(--card-border);
-    border-radius: var(--radius-sm);
-    background: #1e293b;
-    color: var(--text-muted);
-    font-family: var(--font-display);
-    font-size: 0.72rem;
-    font-weight: 800;
-    cursor: pointer;
-    box-shadow: var(--shadow-raised);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.15s;
-  }
-
-  .btn-preset:active { transform: translateY(1px); }
-  .btn-preset.active {
-    background: rgba(245, 158, 11, 0.15);
-    border-color: var(--accent);
-    color: var(--accent);
-    box-shadow: 0 0 6px var(--accent-glow);
-  }
-
-  /* Spaltenköpfe */
-  .grid-header {
-    position: sticky;
-    top: 56px;
-    z-index: 15;
-    display: grid;
-    grid-template-columns: 46px 1fr 1fr;
-    gap: 6px;
-    padding: 4px 0 8px;
-  }
-
-  .header-pill {
-    background: #111827;
-    border: 1.5px solid var(--card-border);
-    border-radius: var(--radius-sm);
-    padding: 7px 2px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    font-size: 0.85rem;
-    font-weight: 900;
-    box-shadow: var(--shadow-raised);
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-    transition: all 0.2s ease;
-  }
-
-  .header-pill.up { color: var(--up-color); border-color: var(--up-border); background: #0c1a2e; }
-  .header-pill.down { color: var(--down-color); border-color: var(--down-border); background: #23190b; }
-
-  @keyframes pulseUp {
-    0%, 100% { transform: translateY(0); opacity: 0.8; }
-    50% { transform: translateY(-2px); opacity: 1; filter: drop-shadow(0 0 4px var(--up-color)); }
-  }
-  @keyframes pulseDown {
-    0%, 100% { transform: translateY(0); opacity: 0.8; }
-    50% { transform: translateY(2px); opacity: 1; filter: drop-shadow(0 0 4px var(--down-color)); }
-  }
-
-  body[data-active-dir="up"] .header-pill.up .led-arrow { animation: pulseUp 0.8s infinite ease-in-out; }
-  body[data-active-dir="down"] .header-pill.down .led-arrow { animation: pulseDown 0.8s infinite ease-in-out; }
-
-  /* Etagenliste */
-  .floor-list { display: flex; flex-direction: column; gap: 8px; }
-
+  /* Etagenkarten */
   .floor-card {
     background: var(--card-surface);
     border: 1.5px solid var(--card-border);
@@ -441,15 +440,13 @@
     display: grid;
     grid-template-columns: 46px 1fr 1fr;
     overflow: hidden;
-    scroll-margin-top: 130px;
-    transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s cubic-bezier(0.34, 1.4, 0.64, 1);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    flex: none;
   }
 
   .floor-card.active-floor {
     border-color: var(--accent);
-    box-shadow: 0 0 16px rgba(245, 158, 11, 0.4), var(--shadow-raised);
-    transform: scale(1.015);
-    z-index: 5;
+    box-shadow: 0 0 14px rgba(245, 158, 11, 0.4), var(--shadow-raised);
   }
 
   .floor-label {
@@ -471,13 +468,13 @@
 
   .cell-card {
     margin: 0;
-    padding: 10px 8px;
+    padding: 8px 6px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     position: relative;
     background: transparent;
-    transition: background 0.25s;
+    transition: background 0.2s;
   }
 
   .cell-card.dir-up { background: rgba(56, 189, 248, 0.02); }
@@ -506,7 +503,7 @@
   .cell-card.na {
     background: rgba(15, 23, 42, 0.6) !important;
     color: #475569;
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     font-weight: 800;
     display: flex;
     align-items: center;
@@ -514,7 +511,7 @@
     text-transform: uppercase;
   }
 
-  .cell-main { display: flex; align-items: center; gap: 6px; }
+  .cell-main { display: flex; align-items: center; gap: 5px; }
   .input-wrapper {
     flex: 1;
     min-width: 0;
@@ -525,42 +522,40 @@
 
   .sign-quick-toggle {
     position: absolute;
-    left: 4px;
+    left: 3px;
     z-index: 2;
     background: #1e293b;
     border: 1px solid var(--card-border);
     color: var(--text-muted);
     border-radius: 4px;
-    width: 22px;
-    height: 28px;
-    font-size: 0.8rem;
+    width: 20px;
+    height: 26px;
+    font-size: 0.75rem;
     font-weight: 900;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     user-select: none;
-    transition: transform 0.1s;
   }
   .sign-quick-toggle:active {
     background: var(--accent);
     color: #000;
-    transform: scale(0.92);
   }
 
   .val-input {
     width: 100%;
-    height: 44px;
+    height: 40px;
     border: 1.5px solid var(--card-border);
     border-radius: var(--radius-sm);
     background: #050811;
     color: #fff;
     font-family: var(--font-display);
-    font-size: 1.35rem;
+    font-size: 1.25rem;
     font-weight: 900;
     text-align: center;
-    padding-left: 22px;
-    padding-right: 4px;
+    padding-left: 20px;
+    padding-right: 2px;
     outline: none;
     box-shadow: var(--shadow-sunken);
     letter-spacing: 0.02em;
@@ -579,8 +574,8 @@
   /* Pegelanzeige */
   .gauge-container {
     flex: none;
-    width: 14px;
-    height: 44px;
+    width: 12px;
+    height: 40px;
     background: #050811;
     border: 1px solid #1e293b;
     border-radius: 4px;
@@ -646,20 +641,19 @@
 
   /* Statustext */
   .status-text {
-    font-size: 0.92rem;
+    font-size: 0.85rem;
     font-weight: 900;
-    margin-top: 6px;
+    margin-top: 4px;
     text-align: center;
     color: var(--text-muted);
-    min-height: 24px;
+    min-height: 22px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 4px;
     letter-spacing: -0.01em;
-    padding: 2px 4px;
+    padding: 1px 4px;
     background: transparent;
-    transition: all 0.2s ease;
   }
 
   .cell-card.ok .status-text {
@@ -682,11 +676,11 @@
     left: 0;
     right: 0;
     z-index: 30;
-    background: rgba(10, 14, 23, 0.95);
+    background: rgba(10, 14, 23, 0.96);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
     border-top: 1.5px solid var(--card-border);
-    padding: 10px 12px calc(env(safe-area-inset-bottom, 10px) + 8px);
+    padding: 8px 12px calc(env(safe-area-inset-bottom, 8px) + 6px);
     box-shadow: 0 -8px 24px rgba(0,0,0,0.6);
   }
 
@@ -709,7 +703,7 @@
   }
 
   .bottom-bar-inner {
-    max-width: 600px;
+    max-width: 620px;
     margin: 0 auto;
     display: flex;
     align-items: center;
@@ -726,7 +720,7 @@
   }
 
   .bottom-info-title {
-    font-size: 0.62rem;
+    font-size: 0.6rem;
     font-weight: 900;
     color: var(--text-muted);
     text-transform: uppercase;
@@ -734,7 +728,7 @@
 
   .bottom-info-val {
     font-family: var(--font-display);
-    font-size: 0.88rem;
+    font-size: 0.85rem;
     font-weight: 900;
     color: #fff;
     white-space: nowrap;
@@ -750,20 +744,19 @@
   }
 
   .btn-thumb-reset {
-    height: 44px;
+    height: 40px;
     padding: 0 12px;
     border-radius: var(--radius-md);
     background: #1e293b;
     border: 1.5px solid var(--bad-border);
     color: var(--bad-text);
     font-weight: 900;
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 5px;
     text-transform: uppercase;
-    transition: all 0.12s ease;
   }
 
   .btn-thumb-reset:active { transform: translateY(2px); }
@@ -776,14 +769,14 @@
   }
 
   .btn-thumb-protocol {
-    height: 44px;
+    height: 40px;
     padding: 0 16px;
     border-radius: var(--radius-md);
     background: linear-gradient(135deg, #f59e0b, #d97706);
     border: 1.5px solid #b45309;
     color: #000;
     font-weight: 900;
-    font-size: 0.88rem;
+    font-size: 0.85rem;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -791,7 +784,6 @@
     box-shadow: 0 3px 12px var(--accent-glow);
     text-transform: uppercase;
     letter-spacing: 0.02em;
-    transition: transform 0.1s;
   }
 
   .btn-thumb-protocol:active { transform: translateY(2px); }
@@ -822,7 +814,7 @@
     box-shadow: 0 20px 35px rgba(0,0,0,0.85);
     width: 100%;
     max-width: 460px;
-    max-height: 92vh;
+    max-height: 90vh;
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -994,85 +986,86 @@
 </head>
 <body data-active-dir="">
 
-<div class="layout-wrap">
-  <div class="app-container">
-    <!-- Header -->
-    <header class="top-bar">
-      <div class="nav-header">
-        <div class="title-group">
-          <h1>Bündigkeiten</h1>
-        </div>
-      </div>
-    </header>
-
-    <!-- Parameter Dropdown -->
-    <details class="settings-card" id="settingsDetails">
-      <summary>
-        <span>⚙️ Parameter & Richtlinien</span>
-        <svg class="icon-arrow" width="16" height="16" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
-      </summary>
-      <div class="settings-content">
-        <div class="settings-grid">
-          <label class="setting-item">
-            Etagen
-            <input id="floorCount" type="number" min="1" max="50" inputmode="numeric" value="5">
-          </label>
-          <label class="setting-item">
-            Start
-            <input id="startFloor" type="number" inputmode="numeric" value="0">
-          </label>
-          <label class="setting-item">
-            Toleranz ± mm
-            <input id="tolerance" type="number" min="0" step="1" inputmode="numeric" value="10">
-          </label>
-        </div>
-
-        <div class="setting-toggle-row">
-          <span class="toggle-label">UG / EG Beschriftung (0=EG, -1=UG)</span>
-          <label class="switch">
-            <input type="checkbox" id="useEgUg">
-            <span class="slider"></span>
-          </label>
-        </div>
-
-        <div class="presets-wrap">
-          <div class="presets-title">Richtwerte / Norm-Toleranz</div>
-          <div class="presets-grid">
-            <button type="button" class="btn-preset" data-tol="3">± 3 mm</button>
-            <button type="button" class="btn-preset" data-tol="5">± 5 mm</button>
-            <button type="button" class="btn-preset active" data-tol="10">± 10 mm</button>
-            <button type="button" class="btn-preset" data-tol="20">± 20 mm</button>
-          </div>
-        </div>
-      </div>
-    </details>
-
-    <!-- Spaltenköpfe mit LED-Pfeilen -->
-    <div class="grid-header">
-      <div class="header-pill">Et.</div>
-      <div class="header-pill up">
-        <span class="led-arrow">▲</span>
-        <span>Aufwärts</span>
-      </div>
-      <div class="header-pill down">
-        <span class="led-arrow">▼</span>
-        <span>Abwärts</span>
+<div class="app-shell">
+  <!-- Fester Header -->
+  <header class="top-bar">
+    <div class="nav-header">
+      <div class="title-group">
+        <h1>Bündigkeiten</h1>
       </div>
     </div>
+  </header>
 
-    <!-- Etagenliste -->
-    <main class="floor-list" id="listContainer"></main>
+  <!-- Parameter Dropdown -->
+  <details class="settings-card" id="settingsDetails">
+    <summary>
+      <span>⚙️ Parameter & Richtlinien</span>
+      <svg class="icon-arrow" width="16" height="16" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+    </summary>
+    <div class="settings-content">
+      <div class="settings-grid">
+        <label class="setting-item">
+          Etagen
+          <input id="floorCount" type="number" min="1" max="50" inputmode="numeric" value="5">
+        </label>
+        <label class="setting-item">
+          Start
+          <input id="startFloor" type="number" inputmode="numeric" value="0">
+        </label>
+        <label class="setting-item">
+          Toleranz ± mm
+          <input id="tolerance" type="number" min="0" step="1" inputmode="numeric" value="10">
+        </label>
+      </div>
+
+      <div class="setting-toggle-row">
+        <span class="toggle-label">UG / EG Beschriftung (0=EG, -1=UG)</span>
+        <label class="switch">
+          <input type="checkbox" id="useEgUg">
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="presets-wrap">
+        <div class="presets-title">Richtwerte / Norm-Toleranz</div>
+        <div class="presets-grid">
+          <button type="button" class="btn-preset" data-tol="3">± 3 mm</button>
+          <button type="button" class="btn-preset" data-tol="5">± 5 mm</button>
+          <button type="button" class="btn-preset active" data-tol="10">± 10 mm</button>
+          <button type="button" class="btn-preset" data-tol="20">± 20 mm</button>
+        </div>
+      </div>
+    </div>
+  </details>
+
+  <!-- Spaltenköpfe -->
+  <div class="grid-header">
+    <div class="header-pill">Et.</div>
+    <div class="header-pill up">
+      <span class="led-arrow">▲</span>
+      <span>Aufwärts</span>
+    </div>
+    <div class="header-pill down">
+      <span class="led-arrow">▼</span>
+      <span>Abwärts</span>
+    </div>
+    <div class="header-pill shaft-col">Et.</div>
   </div>
 
-  <!-- Fest verankerte Schachtsäule mit gleitendem Fahrkorb -->
-  <aside class="shaft-panel" id="shaftPanel" aria-label="Schacht-Übersicht">
-    <div class="shaft-title">Et.</div>
-    <div class="shaft-track" id="shaftTrack">
-      <div class="shaft-cable"></div>
-      <div class="elevator-car" id="elevatorCar" style="display:none;"></div>
-      <div id="shaftNodes" style="display:flex; flex-direction:column; gap:5px; width:100%; align-items:center;"></div>
-    </div>
-  </aside>
+  <!-- Hauptarbeitsbereich -->
+  <div class="workspace">
+    <!-- Linke Liste: Scrollt selbstständig -->
+    <main class="floor-scroll-area" id="listContainer"></main>
+
+    <!-- Rechte Schachtsäule: Bleibt fix im Viewport stehen -->
+    <aside class="shaft-panel" id="shaftPanel" aria-label="Schacht-Übersicht">
+      <div class="shaft-track" id="shaftTrack">
+        <div class="shaft-cable"></div>
+        <div class="elevator-car" id="elevatorCar" style="display:none;"></div>
+        <div id="shaftNodes" style="display:flex; flex-direction:column; gap:5px; width:100%; align-items:center;"></div>
+      </div>
+    </aside>
+  </div>
 </div>
 
 <!-- Floating Bottom Bar -->
@@ -1106,7 +1099,7 @@
     <div class="modal-body" id="reportBody"></div>
     <div class="modal-actions">
       <button type="button" class="btn-modal copy" onclick="copyReportText()">📋 Kopieren</button>
-      <button type="button" class="btn-modal print" onclick="window.print()">🖨️ PDF / Drucken</button>
+      <button type="button" class="btn-modal print" onclick="window.print()">🖨️️ PDF / Drucken</button>
     </div>
   </div>
 </div>
@@ -1114,7 +1107,7 @@
 <script>
   if ('serviceWorker' in navigator) {
     const swCode = `
-      const CACHE_NAME = 'buendigkeit-elev-v11';
+      const CACHE_NAME = 'buendigkeit-elev-v12';
       self.addEventListener('install', e => {
         e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll([self.location.href])));
         self.skipWaiting();
@@ -1127,7 +1120,7 @@
     navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
   }
 
-  const STORAGE_KEY = 'buendigkeit-elev-v11';
+  const STORAGE_KEY = 'buendigkeit-elev-v12';
   let state = {
     floorCount: 5,
     startFloor: 0,
@@ -1340,6 +1333,7 @@
 
   const container = $('listContainer');
 
+  /* Fokus & Fahrkorb mitlaufen lassen */
   container.addEventListener('focusin', e => {
     const card = e.target.closest('.floor-card');
     if (!card) return;
@@ -1353,14 +1347,11 @@
     const floor = card.dataset.floor;
     const shaftNode = $(`shaft-node-${floor}`);
     const elevatorCar = $('elevatorCar');
-    const shaftPanel = $('shaftPanel');
 
-    if (shaftNode && elevatorCar && shaftPanel) {
+    if (shaftNode && elevatorCar) {
       elevatorCar.style.display = 'flex';
       const offsetTop = shaftNode.offsetTop;
       elevatorCar.style.top = `${offsetTop - 2}px`;
-      
-      // Falls Schacht scrollen muss, Fahrkorb ins Blickfeld holen
       shaftNode.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
   });
