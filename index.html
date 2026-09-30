@@ -418,9 +418,40 @@
     text-transform: uppercase;
   }
 
-  .cell-main { display: flex; align-items: center; gap: 8px; }
-  .input-wrapper { flex: 1; min-width: 0; }
+  .cell-main { display: flex; align-items: center; gap: 6px; }
+  .input-wrapper {
+    flex: 1;
+    min-width: 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
 
+  /* Integrierter Vorzeichen-Schnelltipper direkt links im Feld */
+  .sign-quick-toggle {
+    position: absolute;
+    left: 4px;
+    z-index: 2;
+    background: #1e293b;
+    border: 1px solid var(--card-border);
+    color: var(--text-muted);
+    border-radius: 4px;
+    width: 22px;
+    height: 28px;
+    font-size: 0.8rem;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    user-select: none;
+  }
+  .sign-quick-toggle:active {
+    background: var(--accent);
+    color: #000;
+  }
+
+  /* Eingabefeld mit Ziffernblock-Garantie (inputmode="decimal") */
   .val-input {
     width: 100%;
     height: 44px;
@@ -432,7 +463,8 @@
     font-size: 1.35rem;
     font-weight: 900;
     text-align: center;
-    padding: 0;
+    padding-left: 22px; /* Platz für den kleinen ± Button */
+    padding-right: 4px;
     outline: none;
     box-shadow: var(--shadow-sunken);
     letter-spacing: 0.02em;
@@ -531,9 +563,7 @@
   .cell-card.ok .status-text { color: var(--ok-text); }
   .cell-card.bad .status-text { color: var(--bad-text); }
 
-  /* ========================================================
-     SCHWEBENDE DAUMEN-LEISTE MIT LÖSCH-KNOPF
-     ======================================================== */
+  /* Floating Bottom Bar */
   .bottom-bar {
     position: fixed;
     bottom: 0;
@@ -589,7 +619,6 @@
     flex: none;
   }
 
-  /* Daumen-Löschbutton */
   .btn-thumb-reset {
     height: 44px;
     padding: 0 12px;
@@ -616,7 +645,6 @@
     box-shadow: 0 0 12px rgba(220, 38, 38, 0.6);
   }
 
-  /* Daumen-Protokollbutton */
   .btn-thumb-protocol {
     height: 44px;
     padding: 0 16px;
@@ -869,9 +897,7 @@
   </aside>
 </div>
 
-<!-- ========================================================
-     SCHWEBENDE DAUMEN-LEISTE MIT RESET & PROTOKOLL
-     ======================================================== -->
+<!-- Floating Bottom Bar -->
 <nav class="bottom-bar">
   <div class="bottom-bar-inner">
     <div class="bottom-info">
@@ -907,7 +933,7 @@
 <script>
   if ('serviceWorker' in navigator) {
     const swCode = `
-      const CACHE_NAME = 'buendigkeit-elev-v4';
+      const CACHE_NAME = 'buendigkeit-elev-v5';
       self.addEventListener('install', e => {
         e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll([self.location.href])));
         self.skipWaiting();
@@ -920,7 +946,7 @@
     navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
   }
 
-  const STORAGE_KEY = 'buendigkeit-elev-v4';
+  const STORAGE_KEY = 'buendigkeit-elev-v5';
   let state = {
     floorCount: 5,
     startFloor: 0,
@@ -979,7 +1005,8 @@
       <form class="cell-card ${dirClass}" data-key="${key}" data-floor="${floor}" data-dir="${dir}" onsubmit="event.preventDefault(); handleMobileNext(this);">
         <div class="cell-main">
           <div class="input-wrapper">
-            <input type="text" class="val-input" inputmode="text" placeholder="0" value="${val}" enterkeyhint="next">
+            <button type="button" class="sign-quick-toggle" tabindex="-1" title="Vorzeichen wechseln">±</button>
+            <input type="text" class="val-input" inputmode="decimal" pattern="[0-9\\-+]*" placeholder="0" value="${val}" enterkeyhint="next">
           </div>
           <div class="gauge-container" title="Doppelklick für 0 mm">
             <div class="gauge-scale-ticks">
@@ -1135,6 +1162,24 @@
     document.querySelectorAll('.shaft-node.current-pos').forEach(n => n.classList.remove('current-pos'));
     const shaftNode = $(`shaft-node-${floor}`);
     if (shaftNode) shaftNode.classList.add('current-pos');
+  });
+
+  // Klick auf den kleinen ± Button links im Zahlenfeld
+  container.addEventListener('click', e => {
+    const signBtn = e.target.closest('.sign-quick-toggle');
+    if (signBtn) {
+      const input = signBtn.closest('.input-wrapper').querySelector('.val-input');
+      let val = input.value.trim();
+      if (val.startsWith('-')) {
+        input.value = val.substring(1);
+      } else if (val !== '') {
+        input.value = '-' + val;
+      } else {
+        input.value = '-';
+      }
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      input.focus();
+    }
   });
 
   container.addEventListener('dblclick', e => {
