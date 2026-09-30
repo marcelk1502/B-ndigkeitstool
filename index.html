@@ -67,34 +67,43 @@
   }
 
   .layout-wrap {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
     max-width: 600px;
     margin: 0 auto;
     position: relative;
   }
 
-  .app-container { flex: 1; min-width: 0; }
+  /* Platz rechts für den fixierten Schacht reservieren */
+  .app-container {
+    width: 100%;
+    padding-right: 44px;
+  }
 
-  /* 3D-Schachtsäule */
+  /* ========================================================
+     ECHTER FEST VERANKERTER SCHACHT (POSITION: FIXED)
+     Bleibt beim Scrollen & Tastatur immer voll sichtbar!
+     ======================================================== */
   .shaft-panel {
-    width: 36px;
-    flex: none;
-    position: sticky;
+    position: fixed;
+    right: max(6px, calc((100vw - 600px) / 2 + 6px));
     top: calc(env(safe-area-inset-top, 10px) + 64px);
-    align-self: flex-start;
+    width: 36px;
+    max-height: calc(100dvh - env(safe-area-inset-top, 10px) - env(safe-area-inset-bottom, 16px) - 146px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
     background: #070b14;
     border: 1.5px solid var(--card-border);
     border-radius: var(--radius-md);
-    padding: 6px 3px 8px;
+    padding: 6px 3px 6px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 5px;
-    box-shadow: var(--shadow-raised);
-    z-index: 10;
+    gap: 4px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.8);
+    z-index: 25;
   }
+  .shaft-panel::-webkit-scrollbar { display: none; }
 
   .shaft-title {
     font-size: 0.55rem;
@@ -103,6 +112,7 @@
     text-align: center;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    flex: none;
   }
 
   .shaft-track {
@@ -144,6 +154,7 @@
     position: relative;
     z-index: 1;
     overflow: hidden;
+    flex: none;
   }
 
   .shaft-node:active { transform: scale(0.88); }
@@ -271,7 +282,6 @@
     box-shadow: var(--shadow-sunken);
   }
 
-  /* Schalter für UG/EG Beschriftung */
   .setting-toggle-row {
     margin-top: 10px;
     display: flex;
@@ -883,7 +893,6 @@
     border: 1px solid var(--bad-border);
   }
 
-  /* Mini-Diagramm */
   .chart-section {
     background: #070b14;
     border: 1px solid var(--card-border);
@@ -1018,7 +1027,6 @@
           </label>
         </div>
 
-        <!-- Schalter für UG / EG Beschriftung -->
         <div class="setting-toggle-row">
           <span class="toggle-label">UG / EG Beschriftung (0=EG, -1=UG)</span>
           <label class="switch">
@@ -1056,7 +1064,7 @@
     <main class="floor-list" id="listContainer"></main>
   </div>
 
-  <!-- Schachtsäule mit gleitendem Fahrkorb -->
+  <!-- Fest verankerte Schachtsäule mit gleitendem Fahrkorb -->
   <aside class="shaft-panel" id="shaftPanel" aria-label="Schacht-Übersicht">
     <div class="shaft-title">Et.</div>
     <div class="shaft-track" id="shaftTrack">
@@ -1106,7 +1114,7 @@
 <script>
   if ('serviceWorker' in navigator) {
     const swCode = `
-      const CACHE_NAME = 'buendigkeit-elev-v10';
+      const CACHE_NAME = 'buendigkeit-elev-v11';
       self.addEventListener('install', e => {
         e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll([self.location.href])));
         self.skipWaiting();
@@ -1119,12 +1127,12 @@
     navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
   }
 
-  const STORAGE_KEY = 'buendigkeit-elev-v10';
+  const STORAGE_KEY = 'buendigkeit-elev-v11';
   let state = {
     floorCount: 5,
     startFloor: 0,
     tolerance: 10,
-    useEgUg: true, // Standardmäßig aktiv
+    useEgUg: true,
     values: {}
   };
 
@@ -1149,7 +1157,6 @@
     return isNaN(n) ? null : n;
   }
 
-  // Hilfsfunktion: Wandelt numerische Etagen in EG/UG Labels um
   function getFloorLabel(f) {
     if (!state.useEgUg) return String(f);
     if (f === 0) return 'EG';
@@ -1346,11 +1353,15 @@
     const floor = card.dataset.floor;
     const shaftNode = $(`shaft-node-${floor}`);
     const elevatorCar = $('elevatorCar');
+    const shaftPanel = $('shaftPanel');
 
-    if (shaftNode && elevatorCar) {
+    if (shaftNode && elevatorCar && shaftPanel) {
       elevatorCar.style.display = 'flex';
       const offsetTop = shaftNode.offsetTop;
       elevatorCar.style.top = `${offsetTop - 2}px`;
+      
+      // Falls Schacht scrollen muss, Fahrkorb ins Blickfeld holen
+      shaftNode.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
   });
 
@@ -1482,7 +1493,6 @@
     $(id).addEventListener('input', renderList);
   });
 
-  /* Zweistufiger Daumen-Löschbutton */
   let armTimer = null;
   const resetBtn = $('resetBtn');
   const resetBtnText = $('resetBtnText');
@@ -1504,7 +1514,6 @@
     renderList();
   });
 
-  /* Modal Pop-up Protokoll */
   const modal = $('reportModal');
 
   $('openReportBtn').addEventListener('click', () => {
