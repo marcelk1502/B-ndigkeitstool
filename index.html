@@ -32,14 +32,14 @@
     --accent-glow: rgba(245, 158, 11, 0.35);
 
     --ok: #10b981;
-    --ok-bg: rgba(16, 185, 129, 0.14);
+    --ok-bg: rgba(16, 185, 129, 0.18);
     --ok-border: #059669;
     --ok-text: #34d399;
 
     --bad: #ef4444;
-    --bad-bg: rgba(239, 68, 68, 0.18);
+    --bad-bg: rgba(239, 68, 68, 0.22);
     --bad-border: #dc2626;
-    --bad-text: #f87171;
+    --bad-text: #fca5a5;
 
     --shadow-raised: 
       0 4px 10px -1px rgba(0, 0, 0, 0.6), 
@@ -389,7 +389,7 @@
 
   .cell-card {
     margin: 0;
-    padding: 8px 8px;
+    padding: 10px 8px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -410,7 +410,7 @@
   .cell-card.na {
     background: rgba(15, 23, 42, 0.6) !important;
     color: #475569;
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     font-weight: 800;
     display: flex;
     align-items: center;
@@ -427,7 +427,6 @@
     align-items: center;
   }
 
-  /* Integrierter Vorzeichen-Schnelltipper direkt links im Feld */
   .sign-quick-toggle {
     position: absolute;
     left: 4px;
@@ -451,7 +450,6 @@
     color: #000;
   }
 
-  /* Eingabefeld mit Ziffernblock-Garantie (inputmode="decimal") */
   .val-input {
     width: 100%;
     height: 44px;
@@ -463,7 +461,7 @@
     font-size: 1.35rem;
     font-weight: 900;
     text-align: center;
-    padding-left: 22px; /* Platz für den kleinen ± Button */
+    padding-left: 22px;
     padding-right: 4px;
     outline: none;
     box-shadow: var(--shadow-sunken);
@@ -548,20 +546,38 @@
   .cell-card.ok .gauge-pointer { display: block; background: #10b981; box-shadow: 0 0 6px #10b981; }
   .cell-card.bad .gauge-pointer { display: block; background: #ef4444; box-shadow: 0 0 6px #ef4444; }
 
+  /* ========================================================
+     VERGRÖSSERTER & KONTRASTREICHER STATUSTEXT
+     ======================================================== */
   .status-text {
-    font-size: 0.7rem;
-    font-weight: 800;
-    margin-top: 3px;
+    font-size: 0.92rem;
+    font-weight: 900;
+    margin-top: 6px;
     text-align: center;
     color: var(--text-muted);
-    min-height: 14px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    min-height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    letter-spacing: -0.01em;
+    padding: 2px 4px;
+    background: transparent;
+    transition: all 0.2s ease;
   }
 
-  .cell-card.ok .status-text { color: var(--ok-text); }
-  .cell-card.bad .status-text { color: var(--bad-text); }
+  .cell-card.ok .status-text {
+    color: var(--ok-text);
+    background: rgba(16, 185, 129, 0.18);
+    border: 1px solid rgba(16, 185, 129, 0.35);
+  }
+
+  .cell-card.bad .status-text {
+    color: #ff8a8a;
+    background: rgba(239, 68, 68, 0.25);
+    border: 1px solid rgba(239, 68, 68, 0.5);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.7);
+  }
 
   /* Floating Bottom Bar */
   .bottom-bar {
@@ -933,7 +949,7 @@
 <script>
   if ('serviceWorker' in navigator) {
     const swCode = `
-      const CACHE_NAME = 'buendigkeit-elev-v5';
+      const CACHE_NAME = 'buendigkeit-elev-v6';
       self.addEventListener('install', e => {
         e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll([self.location.href])));
         self.skipWaiting();
@@ -946,7 +962,7 @@
     navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
   }
 
-  const STORAGE_KEY = 'buendigkeit-elev-v5';
+  const STORAGE_KEY = 'buendigkeit-elev-v6';
   let state = {
     floorCount: 5,
     startFloor: 0,
@@ -1076,12 +1092,13 @@
     const isExceeded = Math.abs(n) > state.tolerance;
     card.classList.add(isExceeded ? 'bad' : 'ok');
 
+    // Größere, plakativere Beschriftung mit Pfeil-Symbolen
     if (n === 0) {
-      status.textContent = 'bündig (0 mm)';
+      status.textContent = '✓ bündig (0)';
     } else if (n > 0) {
-      status.textContent = `+${n} mm zu hoch`;
+      status.textContent = `▲ +${n} mm`;
     } else {
-      status.textContent = `${n} mm zu tief`;
+      status.textContent = `▼ ${n} mm`;
     }
 
     const tolerance = Math.max(state.tolerance, 1);
@@ -1164,7 +1181,6 @@
     if (shaftNode) shaftNode.classList.add('current-pos');
   });
 
-  // Klick auf den kleinen ± Button links im Zahlenfeld
   container.addEventListener('click', e => {
     const signBtn = e.target.closest('.sign-quick-toggle');
     if (signBtn) {
