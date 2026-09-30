@@ -144,13 +144,13 @@
     color: var(--accent);
   }
 
-  /* Header */
+  /* Header - Schlank & zentriert ohne Badges */
   header.top-bar {
     position: sticky;
     top: 0;
     z-index: 20;
     background: rgba(10, 14, 23, 0.9);
-    padding-top: 6px;
+    padding-top: 8px;
     padding-bottom: 8px;
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
@@ -160,8 +160,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
-    margin-bottom: 6px;
+    justify-content: center;
   }
 
   .title-group h1 {
@@ -172,41 +171,6 @@
     text-transform: uppercase;
     color: #fff;
     text-shadow: 0 2px 4px rgba(0,0,0,0.6);
-  }
-
-  .badges { display: flex; gap: 6px; }
-
-  .badge {
-    font-size: 0.72rem;
-    font-weight: 800;
-    padding: 3px 8px;
-    border-radius: var(--radius-sm);
-    background: #1e293b;
-    border: 1px solid #334155;
-    color: var(--text-muted);
-    box-shadow: var(--shadow-raised);
-    text-transform: uppercase;
-  }
-
-  .badge.alert {
-    background: var(--bad-bg);
-    color: var(--bad-text);
-    border-color: var(--bad-border);
-  }
-
-  .progress-wrap {
-    height: 5px;
-    background: #1e293b;
-    border-radius: 99px;
-    overflow: hidden;
-    box-shadow: var(--shadow-sunken);
-  }
-  .progress-fill {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, var(--accent), #eab308);
-    box-shadow: 0 0 10px var(--accent-glow);
-    transition: width 0.25s ease;
   }
 
   /* Parameter Dropdown */
@@ -324,7 +288,7 @@
   /* Spaltenköpfe */
   .grid-header {
     position: sticky;
-    top: 76px;
+    top: 56px;
     z-index: 15;
     display: grid;
     grid-template-columns: 46px 1fr 1fr;
@@ -546,7 +510,7 @@
   .cell-card.ok .gauge-pointer { display: block; background: #10b981; box-shadow: 0 0 6px #10b981; }
   .cell-card.bad .gauge-pointer { display: block; background: #ef4444; box-shadow: 0 0 6px #ef4444; }
 
-  /* Klarer, großer Statustext ohne Pfeile/Vorzeichen */
+  /* Großer Statustext */
   .status-text {
     font-size: 0.92rem;
     font-weight: 900;
@@ -577,19 +541,40 @@
     text-shadow: 0 1px 2px rgba(0,0,0,0.7);
   }
 
-  /* Floating Bottom Bar */
+  /* ========================================================
+     SCHWEBENDE DAUMEN-LEISTE MIT INTEGRIERTEM FORTSCHRITTSBALKEN
+     ======================================================== */
   .bottom-bar {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
     z-index: 30;
-    background: rgba(10, 14, 23, 0.94);
+    background: rgba(10, 14, 23, 0.95);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
     border-top: 1.5px solid var(--card-border);
-    padding: 8px 12px calc(env(safe-area-inset-bottom, 10px) + 8px);
+    padding: 10px 12px calc(env(safe-area-inset-bottom, 10px) + 8px);
     box-shadow: 0 -8px 24px rgba(0,0,0,0.6);
+  }
+
+  /* Statusbalken direkt an der Oberkante des Daumen-Boards */
+  .bottom-progress-edge {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: #1e293b;
+    overflow: hidden;
+  }
+
+  .bottom-progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent), #eab308);
+    box-shadow: 0 0 10px var(--accent-glow);
+    transition: width 0.25s ease;
   }
 
   .bottom-bar-inner {
@@ -843,19 +828,12 @@
 
 <div class="layout-wrap">
   <div class="app-container">
-    <!-- Header -->
+    <!-- Header: Sauber & fokussiert -->
     <header class="top-bar">
       <div class="nav-header">
         <div class="title-group">
           <h1>Bündigkeiten</h1>
         </div>
-        <div class="badges">
-          <span class="badge alert" id="chipBad" hidden>0 Abweichungen</span>
-          <span class="badge" id="chipCount">0 / 0</span>
-        </div>
-      </div>
-      <div class="progress-wrap">
-        <div class="progress-fill" id="progressBar"></div>
       </div>
     </header>
 
@@ -911,8 +889,13 @@
   </aside>
 </div>
 
-<!-- Floating Bottom Bar -->
+<!-- ========================================================
+     SCHWEBENDE DAUMEN-LEISTE MIT INTEGRIERTEM STATUSBALKEN OBEN
+     ======================================================== -->
 <nav class="bottom-bar">
+  <div class="bottom-progress-edge" aria-hidden="true">
+    <div class="bottom-progress-fill" id="bottomProgressBar"></div>
+  </div>
   <div class="bottom-bar-inner">
     <div class="bottom-info">
       <span class="bottom-info-title">Status</span>
@@ -947,7 +930,7 @@
 <script>
   if ('serviceWorker' in navigator) {
     const swCode = `
-      const CACHE_NAME = 'buendigkeit-elev-v7';
+      const CACHE_NAME = 'buendigkeit-elev-v8';
       self.addEventListener('install', e => {
         e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll([self.location.href])));
         self.skipWaiting();
@@ -960,7 +943,7 @@
     navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
   }
 
-  const STORAGE_KEY = 'buendigkeit-elev-v7';
+  const STORAGE_KEY = 'buendigkeit-elev-v8';
   let state = {
     floorCount: 5,
     startFloor: 0,
@@ -1090,7 +1073,6 @@
     const isExceeded = Math.abs(n) > state.tolerance;
     card.classList.add(isExceeded ? 'bad' : 'ok');
 
-    // Nur Betrag und Richtung ("zu hoch" / "zu tief" / "bündig")
     if (n === 0) {
       status.textContent = 'bündig';
     } else if (n > 0) {
@@ -1123,19 +1105,16 @@
     });
 
     const total = cells.length;
-    $('chipCount').textContent = `${filled} / ${total} gemessen`;
-    $('bottomStatus').textContent = `${filled} / ${total} gemessen`;
     
-    const chipBad = $('chipBad');
-    if (bad > 0) {
-      chipBad.hidden = false;
-      chipBad.textContent = `${bad} Abweichungen`;
-    } else {
-      chipBad.hidden = true;
-    }
+    // Statusanzeige im Daumen-Board
+    const statusText = bad > 0 
+      ? `${filled} / ${total} (${bad} Fehler)` 
+      : `${filled} / ${total} gemessen`;
+    $('bottomStatus').textContent = statusText;
 
+    // Fortschrittsbalken oben an der Daumenleiste
     const pct = total ? (filled / total * 100) : 0;
-    $('progressBar').style.width = pct + '%';
+    $('bottomProgressBar').style.width = pct + '%';
 
     for (let f = state.startFloor + state.floorCount - 1; f >= state.startFloor; f--) {
       const node = $(`shaft-node-${f}`);
