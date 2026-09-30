@@ -2,217 +2,560 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Bündigkeit</title>
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>Bündigkeitsmessung</title>
 <style>
   :root {
-    box-sizing: border-box;
-    padding-top: env(safe-area-inset-top, 0px);
-    padding-bottom: env(safe-area-inset-bottom, 0px);
-    --bg: #e8edf1; --surface: #ffffff; --line: #d3dce3;
-    --ink: #14212b; --muted: #5a6b78;
-    --accent: #0f6b7a; --accent-ink: #ffffff;
-    --ok: #1f8a4c; --ok-bg: #ddf3e4;
-    --bad: #c0392b; --bad-bg: #fbe0dc;
-    --na: #f0f3f6;
-    --track: #cfd8df;
+    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --bg: #f1f5f9;
+    --surface: #ffffff;
+    --surface-elevated: #ffffff;
+    --border: #e2e8f0;
+    --border-strong: #cbd5e1;
+    --text: #0f172a;
+    --text-muted: #64748b;
+    --text-subtle: #94a3b8;
+    
+    --primary: #0284c7;
+    --primary-bg: #e0f2fe;
+    
+    --ok: #10b981;
+    --ok-bg: #ecfdf5;
+    --ok-border: #a7f3d0;
+    --ok-text: #065f46;
+
+    --bad: #ef4444;
+    --bad-bg: #fef2f2;
+    --bad-border: #fecaca;
+    --bad-text: #991b1b;
+
+    --na-bg: #f8fafc;
+    --na-border: #e2e8f0;
+
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.04);
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
   }
+
   @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --bg: #0d151b; --surface: #16222b; --line: #26353f;
-      --ink: #e8eff4; --muted: #94a6b3;
-      --accent: #4cc3d6; --accent-ink: #062229;
-      --ok: #55d58a; --ok-bg: #143d27;
-      --bad: #ff8a7a; --bad-bg: #4a1e1a;
-      --na: #111b22; --track: #33444f;
+    :root {
+      --bg: #0b111a;
+      --surface: #151e2b;
+      --surface-elevated: #1e293b;
+      --border: #243244;
+      --border-strong: #334458;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-subtle: #64748b;
+
+      --primary: #38bdf8;
+      --primary-bg: #0c4a6e;
+
+      --ok: #34d399;
+      --ok-bg: #064e3b33;
+      --ok-border: #05966955;
+      --ok-text: #6ee7b7;
+
+      --bad: #f87171;
+      --bad-bg: #7f1d1d33;
+      --bad-border: #dc262655;
+      --bad-text: #fca5a5;
+
+      --na-bg: #11182755;
+      --na-border: #1f2937;
+      --shadow-sm: none;
+      --shadow-md: 0 4px 10px rgba(0,0,0,0.3);
     }
   }
-  :root[data-theme="dark"] {
-    --bg: #0d151b; --surface: #16222b; --line: #26353f;
-    --ink: #e8eff4; --muted: #94a6b3;
-    --accent: #4cc3d6; --accent-ink: #062229;
-    --ok: #55d58a; --ok-bg: #143d27;
-    --bad: #ff8a7a; --bad-bg: #4a1e1a;
-    --na: #111b22; --track: #33444f;
-  }
-  html { scroll-padding-top: calc(env(safe-area-inset-top, 0px) + 80px); -webkit-text-size-adjust: 100%; }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0; background: var(--bg); color: var(--ink);
-    font-family: ui-rounded, "SF Pro Rounded", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    font-variant-numeric: tabular-nums;
-  }
-  .wrap { max-width: 560px; margin: 0 auto; padding: 0 8px 40px; }
 
-  /* Kopf: bleibt beim Scrollen sichtbar */
-  .top {
-    position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
-    background: var(--bg); padding: 8px 0 6px;
-  }
-  .titlebar { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-  h1 { font-size: 1.15rem; margin: 0; font-weight: 800; letter-spacing: -.01em; }
-  .badges { display: flex; gap: 6px; align-items: center; }
-  .chip { font-size: .78rem; font-weight: 700; padding: 3px 9px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); }
-  .chip.bad { background: var(--bad-bg); color: var(--bad); border-color: transparent; }
-  .chip[hidden] { display: none; }
-  .progress { height: 3px; background: var(--line); border-radius: 3px; margin: 8px 0 6px; overflow: hidden; }
-  .progress span { display: block; height: 100%; width: 0; background: var(--accent); transition: width .25s; }
-  .cols, .row { display: grid; grid-template-columns: 34px 1fr 1fr; gap: 6px; align-items: center; }
-  .cols {
-    position: sticky;
-    top: calc(env(safe-area-inset-top, 0px) + 48px);
-    z-index: 4;
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    margin: 0;
+    padding: env(safe-area-inset-top, 12px) 12px calc(env(safe-area-inset-bottom, 16px) + 24px);
     background: var(--bg);
-    padding: 4px 6px 6px;
-    font-size: .78rem;
+    color: var(--text);
+    font-family: var(--font);
+    font-variant-numeric: tabular-nums;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .app-container {
+    max-width: 580px;
+    margin: 0 auto;
+  }
+
+  /* Header Sticky */
+  header.top-bar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: var(--bg);
+    padding-top: 4px;
+    padding-bottom: 6px;
+    backdrop-filter: blur(12px);
+  }
+
+  .nav-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .title-group h1 {
+    font-size: 1.3rem;
     font-weight: 800;
-    color: var(--muted);
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+
+  .badges {
+    display: flex;
+    gap: 6px;
+  }
+
+  .badge {
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 99px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .badge.alert {
+    background: var(--bad-bg);
+    color: var(--bad-text);
+    border-color: var(--bad-border);
+  }
+
+  /* Progress Bar */
+  .progress-wrap {
+    height: 6px;
+    background: var(--border);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--primary), #6366f1);
+    border-radius: 99px;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Settings Dropdown */
+  details.settings-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    margin: 10px 0 14px;
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+  }
+
+  details.settings-card summary {
+    list-style: none;
+    padding: 12px 16px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+  }
+
+  details.settings-card summary::-webkit-details-marker { display: none; }
+  details.settings-card summary .icon-arrow {
+    transition: transform 0.2s;
+    fill: currentColor;
+  }
+  details.settings-card[open] summary .icon-arrow {
+    transform: rotate(180deg);
+  }
+
+  .settings-content {
+    padding: 4px 16px 16px;
+    border-top: 1px solid var(--border);
+    background: var(--bg);
+  }
+
+  .settings-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 0.85fr 1.3fr;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .setting-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-muted);
+  }
+
+  .setting-item input {
+    height: 42px;
+    width: 100%;
+    border: 1.5px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text);
+    font: inherit;
+    font-size: 1rem;
+    font-weight: 700;
     text-align: center;
   }
-  .cols span {
+
+  .action-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .btn {
+    flex: 1;
+    height: 40px;
+    border-radius: var(--radius-sm);
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.15s;
+    border: 1px solid var(--border);
     background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    padding: 6px 3px;
-    line-height: 1.1;
+    color: var(--text);
   }
-  .cols span:nth-child(2) { color: var(--accent); }
-  .cols span:nth-child(3) { color: var(--accent); }
 
-  /* Einstellungen */
-  details.settings { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; margin: 4px 0 12px; }
-  details.settings summary {
-    list-style: none; cursor: pointer; padding: 14px 16px; font-weight: 700; font-size: .95rem;
-    display: flex; justify-content: space-between; align-items: center; min-height: 48px;
-  }
-  details.settings summary::-webkit-details-marker { display: none; }
-  details.settings summary::after { content: "▾"; color: var(--muted); transition: transform .2s; }
-  details.settings[open] summary::after { transform: rotate(180deg); }
-  .settings-body { padding: 0 16px 16px; }
-  .setgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-  .setgrid label { display: flex; flex-direction: column; gap: 6px; font-size: .8rem; font-weight: 700; color: var(--muted); }
-  .setgrid input {
-    width: 100%; height: 46px; border: 1.5px solid var(--line); border-radius: 10px; background: var(--bg);
-    color: var(--ink); font: inherit; font-size: 1.1rem; font-weight: 700; text-align: center;
-  }
-  .danger {
-    margin-top: 14px; width: 100%; height: 46px; border-radius: 10px; border: 1.5px solid var(--bad);
-    background: transparent; color: var(--bad); font: inherit; font-weight: 700; font-size: .95rem; cursor: pointer;
-  }
-  .danger.armed { background: var(--bad); color: var(--surface); }
+  .btn:active { transform: scale(0.97); }
 
-  /* Etagen */
-  #list { display: flex; flex-direction: column; gap: 6px; }
-  main {
+  .btn.danger {
+    border-color: var(--bad-border);
+    background: var(--bad-bg);
+    color: var(--bad-text);
+  }
+  .btn.danger.armed {
+    background: var(--bad);
+    color: #fff;
+    border-color: var(--bad);
+  }
+
+  /* Neuer, deutlich größerer Tabellenkopf */
+  .grid-header {
+    position: sticky;
+    top: 50px;
+    z-index: 15;
+    background: var(--bg);
+    display: grid;
+    grid-template-columns: 48px 1fr 1fr;
+    gap: 8px;
+    padding: 6px 0 10px;
+  }
+
+  .header-pill {
+    background: var(--surface);
+    border: 1.5px solid var(--border-strong);
+    border-radius: var(--radius-md);
+    padding: 8px 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--text);
+    box-shadow: var(--shadow-sm);
+    letter-spacing: -0.01em;
+  }
+
+  .header-pill.up {
+    color: var(--primary);
+    border-color: rgba(2, 132, 199, 0.4);
+    background: linear-gradient(180deg, var(--surface), var(--primary-bg));
+  }
+
+  .header-pill.down {
+    color: #8b5cf6;
+    border-color: rgba(139, 92, 246, 0.4);
+    background: linear-gradient(180deg, var(--surface), rgba(139, 92, 246, 0.1));
+  }
+
+  /* Etagenliste */
+  .floor-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  /* Eine Etage = Ein geschlossener Container */
+  .floor-card {
+    background: var(--surface);
+    border: 1.5px solid var(--border-strong);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    display: grid;
+    grid-template-columns: 48px 1fr 1fr;
+    overflow: hidden;
     position: relative;
   }
-  main::before {
-    content: "";
+
+  /* Großes Etagenlabel links */
+  .floor-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    font-weight: 800;
+    background: var(--bg);
+    border-right: 1.5px solid var(--border);
+    color: var(--text);
+    user-select: none;
+  }
+
+  /* Einzelne Mess-Zelle innerhalb der Zeilenkarte */
+  .cell-card {
+    padding: 10px 10px 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    background: transparent;
+    transition: background 0.2s;
+  }
+
+  /* Optische Trennung zwischen Aufwärts und Abwärts */
+  .cell-card.dir-down {
+    border-left: 2px dashed var(--border-strong);
+  }
+
+  .cell-card.ok {
+    background: var(--ok-bg);
+  }
+
+  .cell-card.bad {
+    background: var(--bad-bg);
+  }
+
+  .cell-card.na {
+    background: var(--na-bg);
+    color: var(--text-subtle);
+    font-size: 0.75rem;
+    font-weight: 700;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: 0.02em;
+  }
+
+  .cell-main {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn-sign {
+    flex: none;
+    width: 34px;
+    height: 42px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-strong);
+    background: var(--surface-elevated);
+    color: var(--text);
+    font-size: 0.95rem;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .btn-sign:active { transform: scale(0.92); }
+
+  .input-wrapper {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .val-input {
+    width: 100%;
+    height: 42px;
+    border: 1.5px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    background: var(--surface-elevated);
+    color: var(--text);
+    font: inherit;
+    font-size: 1.15rem;
+    font-weight: 800;
+    text-align: center;
+    padding: 0 2px;
+    outline: none;
+    box-shadow: var(--shadow-sm);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .val-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+  }
+
+  /* Pegelanzeige */
+  .gauge-container {
+    flex: none;
+    width: 12px;
+    height: 42px;
+    background: var(--border);
+    border-radius: 99px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .gauge-tolerance {
     position: absolute;
-    top: 0;
-    bottom: 100px;
-    left: calc(50% + 17px);
-    width: 3px;
-    background: var(--text);
-    opacity: .65;
+    left: 0; right: 0;
+    background: var(--ok);
+    opacity: 0.45;
+  }
+
+  .gauge-center-line {
+    position: absolute;
+    left: 0; right: 0;
+    top: calc(50% - 0.5px);
+    height: 1px;
+    background: var(--text-muted);
+  }
+
+  .gauge-pointer {
+    position: absolute;
+    left: 1px;
+    width: 10px;
+    height: 6px;
     border-radius: 3px;
-    box-shadow: 0 0 0 1px rgba(0,0,0,.04);
-    pointer-events: none;
-    z-index: 3;
+    background: var(--text);
+    top: calc(50% - 3px);
+    display: none;
+    transition: top 0.18s cubic-bezier(0.1, 0.9, 0.2, 1);
   }
-  .row {
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 6px 6px;
-  }
-  .floor { text-align: center; font-size: 1.2rem; font-weight: 800; line-height: 1; }
-  .fld { border-radius: 9px; padding: 8px 4px 6px; border: 1.5px solid transparent; background: var(--bg); min-height: 0; }
-  .fld.ok { background: var(--ok-bg); }
-  .fld.bad { background: var(--bad-bg); }
-  .fld.na { background: var(--na); display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: .7rem; border: 1.5px dashed var(--line); align-self: stretch; }
-  .ctl { display: flex; align-items: center; justify-content: center; gap: 6px; }
-  .sgn {
-    flex: none; width: 28px; height: 34px; border: none; border-radius: 8px; background: var(--accent); color: var(--accent-ink);
-    font: inherit; font-weight: 800; font-size: .7rem; cursor: pointer; padding: 0;
-  }
-  .sgn:active { transform: scale(.94); }
-  .fld input {
-    flex: none; min-width: 0; width: 46px; height: 34px; border: 1.5px solid var(--line); border-radius: 8px; background: var(--surface);
-    color: var(--ink); font: inherit; font-size: 1rem; font-weight: 800; text-align: center; padding: 0;
-  }
-  .fld input::placeholder { color: var(--track); }
-  input:focus-visible, button:focus-visible, summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-  .hint { display: block; margin-top: 6px; text-align: center; font-size: .68rem; font-weight: 600; color: var(--muted); min-height: 1em; line-height: 1; white-space: nowrap; }
-  .fld.ok .hint { color: var(--ok); }
-  .fld.bad .hint { color: var(--bad); }
 
-  /* Anzeige: Marker wandert nach oben (zu hoch) oder unten (zu tief) */
-  .gauge { position: relative; flex: none; width: 12px; height: 50px; border-radius: 6px; background: var(--track); }
-  .gauge .band { position: absolute; left: 0; right: 0; background: var(--ok); opacity: .35; }
-  .gauge .mid { position: absolute; left: -3px; right: -3px; top: calc(50% - 1px); height: 2px; background: var(--ink); opacity: .55; }
-  .gauge .mark { position: absolute; left: -3px; width: 18px; height: 9px; border-radius: 5px; background: var(--muted); top: calc(50% - 4.5px); display: none; transition: top .2s; }
-  .fld.ok .mark { background: var(--ok); display: block; }
-  .fld.bad .mark { background: var(--bad); display: block; }
-
-  #errbox { color: var(--bad); font-size: .85rem; margin: 12px 4px 0; }
-  @media (prefers-reduced-motion: reduce) {
-    .progress span, .gauge .mark, details.settings summary::after { transition: none; }
+  .cell-card.ok .gauge-pointer {
+    display: block;
+    background: var(--ok);
   }
+
+  .cell-card.bad .gauge-pointer {
+    display: block;
+    background: var(--bad);
+  }
+
+  /* Status-Text */
+  .status-text {
+    font-size: 0.72rem;
+    font-weight: 700;
+    margin-top: 4px;
+    text-align: center;
+    color: var(--text-subtle);
+    min-height: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .cell-card.ok .status-text { color: var(--ok-text); }
+  .cell-card.bad .status-text { color: var(--bad-text); }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header class="top">
-    <div class="titlebar">
-      <h1>Bündigkeit</h1>
+
+<div class="app-container">
+  <!-- Sticky Top Bar -->
+  <header class="top-bar">
+    <div class="nav-header">
+      <div class="title-group">
+        <h1>Bündigkeit</h1>
+      </div>
       <div class="badges">
-        <span class="chip bad" id="chipBad" hidden></span>
-        <span class="chip" id="chipCount"></span>
+        <span class="badge alert" id="chipBad" hidden>0 Abweichungen</span>
+        <span class="badge" id="chipCount">0 / 0</span>
       </div>
     </div>
-    <div class="progress" aria-hidden="true"><span id="bar"></span></div>
+    <div class="progress-wrap">
+      <div class="progress-fill" id="progressBar"></div>
+    </div>
   </header>
 
-  <details class="settings" id="settings">
-    <summary>Einstellungen</summary>
-    <div class="settings-body">
-      <div class="setgrid">
-        <label>Etagen <input id="floorCount" type="number" min="1" max="50" inputmode="numeric" value="5"></label>
-        <label>Start-Etage <input id="startFloor" type="number" inputmode="numeric" value="0"></label>
-        <label>Toleranz ± mm <input id="tolerance" type="number" min="0" step="1" inputmode="numeric" value="5"></label>
+  <!-- Einstellungen -->
+  <details class="settings-card" id="settingsDetails">
+    <summary>
+      <span>⚙️ Einstellungen</span>
+      <svg class="icon-arrow" width="16" height="16" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+    </summary>
+    <div class="settings-content">
+      <div class="settings-grid">
+        <label class="setting-item">
+          Etagenanzahl
+          <input id="floorCount" type="number" min="1" max="50" inputmode="numeric" value="5">
+        </label>
+        <label class="setting-item">
+          Start
+          <input id="startFloor" type="number" inputmode="numeric" value="0">
+        </label>
+        <label class="setting-item">
+          Toleranz (± mm)
+          <input id="tolerance" type="number" min="0" step="1" inputmode="numeric" value="5">
+        </label>
       </div>
-      <button type="button" class="danger" id="resetBtn">Alle Werte löschen</button>
+      <div class="action-row">
+        <button type="button" class="btn" id="copyBtn">📋 Bericht kopieren</button>
+        <button type="button" class="btn danger" id="resetBtn">Werte leeren</button>
+      </div>
     </div>
   </details>
 
-  <div class="cols" aria-label="Spalten">
-    <span>Et.</span><span>▲ Aufwärts</span><span>▼ Abwärts</span>
+  <!-- Große, präsente Spaltenköpfe -->
+  <div class="grid-header">
+    <div class="header-pill">Et.</div>
+    <div class="header-pill up">▲ Aufwärts</div>
+    <div class="header-pill down">▼ Abwärts</div>
   </div>
-  <main id="list"></main>
-  <noscript><p style="color:#c0392b">JavaScript ist nicht verfügbar. Bitte die Seite in einem Browser öffnen, nicht in der Datei-Vorschau.</p></noscript>
-  <p id="errbox"></p>
+
+  <!-- Etagenliste -->
+  <main class="floor-list" id="listContainer"></main>
 </div>
 
 <script>
-  window.onerror = function (msg, src, line) {
-    var el = document.getElementById('errbox');
-    if (el) el.textContent = 'Fehler: ' + msg + ' (Zeile ' + line + ')';
+  const STORAGE_KEY = 'buendigkeit-v3';
+  let state = {
+    floorCount: 5,
+    startFloor: 0,
+    tolerance: 5,
+    values: {}
   };
 
-  const KEY = 'buendigkeit-v1';
-  let state = { floorCount: 5, startFloor: 0, tolerance: 5, values: {} };
   const $ = id => document.getElementById(id);
 
-  function load() {
+  function loadState() {
     try {
-      const raw = localStorage.getItem(KEY);
-      if (raw) state = Object.assign(state, JSON.parse(raw));
+      const data = localStorage.getItem(STORAGE_KEY);
+      if (data) state = Object.assign(state, JSON.parse(data));
     } catch (e) {}
   }
-  function save() {
-    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
+
+  function saveState() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch (e) {}
   }
 
   function parseVal(v) {
@@ -228,122 +571,198 @@
     state.tolerance = isNaN(t) ? 5 : Math.abs(t);
   }
 
-  function cellHtml(i, d) {
-    const bottom = i === state.startFloor;
-    const top = i === state.startFloor + state.floorCount - 1;
-    if ((d === 'up' && bottom) || (d === 'down' && top)) {
-      return '<div class="fld na">entfällt</div>';
+  function renderCell(floor, dir) {
+    const isBottom = floor === state.startFloor;
+    const isTop = floor === state.startFloor + state.floorCount - 1;
+    const dirClass = dir === 'down' ? 'dir-down' : 'dir-up';
+
+    if ((dir === 'up' && isBottom) || (dir === 'down' && isTop)) {
+      return `<div class="cell-card ${dirClass} na">Nicht anfahrbar</div>`;
     }
-    const v = state.values[i + ':' + d];
-    return '<div class="fld" data-key="' + i + ':' + d + '">' +
-      '<div class="ctl">' +
-        '<button type="button" class="sgn" tabindex="-1" aria-label="Vorzeichen wechseln">+/−</button>' +
-        '<input type="text" inputmode="numeric" autocomplete="off" placeholder="0" aria-label="Abweichung in mm" value="' + (v != null ? v : '') + '">' +
-        '<div class="gauge" aria-hidden="true"><i class="band"></i><i class="mid"></i><b class="mark"></b></div>' +
-      '</div>' +
-      '<small class="hint"></small>' +
-    '</div>';
+
+    const key = `${floor}:${dir}`;
+    const val = state.values[key] ?? '';
+
+    return `
+      <div class="cell-card ${dirClass}" data-key="${key}">
+        <div class="cell-main">
+          <button type="button" class="btn-sign" tabindex="-1" title="Vorzeichen wechseln">±</button>
+          <div class="input-wrapper">
+            <input type="text" class="val-input" inputmode="numeric" placeholder="0" value="${val}">
+          </div>
+          <div class="gauge-container" aria-hidden="true">
+            <div class="gauge-tolerance"></div>
+            <div class="gauge-center-line"></div>
+            <div class="gauge-pointer"></div>
+          </div>
+        </div>
+        <div class="status-text"></div>
+      </div>
+    `;
   }
 
   function renderList() {
     readSettings();
-    const list = $('list');
+    const container = $('listContainer');
     let html = '';
-    for (let i = state.startFloor + state.floorCount - 1; i >= state.startFloor; i--) {
-      html += '<div class="row"><div class="floor">' + i + '</div>' + cellHtml(i, 'up') + cellHtml(i, 'down') + '</div>';
+
+    for (let f = state.startFloor + state.floorCount - 1; f >= state.startFloor; f--) {
+      html += `
+        <div class="floor-card">
+          <div class="floor-label">${f}</div>
+          ${renderCell(f, 'up')}
+          ${renderCell(f, 'down')}
+        </div>
+      `;
     }
-    list.innerHTML = html;
-    list.querySelectorAll('.fld[data-key]').forEach(applyCell);
-    updateSummary();
-    save();
+
+    container.innerHTML = html;
+    container.querySelectorAll('.cell-card[data-key]').forEach(applyCellStyles);
+    updateMetrics();
+    saveState();
   }
 
-  function applyCell(fld) {
-    const inp = fld.querySelector('input');
-    const n = parseVal(inp.value);
-    fld.classList.remove('ok', 'bad');
-    const hint = fld.querySelector('.hint');
-    const mark = fld.querySelector('.mark');
-    if (n === null) { hint.textContent = ''; return; }
-    fld.classList.add(Math.abs(n) > state.tolerance ? 'bad' : 'ok');
-    hint.textContent = n > 0 ? n + ' mm zu hoch' : n < 0 ? Math.abs(n) + ' mm zu tief' : 'bündig';
+  function applyCellStyles(card) {
+    const input = card.querySelector('.val-input');
+    const n = parseVal(input.value);
+    const status = card.querySelector('.status-text');
+    const pointer = card.querySelector('.gauge-pointer');
+    const tolBand = card.querySelector('.gauge-tolerance');
+
+    card.classList.remove('ok', 'bad');
+
+    if (n === null) {
+      status.textContent = '';
+      return;
+    }
+
+    const isExceeded = Math.abs(n) > state.tolerance;
+    card.classList.add(isExceeded ? 'bad' : 'ok');
+
+    if (n === 0) {
+      status.textContent = 'Exakt bündig';
+    } else if (n > 0) {
+      status.textContent = `+${n} mm zu hoch`;
+    } else {
+      status.textContent = `${n} mm zu tief`;
+    }
+
     const tolerance = Math.max(state.tolerance, 1);
+    const range = Math.max(12, tolerance * 1.6);
+    const tolPercent = Math.min(50, (tolerance / range) * 50);
 
-    // Fester sichtbarer Bereich: -10 bis +10 mm.
-    // Die Toleranz definiert ausschließlich den grünen Bereich in der Mitte.
-    // Alles außerhalb der Toleranz bleibt grau und der Marker zeigt die Abweichung.
-    const displayRange = Math.max(10, tolerance * 1.5);
-    const greenHalf = Math.min(50, (tolerance / displayRange) * 50);
-    const greenTop = 50 - greenHalf;
+    tolBand.style.top = (50 - tolPercent) + '%';
+    tolBand.style.height = (tolPercent * 2) + '%';
 
-    const band = fld.querySelector('.band');
-    band.style.top = greenTop + '%';
-    band.style.height = (greenHalf * 2) + '%';
-
-    const pos = Math.max(-1, Math.min(1, n / displayRange));
-    mark.style.top = 'calc(' + (50 - pos * 50) + '% - 4.5px)';
+    const clamped = Math.max(-range, Math.min(range, n));
+    const normalized = (clamped / range);
+    const topPct = 50 - (normalized * 50);
+    pointer.style.top = `calc(${topPct}% - 3px)`;
   }
 
-  function updateSummary() {
-    const cells = document.querySelectorAll('.fld[data-key]');
-    let filled = 0, bad = 0;
-    cells.forEach(f => {
-      if (f.classList.contains('bad')) { bad++; filled++; }
-      else if (f.classList.contains('ok')) filled++;
+  function updateMetrics() {
+    const cells = document.querySelectorAll('.cell-card[data-key]');
+    let filled = 0;
+    let bad = 0;
+
+    cells.forEach(c => {
+      if (c.classList.contains('bad')) { bad++; filled++; }
+      else if (c.classList.contains('ok')) { filled++; }
     });
-    $('chipCount').textContent = filled + ' von ' + cells.length;
-    const cb = $('chipBad');
-    cb.hidden = bad === 0;
-    cb.textContent = bad + ' außerhalb';
-    $('bar').style.width = (cells.length ? (filled / cells.length * 100) : 0) + '%';
+
+    const total = cells.length;
+    $('chipCount').textContent = `${filled} / ${total} gemessen`;
+    
+    const chipBad = $('chipBad');
+    if (bad > 0) {
+      chipBad.hidden = false;
+      chipBad.textContent = `${bad} Toleranzfehler`;
+    } else {
+      chipBad.hidden = true;
+    }
+
+    const pct = total ? (filled / total * 100) : 0;
+    $('progressBar').style.width = pct + '%';
   }
 
-  const list = $('list');
-  list.addEventListener('click', function (e) {
-    const btn = e.target.closest('.sgn');
-    if (!btn) return;
-    const inp = btn.parentElement.querySelector('input');
-    inp.value = inp.value.startsWith('-') ? inp.value.slice(1) : '-' + inp.value;
-    inp.dispatchEvent(new Event('input', { bubbles: true }));
-    inp.focus();
-  });
-  list.addEventListener('input', function (e) {
-    const inp = e.target;
-    if (inp.tagName !== 'INPUT') return;
-    const neg = inp.value.trim().startsWith('-');
-    inp.value = (neg ? '-' : '') + inp.value.replace(/[^0-9]/g, '');
-    const fld = inp.closest('.fld');
-    const k = fld.dataset.key;
-    if (inp.value === '') delete state.values[k]; else state.values[k] = inp.value;
-    applyCell(fld);
-    updateSummary();
-    save();
+  const container = $('listContainer');
+
+  container.addEventListener('click', e => {
+    const signBtn = e.target.closest('.btn-sign');
+    if (signBtn) {
+      const input = signBtn.closest('.cell-card').querySelector('.val-input');
+      if (input.value) {
+        input.value = input.value.startsWith('-') ? input.value.slice(1) : '-' + input.value;
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+    }
   });
 
-  ['floorCount', 'startFloor', 'tolerance'].forEach(id => $(id).addEventListener('input', renderList));
+  container.addEventListener('input', e => {
+    const input = e.target;
+    if (!input.classList.contains('val-input')) return;
 
-  // Zweistufiges Löschen ohne Systemdialog
+    let val = input.value.trim();
+    const isNeg = val.startsWith('-');
+    val = val.replace(/[^0-9]/g, '');
+    input.value = (isNeg ? '-' : '') + val;
+
+    const card = input.closest('.cell-card');
+    const key = card.dataset.key;
+
+    if (input.value === '' || input.value === '-') {
+      delete state.values[key];
+    } else {
+      state.values[key] = input.value;
+    }
+
+    applyCellStyles(card);
+    updateMetrics();
+    saveState();
+  });
+
+  ['floorCount', 'startFloor', 'tolerance'].forEach(id => {
+    $(id).addEventListener('input', renderList);
+  });
+
   let armTimer = null;
   $('resetBtn').addEventListener('click', function () {
-    const b = this;
-    if (!b.classList.contains('armed')) {
-      b.classList.add('armed');
-      b.textContent = 'Wirklich alle Werte löschen?';
-      armTimer = setTimeout(disarm, 4000);
+    if (!this.classList.contains('armed')) {
+      this.classList.add('armed');
+      this.textContent = 'Wirklich leeren?';
+      armTimer = setTimeout(() => {
+        this.classList.remove('armed');
+        this.textContent = 'Werte leeren';
+      }, 3500);
       return;
     }
     clearTimeout(armTimer);
+    this.classList.remove('armed');
+    this.textContent = 'Werte leeren';
     state.values = {};
-    disarm();
     renderList();
   });
-  function disarm() {
-    const b = $('resetBtn');
-    b.classList.remove('armed');
-    b.textContent = 'Alle Werte löschen';
-  }
 
-  load();
+  $('copyBtn').addEventListener('click', async () => {
+    let report = `Bündigkeitsmessung (Toleranz: ±${state.tolerance} mm)\n`;
+    report += `------------------------------------\n`;
+    for (let f = state.startFloor + state.floorCount - 1; f >= state.startFloor; f--) {
+      const up = state.values[`${f}:up`] !== undefined ? `${state.values[`${f}:up`]} mm` : (f === state.startFloor ? '—' : 'offen');
+      const dn = state.values[`${f}:down`] !== undefined ? `${state.values[`${f}:down`]} mm` : (f === state.startFloor + state.floorCount - 1 ? '—' : 'offen');
+      report += `Etage ${f.toString().padStart(2, ' ')} | ▲ Auf: ${up.padEnd(8, ' ')} | ▼ Ab: ${dn}\n`;
+    }
+    try {
+      await navigator.clipboard.writeText(report);
+      const btn = $('copyBtn');
+      const orig = btn.textContent;
+      btn.textContent = '✓ Kopiert!';
+      setTimeout(() => btn.textContent = orig, 2000);
+    } catch(err) {
+      alert(report);
+    }
+  });
+
+  loadState();
   $('floorCount').value = state.floorCount;
   $('startFloor').value = state.startFloor;
   $('tolerance').value = state.tolerance;
