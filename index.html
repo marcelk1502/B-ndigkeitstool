@@ -13,7 +13,6 @@
   :root {
     --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     
-    /* Industrie-Look: Schacht-Anthrazit & Sicherheits-Gelb */
     --bg-base: #0b0f19;
     --card-surface: linear-gradient(160deg, #1e293b 0%, #111827 100%);
     --card-border: #334155;
@@ -21,7 +20,6 @@
     --text: #f8fafc;
     --text-muted: #94a3b8;
 
-    /* Signalgelb wie im Aufzugbau */
     --accent: #f59e0b;
     --accent-glow: rgba(245, 158, 11, 0.3);
     --accent-bg: rgba(245, 158, 11, 0.12);
@@ -122,7 +120,7 @@
   .shaft-node.bad { background: #7f1d1d; border-color: #ef4444; color: #fff; box-shadow: 0 0 8px rgba(239, 68, 68, 0.4); }
   .shaft-node.partial { background: #1e3a8a; border-color: #3b82f6; color: #fff; }
 
-  /* Tableau-Header */
+  /* Header */
   header.top-bar {
     position: sticky;
     top: 0;
@@ -140,12 +138,6 @@
     align-items: center;
     gap: 5px;
     margin-bottom: 6px;
-  }
-
-  .title-group {
-    display: flex;
-    align-items: center;
-    gap: 8px;
   }
 
   .title-group h1 {
@@ -178,7 +170,6 @@
     border-color: var(--bad-border);
   }
 
-  /* Statusbalken */
   .progress-wrap {
     height: 5px;
     background: #1e293b;
@@ -262,7 +253,6 @@
     box-shadow: var(--shadow-sunken);
   }
 
-  /* Schnellauswahl-Chips für Normen */
   .presets-wrap {
     margin-top: 10px;
     display: flex;
@@ -310,7 +300,6 @@
 
   .action-row { display: flex; gap: 8px; margin-top: 12px; }
 
-  /* Taktile Buttons */
   .btn {
     flex: 1;
     height: 40px;
@@ -414,7 +403,7 @@
 
   .cell-card {
     margin: 0;
-    padding: 8px 6px;
+    padding: 8px 8px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -438,29 +427,7 @@
     text-transform: uppercase;
   }
 
-  .cell-main { display: flex; align-items: center; gap: 5px; }
-
-  .btn-sign {
-    flex: none;
-    width: 32px;
-    height: 42px;
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--card-border);
-    background: #1e293b;
-    color: #fff;
-    font-size: 1rem;
-    font-weight: 900;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: var(--shadow-raised);
-  }
-
-  .btn-sign:active {
-    transform: translateY(2px);
-    box-shadow: var(--shadow-sunken);
-  }
+  .cell-main { display: flex; align-items: center; gap: 8px; }
 
   .input-wrapper { flex: 1; min-width: 0; }
 
@@ -485,7 +452,7 @@
     box-shadow: 0 0 0 2px var(--accent-glow), var(--shadow-sunken);
   }
 
-  /* Pegelanzeige / Messkeil-Schiene */
+  /* Pegelanzeige */
   .gauge-container {
     flex: none;
     width: 12px;
@@ -544,7 +511,7 @@
   .cell-card.ok .status-text { color: var(--ok-text); }
   .cell-card.bad .status-text { color: var(--bad-text); }
 
-  /* Modal Pop-up */
+  /* Modal */
   .modal-overlay {
     position: fixed;
     inset: 0;
@@ -690,7 +657,7 @@
 
 <div class="layout-wrap">
   <div class="app-container">
-    <!-- Sticky Tableau-Header -->
+    <!-- Header -->
     <header class="top-bar">
       <div class="nav-header">
         <div class="title-group">
@@ -706,7 +673,7 @@
       </div>
     </header>
 
-    <!-- Einstellungen & Norm-Toleranzen -->
+    <!-- Einstellungen -->
     <details class="settings-card" id="settingsDetails">
       <summary>
         <span>⚙️ Parameter & Richtlinien</span>
@@ -728,7 +695,6 @@
           </label>
         </div>
 
-        <!-- Schnellauswahl Normen & Aufzugstypen -->
         <div class="presets-wrap">
           <div class="presets-title">Richtwerte / Norm-Toleranz</div>
           <div class="presets-grid">
@@ -780,10 +746,9 @@
 </div>
 
 <script>
-  /* Offline Cache Worker */
   if ('serviceWorker' in navigator) {
     const swCode = `
-      const CACHE_NAME = 'buendigkeit-elev-v1';
+      const CACHE_NAME = 'buendigkeit-elev-v2';
       self.addEventListener('install', e => {
         e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll([self.location.href])));
         self.skipWaiting();
@@ -796,7 +761,7 @@
     navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
   }
 
-  const STORAGE_KEY = 'buendigkeit-elev-data';
+  const STORAGE_KEY = 'buendigkeit-elev-v2';
   let state = {
     floorCount: 5,
     startFloor: 0,
@@ -854,9 +819,8 @@
     return `
       <form class="cell-card ${dirClass}" data-key="${key}" data-floor="${floor}" data-dir="${dir}" onsubmit="event.preventDefault(); handleMobileNext(this);">
         <div class="cell-main">
-          <button type="button" class="btn-sign" tabindex="-1" title="Vorzeichen wechseln">±</button>
           <div class="input-wrapper">
-            <input type="text" class="val-input" inputmode="numeric" placeholder="0" value="${val}" enterkeyhint="next">
+            <input type="text" class="val-input" inputmode="text" placeholder="0" value="${val}" enterkeyhint="next">
           </div>
           <div class="gauge-container" title="Doppelklick für 0 mm">
             <div class="gauge-tolerance"></div>
@@ -998,17 +962,6 @@
 
   const container = $('listContainer');
 
-  container.addEventListener('click', e => {
-    const signBtn = e.target.closest('.btn-sign');
-    if (signBtn) {
-      const input = signBtn.closest('.cell-card').querySelector('.val-input');
-      if (input.value) {
-        input.value = input.value.startsWith('-') ? input.value.slice(1) : '-' + input.value;
-        input.dispatchEvent(new Event('input', { bubbles: true }));
-      }
-    }
-  });
-
   container.addEventListener('dblclick', e => {
     const card = e.target.closest('.cell-card');
     if (!card || card.classList.contains('na')) return;
@@ -1063,14 +1016,21 @@
     if (!input.classList.contains('val-input')) return;
 
     let val = input.value.trim();
-    const isNeg = val.startsWith('-');
+    // Vorzeichenerkennung für '+' und '-'
+    let prefix = '';
+    if (val.startsWith('-')) {
+      prefix = '-';
+    } else if (val.startsWith('+')) {
+      prefix = '+';
+    }
+
     val = val.replace(/[^0-9]/g, '');
-    input.value = (isNeg ? '-' : '') + val;
+    input.value = prefix + val;
 
     const card = input.closest('.cell-card');
     const key = card.dataset.key;
 
-    if (input.value === '' || input.value === '-') {
+    if (input.value === '' || input.value === '-' || input.value === '+') {
       delete state.values[key];
     } else {
       state.values[key] = input.value;
@@ -1081,7 +1041,6 @@
     saveState();
   });
 
-  // Preset Buttons Event
   document.querySelectorAll('.btn-preset').forEach(btn => {
     btn.addEventListener('click', () => {
       $('tolerance').value = btn.dataset.tol;
@@ -1111,7 +1070,6 @@
     renderList();
   });
 
-  /* Modal Pop-up Protokoll mit Schleppfehler (Hysterese) */
   const modal = $('reportModal');
 
   $('openReportBtn').addEventListener('click', () => {
@@ -1170,7 +1128,6 @@
         }
       }
 
-      // Berechnung Schleppfehler (Differenz Auf vs. Ab)
       let diffHtml = '<span class="report-val na">—</span>';
       if (upVal !== null && dnVal !== null) {
         const diff = Math.abs(upVal - dnVal);
