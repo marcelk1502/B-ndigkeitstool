@@ -95,7 +95,7 @@
     min-width: 0;
   }
 
-  /* Grafischer Mini-Schacht (dauerhaft sichtbar auf allen Screens) */
+  /* Grafischer Mini-Schacht */
   .shaft-panel {
     width: 28px;
     flex: none;
@@ -169,10 +169,7 @@
     margin: 0;
   }
 
-  .badges {
-    display: flex;
-    gap: 6px;
-  }
+  .badges { display: flex; gap: 6px; }
 
   .badge {
     font-size: 0.75rem;
@@ -270,11 +267,7 @@
     text-align: center;
   }
 
-  .action-row {
-    display: flex;
-    gap: 8px;
-    margin-top: 10px;
-  }
+  .action-row { display: flex; gap: 8px; margin-top: 10px; }
 
   .btn {
     flex: 1;
@@ -295,7 +288,6 @@
   }
 
   .btn:active { transform: scale(0.97); }
-
   .btn.danger {
     border-color: var(--bad-border);
     background: var(--bad-bg);
@@ -377,6 +369,7 @@
   }
 
   .cell-card {
+    margin: 0;
     padding: 8px 6px 6px;
     display: flex;
     flex-direction: column;
@@ -398,6 +391,7 @@
     color: var(--text-subtle);
     font-size: 0.72rem;
     font-weight: 700;
+    display: flex;
     align-items: center;
     justify-content: center;
   }
@@ -575,7 +569,7 @@
 </div>
 
 <script>
-  const STORAGE_KEY = 'buendigkeit-v5';
+  const STORAGE_KEY = 'buendigkeit-v6';
   let state = {
     floorCount: 5,
     startFloor: 0,
@@ -623,8 +617,9 @@
     const key = `${floor}:${dir}`;
     const val = state.values[key] ?? '';
 
+    // Jede Zelle ist ein eigenes form-Element, um mobile Tastatur-Weiterleitungen direkt zu steuern
     return `
-      <div class="cell-card ${dirClass}" data-key="${key}" data-floor="${floor}" data-dir="${dir}">
+      <form class="cell-card ${dirClass}" data-key="${key}" data-floor="${floor}" data-dir="${dir}" onsubmit="event.preventDefault(); handleMobileNext(this);">
         <div class="cell-main">
           <button type="button" class="btn-sign" tabindex="-1" title="Vorzeichen wechseln">±</button>
           <div class="input-wrapper">
@@ -637,7 +632,7 @@
           </div>
         </div>
         <div class="status-text"></div>
-      </div>
+      </form>
     `;
   }
 
@@ -679,6 +674,7 @@
 
   function applyCellStyles(card) {
     const input = card.querySelector('.val-input');
+    if (!input) return;
     const n = parseVal(input.value);
     const status = card.querySelector('.status-text');
     const pointer = card.querySelector('.gauge-pointer');
@@ -694,8 +690,9 @@
     const isExceeded = Math.abs(n) > state.tolerance;
     card.classList.add(isExceeded ? 'bad' : 'ok');
 
+    // Hier angepasst: einfach nur "bündig"
     if (n === 0) {
-      status.textContent = 'Exakt bündig';
+      status.textContent = 'bündig';
     } else if (n > 0) {
       status.textContent = `+${n} mm zu hoch`;
     } else {
@@ -794,7 +791,11 @@
     }
   });
 
-  // Richtungsabhängiges Weiterspringen bei Enter
+  // Robuste mobile Sprunglogik
+  window.handleMobileNext = function(card) {
+    advanceDirectional(card);
+  };
+
   container.addEventListener('keydown', e => {
     if (e.key === 'Enter') {
       e.preventDefault();
@@ -809,11 +810,11 @@
     let targetCard = null;
 
     if (dir === 'up') {
-      // Aufwärts -> Springe in die Etage darüber (floor + 1), ebenfalls Spalte 'up'
+      // Aufwärts -> Etage darüber (floor + 1) in Spalte 'up'
       const nextFloor = floor + 1;
       targetCard = container.querySelector(`.cell-card[data-key="${nextFloor}:up"]`);
     } else if (dir === 'down') {
-      // Abwärts -> Springe in die Etage darunter (floor - 1), ebenfalls Spalte 'down'
+      // Abwärts -> Etage darunter (floor - 1) in Spalte 'down'
       const nextFloor = floor - 1;
       targetCard = container.querySelector(`.cell-card[data-key="${nextFloor}:down"]`);
     }
@@ -821,12 +822,14 @@
     if (targetCard) {
       const nextInput = targetCard.querySelector('.val-input');
       if (nextInput) {
-        nextInput.focus();
-        nextInput.select();
-        targetCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        // setTimeout stellt sicher, dass mobile Keyboards den Fokus verlässlich mitnehmen
+        setTimeout(() => {
+          nextInput.focus();
+          nextInput.select();
+          targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 50);
       }
     } else {
-      // Am Ende der Fahrt angekommen: Fokus lösen
       const currentInput = currentCard.querySelector('.val-input');
       if (currentInput) currentInput.blur();
     }
