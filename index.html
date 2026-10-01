@@ -182,15 +182,17 @@
 
   .main-column { min-width: 0; }
 
+  /* 4-Spalten Grid: Etage (46px) | Auf (1fr) | Führungssteg (6px) | Ab (1fr) */
   .grid-header {
     position: sticky;
     top: 68px;
     z-index: 15;
     display: grid;
-    grid-template-columns: 46px 1fr 1fr;
-    gap: 0; /* Zusammenhängend für durchgehende Trennfuge */
+    grid-template-columns: 46px 1fr 6px 1fr;
+    gap: 0;
     padding: 2px 0 6px 0;
     background: transparent;
+    align-items: stretch;
   }
 
   .header-pill {
@@ -218,7 +220,6 @@
     border-color: var(--up-border);
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
-    border-right: none;
   }
   
   .header-pill.down { 
@@ -226,9 +227,26 @@
     border-color: var(--down-border);
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
-    /* Vertikale Trennfuge auch im Header */
-    border-left: 2px solid #090b0e;
-    box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.15), var(--shadow-raised);
+  }
+
+  /* Durchgehender vertikaler Führungssteg / Edelstahl-Fräsnut */
+  .vertical-rail-divider {
+    background: #090b0e;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 1px 0 2px rgba(0,0,0,0.9), inset -1px 0 2px rgba(0,0,0,0.9);
+  }
+
+  .vertical-rail-divider::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, #64748b 0%, #334155 50%, #475569 100%);
+    box-shadow: 1px 0 0 rgba(255, 255, 255, 0.25), -1px 0 0 rgba(0, 0, 0, 0.7);
   }
 
   @keyframes pulseUp {
@@ -256,7 +274,7 @@
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-raised);
     display: grid;
-    grid-template-columns: 46px 1fr 1fr;
+    grid-template-columns: 46px 1fr 6px 1fr;
     overflow: hidden;
     scroll-margin-top: 130px;
     transition: border-color 0.2s, box-shadow 0.2s;
@@ -300,14 +318,8 @@
     background: rgba(56, 189, 248, 0.03); 
   }
 
-  /* ========================================================
-     VERTIKALE TRENNUNG ZWISCHEN AUF- UND AB-SPALTE
-     (Eingelassene Edelstahl-Nut mit Lichtkante)
-     ======================================================== */
   .cell-card.dir-down {
     background: rgba(245, 158, 11, 0.03);
-    border-left: 2px solid #090b0e;
-    box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.12);
   }
 
   .cell-card.focused-cell {
@@ -1067,12 +1079,14 @@
 
   <div class="inspection-split">
     <div class="main-column">
+      <!-- Grid-Header mit durchgehendem Edelstahl-Trennsteg -->
       <div class="grid-header">
         <div class="header-pill floor-th engraved-text">Et.</div>
         <div class="header-pill up engraved-text">
           <span class="led-arrow">▲</span>
           <span>Auf</span>
         </div>
+        <div class="vertical-rail-divider"></div>
         <div class="header-pill down engraved-text">
           <span class="led-arrow">▼</span>
           <span>Ab</span>
@@ -1203,7 +1217,7 @@
 <script>
   if ('serviceWorker' in navigator) {
     const swCode = `
-      const CACHE_NAME = 'buendigkeit-elev-v27';
+      const CACHE_NAME = 'buendigkeit-elev-v28';
       self.addEventListener('install', e => {
         e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll([self.location.href])));
         self.skipWaiting();
@@ -1216,7 +1230,7 @@
     navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
   }
 
-  const STORAGE_KEY = 'buendigkeit-elev-v27';
+  const STORAGE_KEY = 'buendigkeit-elev-v28';
   let state = {
     floorCount: 5,
     startFloor: 0,
@@ -1357,6 +1371,7 @@
         <div class="floor-card" id="floor-card-${f}" data-floor="${f}">
           <div class="floor-label engraved-text">${label}</div>
           ${renderCell(f, 'up')}
+          <div class="vertical-rail-divider"></div>
           ${renderCell(f, 'down')}
         </div>
       `;
