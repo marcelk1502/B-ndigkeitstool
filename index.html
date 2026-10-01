@@ -116,7 +116,7 @@
   .s-bl { bottom: 8px; left: 8px; }
   .s-br { bottom: 8px; right: 8px; }
 
-  /* Navigation zurück: Schalter etwas nach rechts eingerückt, ohne Normbadge */
+  /* Navigation zurück */
   .tableau-nav {
     display: flex;
     align-items: center;
@@ -159,7 +159,7 @@
     margin-right: 12px;
   }
 
-  /* Treibscheiben-Antrieb (Edelstahl Maschinenraum) */
+  /* Treibscheiben-Antrieb */
   .elevator-machinery {
     width: 38px;
     height: 44px;
@@ -209,7 +209,7 @@
     width: 1px;
     background: #cbd5e1;
     z-index: 1;
-    transition: height 0.35s cubic-bezier(0.34, 1.3, 0.64, 1);
+    transition: height 0.6s ease;
   }
   .rope-left { left: 8px; height: 16px; }
   .rope-right { right: 8px; height: 10px; }
@@ -225,7 +225,7 @@
     border: 1px solid #94a3b8;
     box-shadow: 0 0 4px rgba(56, 189, 248, 0.6);
     z-index: 2;
-    transition: top 0.35s cubic-bezier(0.34, 1.3, 0.64, 1);
+    transition: top 0.6s ease;
   }
 
   .mach-counterweight {
@@ -239,19 +239,19 @@
     border: 1px solid #fde68a;
     box-shadow: 0 0 4px var(--accent-glow);
     z-index: 2;
-    transition: top 0.35s cubic-bezier(0.34, 1.3, 0.64, 1);
+    transition: top 0.6s ease;
   }
 
   @keyframes rotateCW { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
   @keyframes rotateCCW { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
 
-  body[data-active-dir="up"] .traction-sheave { animation: rotateCW 1.2s infinite linear; }
+  body[data-active-dir="up"] .traction-sheave { animation: rotateCW 1.5s infinite linear; }
   body[data-active-dir="up"] .mach-car { top: 18px; }
   body[data-active-dir="up"] .rope-left { height: 7px; }
   body[data-active-dir="up"] .mach-counterweight { top: 29px; }
   body[data-active-dir="up"] .rope-right { height: 18px; }
 
-  body[data-active-dir="down"] .traction-sheave { animation: rotateCCW 1.2s infinite linear; }
+  body[data-active-dir="down"] .traction-sheave { animation: rotateCCW 1.5s infinite linear; }
   body[data-active-dir="down"] .mach-car { top: 29px; }
   body[data-active-dir="down"] .rope-left { height: 18px; }
   body[data-active-dir="down"] .mach-counterweight { top: 18px; }
@@ -558,7 +558,7 @@
   }
 
   /* ========================================================
-     ANIMIERTER EDELSTAHL-SCHACHT RECHTS (KABINE & TÜREN)
+     ANIMIERTER EDELSTAHL-SCHACHT RECHTS (LANGSAMERE FAHRT & TÜREN)
      ======================================================== */
   .shaft-panel {
     position: absolute;
@@ -643,14 +643,14 @@
   .shaft-node.bad { background: #7f1d1d; border-color: #ef4444; color: #fff; box-shadow: 0 0 6px rgba(239, 68, 68, 0.6); }
   .shaft-node.partial { background: #1e3a8a; border-color: #3b82f6; color: #fff; }
 
-  /* KABINE MIT TÜR-ANIMATION & ETAGE DAHINTER */
+  /* KABINE: Verlangsamte, gedämpfte Fahrzeit (0.9s ease-in-out) */
   .elevator-car {
     position: absolute;
     left: 2px;
     right: 2px;
     height: 24px;
     border-radius: 3px;
-    background: #0f172a; /* Kabinen-Innenraum */
+    background: #0f172a;
     border: 1.5px solid #94a3b8;
     box-shadow: 
       0 0 10px rgba(56, 189, 248, 0.5), 
@@ -658,14 +658,13 @@
       inset 0 -2px 4px rgba(0,0,0,0.8);
     pointer-events: none;
     z-index: 3;
-    transition: top 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+    transition: top 0.9s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
   }
 
-  /* Etagenanzeige im Kabinen-Innenraum */
   .car-interior-label {
     font-family: var(--font-display);
     font-size: 0.65rem;
@@ -676,7 +675,7 @@
     z-index: 1;
   }
 
-  /* Die beiden Edelstahltürflügel (zentral öffnend) */
+  /* TÜREN: Weiches und deutlich langsameres Öffnen & Schließen (0.65s) */
   .car-door {
     position: absolute;
     top: 0;
@@ -685,7 +684,7 @@
     background: linear-gradient(135deg, #475569 0%, #27303f 100%);
     border: 0.5px solid #64748b;
     z-index: 2;
-    transition: transform 0.35s ease-in-out;
+    transition: transform 0.65s cubic-bezier(0.25, 1, 0.5, 1);
   }
   .car-door-left {
     left: 0;
@@ -698,7 +697,6 @@
     box-shadow: inset -1px 0 0 rgba(255,255,255,0.2);
   }
 
-  /* Geöffnete Türen bei Ankunft an Haltestelle */
   .elevator-car.doors-open .car-door-left {
     transform: translateX(-88%);
   }
@@ -1066,12 +1064,12 @@
   <div class="screw s-bl"></div>
   <div class="screw s-br"></div>
 
-  <!-- Oberer Bereich: Nur noch der nach rechts versetzte Schalter -->
+  <!-- Navigation -->
   <div class="tableau-nav">
     <a href="index.html" class="nav-back">‹ Hauptmenü</a>
   </div>
 
-  <!-- Header mit animiertem Antriebsmodell -->
+  <!-- Header -->
   <header class="top-bar">
     <div class="nav-header">
       <div class="elevator-machinery" aria-hidden="true" title="Treibscheiben-Antrieb">
@@ -1103,7 +1101,7 @@
   <!-- Etagenliste -->
   <main class="floor-list" id="listContainer"></main>
 
-  <!-- Rechts im Tableau: animierter Schacht mit Aufzugstüren & sichtbarer Etage -->
+  <!-- Animierter Schacht mit gedämpfter Kabinen- & Türfahrt -->
   <aside class="shaft-panel" id="shaftPanel" aria-label="Schacht-Navigation">
     <div class="shaft-track" id="shaftTrack">
       <div class="shaft-rail-l"></div>
@@ -1208,7 +1206,7 @@
 <script>
   if ('serviceWorker' in navigator) {
     const swCode = `
-      const CACHE_NAME = 'buendigkeit-elev-v17';
+      const CACHE_NAME = 'buendigkeit-elev-v18';
       self.addEventListener('install', e => {
         e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll([self.location.href])));
         self.skipWaiting();
@@ -1221,7 +1219,7 @@
     navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
   }
 
-  const STORAGE_KEY = 'buendigkeit-elev-v17';
+  const STORAGE_KEY = 'buendigkeit-elev-v18';
   let state = {
     floorCount: 5,
     startFloor: 0,
@@ -1442,7 +1440,7 @@
 
   const container = $('listContainer');
 
-  /* Fokus & Fahrkorb-Animation im Schacht mit Türoffnung */
+  /* Fokus & ruhige Fahrkorb-Animation mit verzögertem sanftem Öffnen */
   container.addEventListener('focusin', e => {
     const card = e.target.closest('.floor-card');
     if (!card) return;
@@ -1462,7 +1460,7 @@
     if (shaftNode && elevatorCar && shaftPanel) {
       elevatorCar.style.display = 'flex';
       
-      // Türen vorübergehend schließen während der Fahrt
+      // Türen schließen während der Fahrt
       elevatorCar.classList.remove('doors-open');
       carFloorText.textContent = getFloorLabel(floor);
 
@@ -1470,23 +1468,22 @@
       elevatorCar.style.top = `${offsetTop - 1}px`;
       shaftNode.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
-      // Türen öffnen sobald die Kabine die Etage erreicht
+      // Türen öffnen sich erst ruhig, nachdem der Fahrkorb eingefahren ist (850ms)
       if (doorTimer) clearTimeout(doorTimer);
       doorTimer = setTimeout(() => {
         elevatorCar.classList.add('doors-open');
-      }, 300);
+      }, 850);
     }
   });
 
-  container.addEventListener('focusout', (e) => {
+  container.addEventListener('focusout', () => {
     document.body.dataset.activeDir = '';
     const elevatorCar = $('elevatorCar');
-    // Schließen, wenn kein neues Feld innerhalb der Liste den Fokus bekommt
     setTimeout(() => {
       if (!document.activeElement || !document.activeElement.classList.contains('val-input')) {
         if (elevatorCar) elevatorCar.classList.remove('doors-open');
       }
-    }, 150);
+    }, 250);
   });
 
   container.addEventListener('click', e => {
@@ -1613,7 +1610,7 @@
     $(id).addEventListener('input', renderList);
   });
 
-  /* Daumen-Löschbutton */
+  /* Löschbutton */
   let armTimer = null;
   const resetBtn = $('resetBtn');
   const resetBtnText = $('resetBtnText');
