@@ -73,7 +73,7 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* Tableau-Hauptgehäuse mit seitlich sichtbaren Inbusschrauben */
+  /* Tableau-Hauptgehäuse */
   .layout-wrap {
     max-width: 610px;
     margin: 0 auto;
@@ -83,7 +83,7 @@
     border: 2px solid var(--steel-light);
     border-radius: var(--radius-lg);
     padding-left: 12px;
-    padding-top: 10px;
+    padding-top: 12px;
     padding-bottom: 14px;
     box-shadow: 
       inset 0 1px 2px var(--steel-bevel),
@@ -116,36 +116,33 @@
   .s-bl { bottom: 8px; left: 8px; }
   .s-br { bottom: 8px; right: 8px; }
 
-  /* Navigation zurück */
+  /* Navigation zurück: Schalter etwas nach rechts eingerückt, ohne Normbadge */
   .tableau-nav {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    margin-bottom: 4px;
-    padding-right: 12px;
+    margin-bottom: 6px;
+    padding-left: 14px;
   }
   .nav-back {
     color: #79b8ff;
     text-decoration: none;
-    font-size: 0.78rem;
+    font-size: 0.8rem;
     font-weight: 700;
     letter-spacing: 0.05em;
     text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: color 0.15s ease;
   }
-  .tableau-badge {
-    font-size: 0.65rem;
-    font-family: var(--font-display);
-    color: var(--text-muted);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
+  .nav-back:active { color: #bae6fd; }
 
   /* Header */
   header.top-bar {
     position: sticky;
     top: 0;
     z-index: 20;
-    padding: 6px 0 8px;
+    padding: 4px 0 8px;
     background: transparent;
   }
 
@@ -561,7 +558,7 @@
   }
 
   /* ========================================================
-     ANIMIERTER EDELSTAHL-SCHACHT RECHTS (KABINE & FÜHRUNG)
+     ANIMIERTER EDELSTAHL-SCHACHT RECHTS (KABINE & TÜREN)
      ======================================================== */
   .shaft-panel {
     position: absolute;
@@ -590,7 +587,6 @@
     align-items: center;
   }
 
-  /* Zwei durchgehende Führungsschienen */
   .shaft-rail-l, .shaft-rail-r {
     position: absolute;
     top: 0;
@@ -632,7 +628,6 @@
     position: relative;
   }
 
-  /* Schwellenstrich pro Etage */
   .shaft-node::before {
     content: '';
     position: absolute;
@@ -648,14 +643,14 @@
   .shaft-node.bad { background: #7f1d1d; border-color: #ef4444; color: #fff; box-shadow: 0 0 6px rgba(239, 68, 68, 0.6); }
   .shaft-node.partial { background: #1e3a8a; border-color: #3b82f6; color: #fff; }
 
-  /* Die realistische animierte Aufzugskabine */
+  /* KABINE MIT TÜR-ANIMATION & ETAGE DAHINTER */
   .elevator-car {
     position: absolute;
     left: 2px;
     right: 2px;
     height: 24px;
     border-radius: 3px;
-    background: linear-gradient(135deg, #475569 0%, #1e293b 100%);
+    background: #0f172a; /* Kabinen-Innenraum */
     border: 1.5px solid #94a3b8;
     box-shadow: 
       0 0 10px rgba(56, 189, 248, 0.5), 
@@ -670,25 +665,45 @@
     overflow: hidden;
   }
 
-  /* Kabinentürspalt & Leuchtanzeige */
-  .elevator-car::before {
-    content: '';
-    position: absolute;
-    width: 1px;
-    top: 2px;
-    bottom: 2px;
-    background: #000;
-    box-shadow: 0 0 2px rgba(255, 255, 255, 0.4);
+  /* Etagenanzeige im Kabinen-Innenraum */
+  .car-interior-label {
+    font-family: var(--font-display);
+    font-size: 0.65rem;
+    font-weight: 900;
+    color: #38bdf8;
+    text-shadow: 0 0 4px rgba(56, 189, 248, 0.8);
+    user-select: none;
+    z-index: 1;
   }
-  .elevator-car::after {
-    content: '';
+
+  /* Die beiden Edelstahltürflügel (zentral öffnend) */
+  .car-door {
     position: absolute;
-    top: 2px;
-    left: 4px;
-    right: 4px;
-    height: 2px;
-    background: var(--up-color);
-    box-shadow: 0 0 4px var(--up-color);
+    top: 0;
+    bottom: 0;
+    width: 50%;
+    background: linear-gradient(135deg, #475569 0%, #27303f 100%);
+    border: 0.5px solid #64748b;
+    z-index: 2;
+    transition: transform 0.35s ease-in-out;
+  }
+  .car-door-left {
+    left: 0;
+    border-right: 1px solid #1e293b;
+    box-shadow: inset 1px 0 0 rgba(255,255,255,0.2);
+  }
+  .car-door-right {
+    right: 0;
+    border-left: 1px solid #1e293b;
+    box-shadow: inset -1px 0 0 rgba(255,255,255,0.2);
+  }
+
+  /* Geöffnete Türen bei Ankunft an Haltestelle */
+  .elevator-car.doors-open .car-door-left {
+    transform: translateX(-88%);
+  }
+  .elevator-car.doors-open .car-door-right {
+    transform: translateX(88%);
   }
 
   /* Floating Bottom Bar */
@@ -764,7 +779,6 @@
     flex: none;
   }
 
-  /* Edelstahl Buttons */
   .btn-thumb-settings {
     height: 40px;
     width: 40px;
@@ -1052,9 +1066,9 @@
   <div class="screw s-bl"></div>
   <div class="screw s-br"></div>
 
+  <!-- Oberer Bereich: Nur noch der nach rechts versetzte Schalter -->
   <div class="tableau-nav">
     <a href="index.html" class="nav-back">‹ Hauptmenü</a>
-    <span class="tableau-badge">EN 81-20 INSPECTION</span>
   </div>
 
   <!-- Header mit animiertem Antriebsmodell -->
@@ -1089,12 +1103,19 @@
   <!-- Etagenliste -->
   <main class="floor-list" id="listContainer"></main>
 
-  <!-- Rechts im Tableau verankerter animierter Schacht -->
+  <!-- Rechts im Tableau: animierter Schacht mit Aufzugstüren & sichtbarer Etage -->
   <aside class="shaft-panel" id="shaftPanel" aria-label="Schacht-Navigation">
     <div class="shaft-track" id="shaftTrack">
       <div class="shaft-rail-l"></div>
       <div class="shaft-rail-r"></div>
-      <div class="elevator-car" id="elevatorCar" style="display:none;"></div>
+      
+      <!-- Kabine mit Türen & Etagenanzeige -->
+      <div class="elevator-car" id="elevatorCar" style="display:none;">
+        <span class="car-interior-label" id="carFloorText">EG</span>
+        <div class="car-door car-door-left"></div>
+        <div class="car-door car-door-right"></div>
+      </div>
+
       <div class="shaft-nodes-wrap" id="shaftNodes"></div>
     </div>
   </aside>
@@ -1187,7 +1208,7 @@
 <script>
   if ('serviceWorker' in navigator) {
     const swCode = `
-      const CACHE_NAME = 'buendigkeit-elev-v16';
+      const CACHE_NAME = 'buendigkeit-elev-v17';
       self.addEventListener('install', e => {
         e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll([self.location.href])));
         self.skipWaiting();
@@ -1200,7 +1221,7 @@
     navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
   }
 
-  const STORAGE_KEY = 'buendigkeit-elev-v16';
+  const STORAGE_KEY = 'buendigkeit-elev-v17';
   let state = {
     floorCount: 5,
     startFloor: 0,
@@ -1208,6 +1229,8 @@
     useEgUg: true,
     values: {}
   };
+
+  let doorTimer = null;
 
   const $ = id => document.getElementById(id);
 
@@ -1419,7 +1442,7 @@
 
   const container = $('listContainer');
 
-  /* Fokus & Fahrkorb-Animation im Schacht rechts */
+  /* Fokus & Fahrkorb-Animation im Schacht mit Türoffnung */
   container.addEventListener('focusin', e => {
     const card = e.target.closest('.floor-card');
     if (!card) return;
@@ -1430,21 +1453,40 @@
     const dir = cell ? cell.dataset.dir : '';
     document.body.dataset.activeDir = dir;
 
-    const floor = card.dataset.floor;
+    const floor = parseInt(card.dataset.floor, 10);
     const shaftNode = $(`shaft-node-${floor}`);
     const elevatorCar = $('elevatorCar');
+    const carFloorText = $('carFloorText');
     const shaftPanel = $('shaftPanel');
 
     if (shaftNode && elevatorCar && shaftPanel) {
       elevatorCar.style.display = 'flex';
+      
+      // Türen vorübergehend schließen während der Fahrt
+      elevatorCar.classList.remove('doors-open');
+      carFloorText.textContent = getFloorLabel(floor);
+
       const offsetTop = shaftNode.offsetTop;
       elevatorCar.style.top = `${offsetTop - 1}px`;
       shaftNode.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+      // Türen öffnen sobald die Kabine die Etage erreicht
+      if (doorTimer) clearTimeout(doorTimer);
+      doorTimer = setTimeout(() => {
+        elevatorCar.classList.add('doors-open');
+      }, 300);
     }
   });
 
-  container.addEventListener('focusout', () => {
+  container.addEventListener('focusout', (e) => {
     document.body.dataset.activeDir = '';
+    const elevatorCar = $('elevatorCar');
+    // Schließen, wenn kein neues Feld innerhalb der Liste den Fokus bekommt
+    setTimeout(() => {
+      if (!document.activeElement || !document.activeElement.classList.contains('val-input')) {
+        if (elevatorCar) elevatorCar.classList.remove('doors-open');
+      }
+    }, 150);
   });
 
   container.addEventListener('click', e => {
@@ -1571,7 +1613,7 @@
     $(id).addEventListener('input', renderList);
   });
 
-  /* Zweistufiger Daumen-Löschbutton */
+  /* Daumen-Löschbutton */
   let armTimer = null;
   const resetBtn = $('resetBtn');
   const resetBtnText = $('resetBtnText');
