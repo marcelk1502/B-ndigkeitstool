@@ -71,10 +71,11 @@
     font-family: var(--font-ui);
     font-variant-numeric: tabular-nums;
     -webkit-font-smoothing: antialiased;
+    transition: padding-bottom 0.2s ease;
   }
 
   body.numpad-active {
-    padding-bottom: calc(env(safe-area-inset-bottom, 10px) + 160px);
+    padding-bottom: calc(env(safe-area-inset-bottom, 10px) + 185px);
   }
 
   /* Laser-Gravur-Effekt */
@@ -582,15 +583,15 @@
   .elevator-car.doors-open .car-door-left { transform: translateX(-88%); }
   .elevator-car.doors-open .car-door-right { transform: translateX(88%); }
 
-  /* Virtuelles Vor-Ort Tastenfeld (verhindert Handy-Tastatur) */
+  /* Virtuelles Vor-Ort Tastenfeld (sauber über der Leiste platziert) */
   .numpad-drawer {
     position: fixed;
-    bottom: 60px;
+    bottom: calc(env(safe-area-inset-bottom, 8px) + 58px);
     left: 0;
     right: 0;
     background: linear-gradient(180deg, #2d333e 0%, #171a22 100%);
     border-top: 2px solid var(--steel-light);
-    border-bottom: 1px solid #333a47;
+    border-bottom: 1.5px solid #0f1217;
     padding: 8px 12px;
     z-index: 29;
     box-shadow: 0 -8px 24px rgba(0,0,0,0.85);
@@ -602,18 +603,18 @@
     max-width: 610px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 6px;
   }
 
   .num-key {
-    height: 38px;
+    height: 40px;
     background: linear-gradient(180deg, #3a4252 0%, #20252e 100%);
     border: 1px solid var(--steel-light);
     border-radius: var(--radius-sm);
     color: #fff;
     font-family: var(--font-display);
-    font-size: 0.85rem;
+    font-size: 0.95rem;
     font-weight: 900;
     cursor: pointer;
     box-shadow: var(--shadow-raised);
@@ -1042,18 +1043,16 @@
   </div>
 </div>
 
-<!-- Vor-Ort Industrie Schnell-Tastenfeld -->
+<!-- Vor-Ort Industrie Schnell-Tastenfeld (ohne ±2) -->
 <div class="numpad-drawer" id="numpadDrawer">
   <div class="numpad-grid">
     <button type="button" class="num-key" onclick="numpadAdd(1)">+1</button>
-    <button type="button" class="num-key" onclick="numpadAdd(2)">+2</button>
     <button type="button" class="num-key" onclick="numpadAdd(5)">+5</button>
     <button type="button" class="num-key" onclick="numpadAdd(10)">+10</button>
     <button type="button" class="num-key zero" onclick="numpadSet(0)">0 mm</button>
     <button type="button" class="num-key clear" onclick="numpadClear()">C</button>
 
     <button type="button" class="num-key" onclick="numpadAdd(-1)">-1</button>
-    <button type="button" class="num-key" onclick="numpadAdd(-2)">-2</button>
     <button type="button" class="num-key" onclick="numpadAdd(-5)">-5</button>
     <button type="button" class="num-key" onclick="numpadAdd(-10)">-10</button>
     <button type="button" class="num-key next" onclick="numpadNext()">Weiter ▾</button>
@@ -1147,7 +1146,7 @@
 <script>
   if ('serviceWorker' in navigator) {
     const swCode = `
-      const CACHE_NAME = 'buendigkeit-elev-v24';
+      const CACHE_NAME = 'buendigkeit-elev-v25';
       self.addEventListener('install', e => {
         e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll([self.location.href])));
         self.skipWaiting();
@@ -1160,7 +1159,7 @@
     navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
   }
 
-  const STORAGE_KEY = 'buendigkeit-elev-v24';
+  const STORAGE_KEY = 'buendigkeit-elev-v25';
   let state = {
     floorCount: 5,
     startFloor: 0,
@@ -1408,7 +1407,7 @@
     const dir = card.dataset.dir;
     document.body.dataset.activeDir = dir;
 
-    // NumPad anzeigen & Body-Abstand anpassen
+    // NumPad anzeigen & Body-Abstand dynamisch anpassen
     $('numpadDrawer').classList.add('active');
     document.body.classList.add('numpad-active');
 
