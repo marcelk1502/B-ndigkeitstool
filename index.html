@@ -78,13 +78,10 @@
     max-width: 610px;
     margin: 0 auto;
     position: relative;
-    padding-right: 50px;
     background: linear-gradient(135deg, #3d434f 0%, #262a32 30%, #3a404c 60%, #1f2229 100%);
     border: 2px solid var(--steel-light);
     border-radius: var(--radius-lg);
-    padding-left: 12px;
-    padding-top: 12px;
-    padding-bottom: 14px;
+    padding: 12px 8px 14px 12px;
     box-shadow: 
       inset 0 1px 2px var(--steel-bevel),
       inset 0 -2px 5px rgba(0,0,0,0.8),
@@ -156,7 +153,6 @@
     border-radius: var(--radius-md);
     padding: 8px 14px;
     box-shadow: inset 0 2px 6px rgba(0,0,0,0.9), 0 2px 4px rgba(255,255,255,0.06);
-    margin-right: 12px;
   }
 
   /* Treibscheiben-Antrieb */
@@ -268,6 +264,19 @@
     font-family: var(--font-display);
   }
 
+  /* Grid Layout: Links Scrollbereich (Liste), Rechts fester Schacht */
+  .inspection-split {
+    display: grid;
+    grid-template-columns: 1fr 42px;
+    gap: 8px;
+    align-items: start;
+    position: relative;
+  }
+
+  .main-column {
+    min-width: 0;
+  }
+
   /* Spaltenköpfe */
   .grid-header {
     position: sticky;
@@ -276,7 +285,7 @@
     display: grid;
     grid-template-columns: 46px 1fr 1fr;
     gap: 6px;
-    padding: 2px 12px 6px 0;
+    padding: 2px 0 6px 0;
     background: transparent;
   }
 
@@ -317,7 +326,6 @@
     flex-direction: column;
     gap: 8px;
     margin-top: 4px;
-    padding-right: 12px;
   }
 
   .floor-card {
@@ -558,14 +566,13 @@
   }
 
   /* ========================================================
-     ANIMIERTER EDELSTAHL-SCHACHT RECHTS (SEHR RUHIGE FAHRT)
+     ANIMIERTER EDELSTAHL-SCHACHT RECHTS (FEST AN OBERKANTE FIXIERT)
      ======================================================== */
   .shaft-panel {
-    position: absolute;
-    right: 8px;
-    top: 54px;
-    bottom: 12px;
+    position: sticky;
+    top: 68px; /* Bleibt bei scrollender Seite fest oben verankert */
     width: 38px;
+    max-height: calc(100vh - 160px);
     background: #090a0e;
     border: 2px solid var(--steel-mid);
     border-radius: var(--radius-md);
@@ -643,7 +650,7 @@
   .shaft-node.bad { background: #7f1d1d; border-color: #ef4444; color: #fff; box-shadow: 0 0 6px rgba(239, 68, 68, 0.6); }
   .shaft-node.partial { background: #1e3a8a; border-color: #3b82f6; color: #fff; }
 
-  /* KABINE: Noch sanftere, verlangsamte Fahrzeit (1.4s) */
+  /* KABINE */
   .elevator-car {
     position: absolute;
     left: 2px;
@@ -675,7 +682,7 @@
     z-index: 1;
   }
 
-  /* TÜREN: Sehr ruhiges und geschmeidiges Aufgleiten (0.9s) */
+  /* TÜREN */
   .car-door {
     position: absolute;
     top: 0;
@@ -852,7 +859,6 @@
     pointer-events: none;
     transition: opacity 0.25s ease;
   }
-  .modal-overlay.active .modal-card { transform: translateY(0) scale(1); }
   .modal-overlay.active { opacity: 1; pointer-events: auto; }
 
   .modal-card {
@@ -869,6 +875,7 @@
     transform: translateY(12px) scale(0.97);
     transition: transform 0.25s cubic-bezier(0.34, 1.4, 0.64, 1);
   }
+  .modal-overlay.active .modal-card { transform: translateY(0) scale(1); }
 
   .modal-header {
     padding: 12px 16px;
@@ -1085,38 +1092,43 @@
     </div>
   </header>
 
-  <!-- Spaltenköpfe -->
-  <div class="grid-header">
-    <div class="header-pill">Et.</div>
-    <div class="header-pill up">
-      <span class="led-arrow">▲</span>
-      <span>Auf</span>
-    </div>
-    <div class="header-pill down">
-      <span class="led-arrow">▼</span>
-      <span>Ab</span>
-    </div>
-  </div>
-
-  <!-- Etagenliste -->
-  <main class="floor-list" id="listContainer"></main>
-
-  <!-- Animierter Schacht -->
-  <aside class="shaft-panel" id="shaftPanel" aria-label="Schacht-Navigation">
-    <div class="shaft-track" id="shaftTrack">
-      <div class="shaft-rail-l"></div>
-      <div class="shaft-rail-r"></div>
-      
-      <!-- Kabine mit Türen & Etagenanzeige -->
-      <div class="elevator-car" id="elevatorCar" style="display:none;">
-        <span class="car-interior-label" id="carFloorText">EG</span>
-        <div class="car-door car-door-left"></div>
-        <div class="car-door car-door-right"></div>
+  <!-- Zweispaltiges Layout: Links die scrollende Etagenliste, rechts der fix verankerte Schacht -->
+  <div class="inspection-split">
+    <div class="main-column">
+      <!-- Spaltenköpfe -->
+      <div class="grid-header">
+        <div class="header-pill">Et.</div>
+        <div class="header-pill up">
+          <span class="led-arrow">▲</span>
+          <span>Auf</span>
+        </div>
+        <div class="header-pill down">
+          <span class="led-arrow">▼</span>
+          <span>Ab</span>
+        </div>
       </div>
 
-      <div class="shaft-nodes-wrap" id="shaftNodes"></div>
+      <!-- Etagenliste -->
+      <main class="floor-list" id="listContainer"></main>
     </div>
-  </aside>
+
+    <!-- Rechts feststehender Schacht -->
+    <aside class="shaft-panel" id="shaftPanel" aria-label="Schacht-Navigation">
+      <div class="shaft-track" id="shaftTrack">
+        <div class="shaft-rail-l"></div>
+        <div class="shaft-rail-r"></div>
+        
+        <!-- Kabine mit Türen & Etagenanzeige -->
+        <div class="elevator-car" id="elevatorCar" style="display:none;">
+          <span class="car-interior-label" id="carFloorText">EG</span>
+          <div class="car-door car-door-left"></div>
+          <div class="car-door car-door-right"></div>
+        </div>
+
+        <div class="shaft-nodes-wrap" id="shaftNodes"></div>
+      </div>
+    </aside>
+  </div>
 </div>
 
 <!-- Floating Bottom Bar -->
@@ -1206,7 +1218,7 @@
 <script>
   if ('serviceWorker' in navigator) {
     const swCode = `
-      const CACHE_NAME = 'buendigkeit-elev-v20';
+      const CACHE_NAME = 'buendigkeit-elev-v21';
       self.addEventListener('install', e => {
         e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll([self.location.href])));
         self.skipWaiting();
@@ -1219,7 +1231,7 @@
     navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
   }
 
-  const STORAGE_KEY = 'buendigkeit-elev-v20';
+  const STORAGE_KEY = 'buendigkeit-elev-v21';
   let state = {
     floorCount: 5,
     startFloor: 0,
@@ -1441,7 +1453,7 @@
 
   const container = $('listContainer');
 
-  /* Fokus & noch ruhigere Fahrkorb-Animation */
+  /* Fokus & ruhige Fahrt mit starrer Schachtverankerung */
   container.addEventListener('focusin', e => {
     const card = e.target.closest('.floor-card');
     if (!card) return;
@@ -1461,7 +1473,7 @@
     if (shaftNode && elevatorCar && shaftPanel) {
       elevatorCar.style.display = 'flex';
 
-      // Bleibt auf gleicher Etage: Türen bleiben offen
+      // Wenn gleiche Etage: Keine Türbewegung
       if (currentElevatorFloor === floor) {
         if (!elevatorCar.classList.contains('doors-open')) {
           elevatorCar.classList.add('doors-open');
@@ -1469,7 +1481,7 @@
         return;
       }
 
-      // Neue Etage: Fahrt mit 1.4s Dauer, erst nach 1.35s öffnen
+      // Neue Etage: Türen zu, sanft anfahren, ankommen, öffnen
       currentElevatorFloor = floor;
       elevatorCar.classList.remove('doors-open');
       carFloorText.textContent = getFloorLabel(floor);
