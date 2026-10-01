@@ -1,1775 +1,251 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
-<meta name="theme-color" content="#0a0e17">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Bündigkeiten">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%231e293b'/><rect x='10' y='10' width='80' height='80' rx='14' fill='%230f172a' stroke='%23f59e0b' stroke-width='4'/><text y='.9em' x='22' font-size='68' fill='%23f59e0b'>⇕</text></svg>">
-<title>Bündigkeiten - Aufzugservice</title>
-<style>
-  :root {
-    --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    --font-display: "SF Mono", "Roboto Mono", "Consolas", "Liberation Mono", ui-monospace, monospace;
-    
-    --bg-base: #0a0e17;
-    --card-surface: linear-gradient(165deg, #1e293b 0%, #0f172a 100%);
-    --card-border: #334155;
-    --text: #f8fafc;
-    --text-muted: #94a3b8;
-
-    --up-color: #38bdf8;
-    --up-border: rgba(56, 189, 248, 0.35);
-    --up-glow: rgba(56, 189, 248, 0.2);
-
-    --down-color: #f59e0b;
-    --down-border: rgba(245, 158, 11, 0.35);
-    --down-glow: rgba(245, 158, 11, 0.2);
-
-    --accent: #f59e0b;
-    --accent-glow: rgba(245, 158, 11, 0.4);
-
-    --ok: #10b981;
-    --ok-bg: rgba(16, 185, 129, 0.18);
-    --ok-border: #059669;
-    --ok-text: #34d399;
-
-    --bad: #ef4444;
-    --bad-bg: rgba(239, 68, 68, 0.22);
-    --bad-border: #dc2626;
-    --bad-text: #fca5a5;
-
-    --shadow-raised: 
-      0 4px 10px -1px rgba(0, 0, 0, 0.6), 
-      inset 0 1px 0 rgba(255, 255, 255, 0.08);
-    --shadow-sunken: 
-      inset 0 2px 6px rgba(0, 0, 0, 0.75),
-      inset 0 -1px 0 rgba(255, 255, 255, 0.04);
-    
-    --radius-sm: 6px;
-    --radius-md: 10px;
-    --radius-lg: 14px;
-  }
-
-  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  
-  body {
-    margin: 0;
-    padding: env(safe-area-inset-top, 8px) 8px calc(env(safe-area-inset-bottom, 10px) + 74px);
-    background: var(--bg-base);
-    min-height: 100vh;
-    color: var(--text);
-    font-family: var(--font-ui);
-    font-variant-numeric: tabular-nums;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  .layout-wrap {
-    max-width: 600px;
-    margin: 0 auto;
-    position: relative;
-    padding-right: 42px;
-  }
-
-  /* Header */
-  header.top-bar {
-    position: sticky;
-    top: 0;
-    z-index: 20;
-    background: rgba(10, 14, 23, 0.94);
-    padding: 6px 0 8px;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-  }
-
-  .nav-header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 12px;
-  }
-
-  /* ========================================================
-     ANIMIERTES AUFZUG-MODELL (TREIBSCHEIBE & GEGENGEWICHT)
-     ======================================================== */
-  .elevator-machinery {
-    width: 38px;
-    height: 44px;
-    position: relative;
-    background: #060910;
-    border: 1.5px solid var(--card-border);
-    border-radius: var(--radius-sm);
-    box-shadow: var(--shadow-sunken);
-    overflow: hidden;
-    flex: none;
-  }
-
-  /* Treibscheibe */
-  .traction-sheave {
-    position: absolute;
-    top: 3px;
-    left: 50%;
-    width: 20px;
-    height: 20px;
-    margin-left: -10px;
-    border-radius: 50%;
-    border: 1.5px solid var(--accent);
-    background: #1e293b;
-    box-shadow: 0 0 6px var(--accent-glow);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.3s ease;
-  }
-  .traction-sheave::after {
-    content: "";
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--accent);
-  }
-  .traction-sheave::before {
-    content: "";
-    position: absolute;
-    width: 14px;
-    height: 2px;
-    background: #475569;
-  }
-
-  /* Tragseile */
-  .rope-left, .rope-right {
-    position: absolute;
-    top: 13px;
-    width: 1px;
-    background: #94a3b8;
-    z-index: 1;
-    transition: height 0.35s cubic-bezier(0.34, 1.3, 0.64, 1);
-  }
-  .rope-left { left: 8px; height: 16px; }
-  .rope-right { right: 8px; height: 10px; }
-
-  /* Fahrkorb (links) */
-  .mach-car {
-    position: absolute;
-    left: 4px;
-    top: 27px;
-    width: 9px;
-    height: 12px;
-    border-radius: 1.5px;
-    background: linear-gradient(135deg, #38bdf8, #0284c7);
-    border: 1px solid #7dd3fc;
-    box-shadow: 0 0 4px rgba(56, 189, 248, 0.5);
-    z-index: 2;
-    transition: top 0.35s cubic-bezier(0.34, 1.3, 0.64, 1);
-  }
-
-  /* Gegengewicht (rechts) */
-  .mach-counterweight {
-    position: absolute;
-    right: 5px;
-    top: 22px;
-    width: 7px;
-    height: 10px;
-    border-radius: 1px;
-    background: #f59e0b;
-    border: 1px solid #fde68a;
-    box-shadow: 0 0 4px var(--accent-glow);
-    z-index: 2;
-    transition: top 0.35s cubic-bezier(0.34, 1.3, 0.64, 1);
-  }
-
-  /* Drehungs-Animationen */
-  @keyframes rotateCW {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-  }
-  @keyframes rotateCCW {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(-360deg); }
-  }
-
-  /* Zustände bei Aufwärts-/Abwärtsfahrt */
-  body[data-active-dir="up"] .traction-sheave {
-    animation: rotateCW 1.2s infinite linear;
-  }
-  body[data-active-dir="up"] .mach-car {
-    top: 18px;
-  }
-  body[data-active-dir="up"] .rope-left {
-    height: 7px;
-  }
-  body[data-active-dir="up"] .mach-counterweight {
-    top: 29px;
-  }
-  body[data-active-dir="up"] .rope-right {
-    height: 18px;
-  }
-
-  body[data-active-dir="down"] .traction-sheave {
-    animation: rotateCCW 1.2s infinite linear;
-  }
-  body[data-active-dir="down"] .mach-car {
-    top: 29px;
-  }
-  body[data-active-dir="down"] .rope-left {
-    height: 18px;
-  }
-  body[data-active-dir="down"] .mach-counterweight {
-    top: 18px;
-  }
-  body[data-active-dir="down"] .rope-right {
-    height: 7px;
-  }
-
-  .title-group h1 {
-    font-size: 1.55rem;
-    font-weight: 900;
-    letter-spacing: -0.02em;
-    margin: 0;
-    text-transform: uppercase;
-    color: #fff;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.6);
-  }
-
-  /* Spaltenköpfe */
-  .grid-header {
-    position: sticky;
-    top: 54px;
-    z-index: 15;
-    display: grid;
-    grid-template-columns: 46px 1fr 1fr;
-    gap: 6px;
-    padding: 2px 0 6px;
-    background: var(--bg-base);
-  }
-
-  .header-pill {
-    background: #111827;
-    border: 1.5px solid var(--card-border);
-    border-radius: var(--radius-sm);
-    padding: 6px 2px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    font-size: 0.82rem;
-    font-weight: 900;
-    box-shadow: var(--shadow-raised);
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-  }
-
-  .header-pill.up { color: var(--up-color); border-color: var(--up-border); background: #0c1a2e; }
-  .header-pill.down { color: var(--down-color); border-color: var(--down-border); background: #23190b; }
-
-  @keyframes pulseUp {
-    0%, 100% { transform: translateY(0); opacity: 0.8; }
-    50% { transform: translateY(-2px); opacity: 1; filter: drop-shadow(0 0 4px var(--up-color)); }
-  }
-  @keyframes pulseDown {
-    0%, 100% { transform: translateY(0); opacity: 0.8; }
-    50% { transform: translateY(2px); opacity: 1; filter: drop-shadow(0 0 4px var(--down-color)); }
-  }
-
-  body[data-active-dir="up"] .header-pill.up .led-arrow { animation: pulseUp 0.8s infinite ease-in-out; }
-  body[data-active-dir="down"] .header-pill.down .led-arrow { animation: pulseDown 0.8s infinite ease-in-out; }
-
-  /* Etagenliste */
-  .floor-list {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-top: 4px;
-  }
-
-  .floor-card {
-    background: var(--card-surface);
-    border: 1.5px solid var(--card-border);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-raised);
-    display: grid;
-    grid-template-columns: 46px 1fr 1fr;
-    overflow: hidden;
-    scroll-margin-top: 110px;
-    transition: border-color 0.2s, box-shadow 0.2s;
-  }
-
-  .floor-card.active-floor {
-    border-color: var(--accent);
-    box-shadow: 0 0 14px rgba(245, 158, 11, 0.4), var(--shadow-raised);
-  }
-
-  .floor-label {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--font-display);
-    font-size: 1.15rem;
-    font-weight: 900;
-    background: #060910;
-    border-right: 1.5px solid var(--card-border);
-    color: #fff;
-    user-select: none;
-    box-shadow: inset -2px 0 6px rgba(0,0,0,0.8);
-    letter-spacing: -0.05em;
-    text-align: center;
-    padding: 0 2px;
-  }
-
-  .cell-card {
-    margin: 0;
-    padding: 8px 6px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    position: relative;
-    background: transparent;
-    transition: background 0.2s;
-  }
-
-  .cell-card.dir-up { background: rgba(56, 189, 248, 0.02); }
-  .cell-card.dir-down {
-    border-left: 1.5px dashed rgba(245, 158, 11, 0.3);
-    background: rgba(245, 158, 11, 0.02);
-  }
-
-  .cell-card.ok { background: var(--ok-bg) !important; }
-  .cell-card.bad { background: var(--bad-bg) !important; }
-
-  @keyframes shakeWarn {
-    0%, 100% { transform: translateX(0); }
-    20%, 60% { transform: translateX(-3px); }
-    40%, 80% { transform: translateX(3px); }
-  }
-  .cell-card.shake { animation: shakeWarn 0.35s ease-in-out; }
-
-  @keyframes okPulse {
-    0% { box-shadow: inset 0 0 0 rgba(16, 185, 129, 0); }
-    50% { box-shadow: inset 0 0 16px rgba(16, 185, 129, 0.6); }
-    100% { box-shadow: inset 0 0 0 rgba(16, 185, 129, 0); }
-  }
-  .cell-card.success-pulse { animation: okPulse 0.6s ease-out; }
-
-  .cell-card.na {
-    background: rgba(15, 23, 42, 0.6) !important;
-    color: #475569;
-    font-size: 0.72rem;
-    font-weight: 800;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-transform: uppercase;
-  }
-
-  .cell-main { display: flex; align-items: center; gap: 5px; }
-  .input-wrapper {
-    flex: 1;
-    min-width: 0;
-    position: relative;
-    display: flex;
-    align-items: center;
-  }
-
-  .sign-quick-toggle {
-    position: absolute;
-    left: 3px;
-    z-index: 2;
-    background: #1e293b;
-    border: 1px solid var(--card-border);
-    color: var(--text-muted);
-    border-radius: 4px;
-    width: 20px;
-    height: 26px;
-    font-size: 0.75rem;
-    font-weight: 900;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    user-select: none;
-  }
-  .sign-quick-toggle:active {
-    background: var(--accent);
-    color: #000;
-  }
-
-  .val-input {
-    width: 100%;
-    height: 40px;
-    border: 1.5px solid var(--card-border);
-    border-radius: var(--radius-sm);
-    background: #050811;
-    color: #fff;
-    font-family: var(--font-display);
-    font-size: 1.25rem;
-    font-weight: 900;
-    text-align: center;
-    padding-left: 20px;
-    padding-right: 2px;
-    outline: none;
-    box-shadow: var(--shadow-sunken);
-    letter-spacing: 0.02em;
-    transition: border-color 0.15s, box-shadow 0.15s;
-  }
-
-  .dir-up .val-input:focus {
-    border-color: var(--up-color);
-    box-shadow: 0 0 0 2px var(--up-glow), var(--shadow-sunken);
-  }
-  .dir-down .val-input:focus {
-    border-color: var(--down-color);
-    box-shadow: 0 0 0 2px var(--down-glow), var(--shadow-sunken);
-  }
-
-  /* Pegelanzeige */
-  .gauge-container {
-    flex: none;
-    width: 12px;
-    height: 40px;
-    background: #050811;
-    border: 1px solid #1e293b;
-    border-radius: 4px;
-    position: relative;
-    overflow: hidden;
-    cursor: pointer;
-    box-shadow: var(--shadow-sunken);
-  }
-
-  .gauge-scale-ticks {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 3px 0;
-    opacity: 0.35;
-  }
-  .gauge-scale-ticks span {
-    display: block;
-    height: 1px;
-    width: 4px;
-    background: #94a3b8;
-  }
-  .gauge-scale-ticks span.mid-tick {
-    width: 8px;
-    background: #f59e0b;
-    opacity: 0.9;
-  }
-
-  .gauge-tolerance {
-    position: absolute;
-    left: 0; right: 0;
-    background: #10b981;
-    opacity: 0.35;
-  }
-
-  .gauge-center-line {
-    position: absolute;
-    left: 0; right: 0;
-    top: calc(50% - 0.5px);
-    height: 1.5px;
-    background: #f59e0b;
-    opacity: 0.8;
-  }
-
-  .gauge-pointer {
-    position: absolute;
-    left: 1px;
-    right: 1px;
-    height: 5px;
-    border-radius: 1px;
-    background: #fff;
-    top: calc(50% - 2.5px);
-    display: none;
-    transition: top 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.8);
-  }
-
-  .cell-card.ok .gauge-pointer { display: block; background: #10b981; box-shadow: 0 0 6px #10b981; }
-  .cell-card.bad .gauge-pointer { display: block; background: #ef4444; box-shadow: 0 0 6px #ef4444; }
-
-  /* Statustext */
-  .status-text {
-    font-size: 0.85rem;
-    font-weight: 900;
-    margin-top: 4px;
-    text-align: center;
-    color: var(--text-muted);
-    min-height: 22px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 4px;
-    letter-spacing: -0.01em;
-    padding: 1px 4px;
-    background: transparent;
-  }
-
-  .cell-card.ok .status-text {
-    color: var(--ok-text);
-    background: rgba(16, 185, 129, 0.18);
-    border: 1px solid rgba(16, 185, 129, 0.35);
-  }
-
-  .cell-card.bad .status-text {
-    color: #ff8a8a;
-    background: rgba(239, 68, 68, 0.25);
-    border: 1px solid rgba(239, 68, 68, 0.5);
-    text-shadow: 0 1px 2px rgba(0,0,0,0.7);
-  }
-
-  /* Schacht-Navigation (Mini-Map rechts) */
-  .shaft-panel {
-    position: fixed;
-    right: max(6px, calc((100vw - 600px) / 2 + 6px));
-    top: calc(env(safe-area-inset-top, 8px) + 54px);
-    width: 36px;
-    max-height: calc(100vh - 140px);
-    overflow-y: auto;
-    overflow-x: hidden;
-    scrollbar-width: none;
-    background: #070b14;
-    border: 1.5px solid var(--card-border);
-    border-radius: var(--radius-md);
-    padding: 4px 2px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.85);
-    z-index: 25;
-    transition: transform 0.2s ease, top 0.2s ease;
-  }
-  .shaft-panel::-webkit-scrollbar { display: none; }
-
-  .shaft-track {
-    position: relative;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    align-items: center;
-  }
-
-  .shaft-cable {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 50%;
-    width: 2px;
-    background: #1e293b;
-    transform: translateX(-50%);
-    z-index: 0;
-  }
-
-  .shaft-node {
-    width: 28px;
-    height: 20px;
-    border-radius: 4px;
-    background: #131d2e;
-    border: 1px solid #23344d;
-    font-family: var(--font-display);
-    font-size: 0.62rem;
-    font-weight: 900;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-muted);
-    cursor: pointer;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.5);
-    transition: all 0.15s ease;
-    position: relative;
-    z-index: 1;
-    overflow: hidden;
-    flex: none;
-  }
-
-  .shaft-node:active { transform: scale(0.85); }
-  .shaft-node.ok { background: #065f46; border-color: #10b981; color: #fff; }
-  .shaft-node.bad { background: #7f1d1d; border-color: #ef4444; color: #fff; box-shadow: 0 0 6px rgba(239, 68, 68, 0.5); }
-  .shaft-node.partial { background: #1e3a8a; border-color: #3b82f6; color: #fff; }
-
-  .elevator-car {
-    position: absolute;
-    left: 1px;
-    right: 1px;
-    height: 22px;
-    border-radius: 4px;
-    border: 1.5px solid var(--accent);
-    background: rgba(245, 158, 11, 0.25);
-    box-shadow: 0 0 8px var(--accent-glow), inset 0 0 4px var(--accent-glow);
-    pointer-events: none;
-    z-index: 2;
-    transition: top 0.3s cubic-bezier(0.34, 1.3, 0.64, 1);
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-  }
-  .elevator-car::after {
-    content: "◀";
-    font-size: 7px;
-    color: var(--accent);
-    margin-right: -6px;
-  }
-
-  /* Floating Bottom Bar */
-  .bottom-bar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 30;
-    background: rgba(10, 14, 23, 0.96);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border-top: 1.5px solid var(--card-border);
-    padding: 8px 12px calc(env(safe-area-inset-bottom, 8px) + 6px);
-    box-shadow: 0 -8px 24px rgba(0,0,0,0.6);
-  }
-
-  .bottom-progress-edge {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: #1e293b;
-    overflow: hidden;
-  }
-
-  .bottom-progress-fill {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, var(--accent), #eab308);
-    box-shadow: 0 0 10px var(--accent-glow);
-    transition: width 0.25s ease;
-  }
-
-  .bottom-bar-inner {
-    max-width: 600px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-  }
-
-  .bottom-info {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    min-width: 0;
-    flex: 1;
-  }
-
-  .bottom-info-title {
-    font-size: 0.6rem;
-    font-weight: 900;
-    color: var(--text-muted);
-    text-transform: uppercase;
-  }
-
-  .bottom-info-val {
-    font-family: var(--font-display);
-    font-size: 0.85rem;
-    font-weight: 900;
-    color: #fff;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .bottom-actions {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    flex: none;
-  }
-
-  /* Zahnrad Button für Einstellungen */
-  .btn-thumb-settings {
-    height: 40px;
-    width: 40px;
-    border-radius: var(--radius-md);
-    background: #1e293b;
-    border: 1.5px solid var(--card-border);
-    color: #fff;
-    font-size: 1.15rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.1s ease, border-color 0.2s;
-  }
-  .btn-thumb-settings:active { transform: translateY(2px); border-color: var(--accent); }
-
-  .btn-thumb-reset {
-    height: 40px;
-    padding: 0 10px;
-    border-radius: var(--radius-md);
-    background: #1e293b;
-    border: 1.5px solid var(--bad-border);
-    color: var(--bad-text);
-    font-weight: 900;
-    font-size: 0.78rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    text-transform: uppercase;
-  }
-  .btn-thumb-reset:active { transform: translateY(2px); }
-  .btn-thumb-reset.armed {
-    background: #dc2626;
-    border-color: #ef4444;
-    color: #fff;
-    box-shadow: 0 0 12px rgba(220, 38, 38, 0.6);
-  }
-
-  .btn-thumb-protocol {
-    height: 40px;
-    padding: 0 14px;
-    border-radius: var(--radius-md);
-    background: linear-gradient(135deg, #f59e0b, #d97706);
-    border: 1.5px solid #b45309;
-    color: #000;
-    font-weight: 900;
-    font-size: 0.85rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    box-shadow: 0 3px 12px var(--accent-glow);
-    text-transform: uppercase;
-    letter-spacing: 0.02em;
-  }
-  .btn-thumb-protocol:active { transform: translateY(2px); }
-
-  /* Modals */
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.82);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 12px;
-    z-index: 100;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.25s ease;
-  }
-
-  .modal-overlay.active { opacity: 1; pointer-events: auto; }
-
-  .modal-card {
-    background: #0f172a;
-    border: 1.5px solid var(--card-border);
-    border-radius: var(--radius-lg);
-    box-shadow: 0 20px 35px rgba(0,0,0,0.85);
-    width: 100%;
-    max-width: 460px;
-    max-height: 90vh;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    transform: translateY(12px) scale(0.97);
-    transition: transform 0.25s cubic-bezier(0.34, 1.4, 0.64, 1);
-  }
-
-  .modal-overlay.active .modal-card { transform: translateY(0) scale(1); }
-
-  .modal-header {
-    padding: 12px 16px;
-    border-bottom: 1.5px solid var(--card-border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: #070b14;
-  }
-
-  .modal-header h2 {
-    font-size: 1.1rem;
-    font-weight: 900;
-    margin: 0;
-    color: #fff;
-    text-transform: uppercase;
-  }
-
-  .modal-close {
-    background: transparent;
-    border: none;
-    font-size: 1.4rem;
-    color: var(--text-muted);
-    cursor: pointer;
-    padding: 2px 6px;
-  }
-
-  .modal-body { padding: 12px 14px; overflow-y: auto; }
-
-  .settings-grid-modal {
-    display: grid;
-    grid-template-columns: 1.2fr 0.8fr 1.2fr;
-    gap: 8px;
-  }
-
-  .setting-item-modal {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    font-size: 0.7rem;
-    font-weight: 800;
-    color: var(--text-muted);
-    text-transform: uppercase;
-  }
-
-  .setting-item-modal input {
-    height: 38px;
-    width: 100%;
-    border: 1.5px solid var(--card-border);
-    border-radius: var(--radius-sm);
-    background: #090d16;
-    color: #fff;
-    font-family: var(--font-display);
-    font-size: 1.05rem;
-    font-weight: 900;
-    text-align: center;
-    box-shadow: var(--shadow-sunken);
-  }
-
-  .setting-toggle-row-modal {
-    margin-top: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: #090d16;
-    border: 1.5px solid var(--card-border);
-    border-radius: var(--radius-sm);
-    padding: 8px 10px;
-    box-shadow: var(--shadow-sunken);
-  }
-
-  .presets-wrap-modal {
-    margin-top: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  .presets-title-modal {
-    font-size: 0.68rem;
-    font-weight: 800;
-    color: var(--text-muted);
-    text-transform: uppercase;
-  }
-
-  .presets-grid-modal {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 6px;
-  }
-
-  .report-meta {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin-bottom: 12px;
-    background: #070b14;
-    padding: 10px;
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--card-border);
-    font-size: 0.78rem;
-    color: var(--text-muted);
-  }
-
-  .report-status-badge {
-    grid-column: span 2;
-    padding: 8px;
-    border-radius: var(--radius-sm);
-    font-weight: 900;
-    text-align: center;
-    font-size: 0.82rem;
-  }
-
-  .report-status-badge.ok {
-    background: var(--ok-bg);
-    color: var(--ok-text);
-    border: 1px solid var(--ok-border);
-  }
-  .report-status-badge.bad {
-    background: var(--bad-bg);
-    color: var(--bad-text);
-    border: 1px solid var(--bad-border);
-  }
-
-  .chart-section {
-    background: #070b14;
-    border: 1px solid var(--card-border);
-    border-radius: var(--radius-sm);
-    padding: 10px;
-    margin-bottom: 12px;
-  }
-  .chart-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-    font-size: 0.7rem;
-    font-weight: 900;
-    text-transform: uppercase;
-    color: var(--text-muted);
-  }
-  .chart-legend { display: flex; gap: 10px; }
-  .chart-legend span {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 0.65rem;
-  }
-  .legend-dot-up { width: 8px; height: 8px; border-radius: 2px; background: var(--up-color); }
-  .legend-dot-down { width: 8px; height: 8px; border-radius: 2px; background: var(--down-color); }
-
-  .curve-chart-svg {
-    width: 100%;
-    height: 130px;
-    overflow: visible;
-  }
-
-  .report-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 4px;
-    text-align: center;
-  }
-
-  .report-table th {
-    background: #070b14;
-    padding: 7px;
-    font-size: 0.72rem;
-    font-weight: 900;
-    color: var(--text-muted);
-    border-bottom: 2px solid var(--card-border);
-    text-transform: uppercase;
-  }
-
-  .report-table td {
-    padding: 7px 4px;
-    border-bottom: 1px solid #1e293b;
-    font-family: var(--font-display);
-    font-weight: 800;
-    font-size: 0.88rem;
-  }
-
-  .report-val {
-    display: inline-block;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-size: 0.8rem;
-  }
-  .report-val.ok { color: var(--ok-text); background: var(--ok-bg); }
-  .report-val.bad { color: var(--bad-text); background: var(--bad-bg); font-weight: 900; }
-  .report-val.na { color: #475569; }
-
-  .diff-tag {
-    font-size: 0.78rem;
-    font-weight: 900;
-    color: var(--accent);
-  }
-
-  .modal-actions {
-    padding: 12px 16px;
-    border-top: 1.5px solid var(--card-border);
-    background: #070b14;
-    display: flex;
-    gap: 8px;
-  }
-
-  .btn-modal {
-    flex: 1;
-    height: 40px;
-    border-radius: var(--radius-md);
-    font-size: 0.82rem;
-    font-weight: 900;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-transform: uppercase;
-    border: 1px solid var(--card-border);
-  }
-  .btn-modal.copy { background: #1e293b; color: #fff; }
-  .btn-modal.print { background: var(--accent); color: #000; border-color: #b45309; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bündigkeits-Tool</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    body {
+      background: radial-gradient(circle at top, #2b3038, #181a1f);
+      color: #e0e6ed;
+      padding: 16px;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .card {
+      background: linear-gradient(145deg, #282c34, #1f2329);
+      border: 1px solid #3d4450;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 480px;
+      padding: 20px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+    .back {
+      display: inline-block;
+      color: #007aff;
+      text-decoration: none;
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+      font-weight: 500;
+    }
+    h1 {
+      font-size: 1.4rem;
+      margin-bottom: 4px;
+      color: #fff;
+    }
+    p.sub {
+      color: #8a94a6;
+      font-size: 0.8rem;
+      margin-bottom: 20px;
+    }
+    .norm-info {
+      background: #16181d;
+      border-left: 3px solid #007aff;
+      padding: 8px 12px;
+      font-size: 0.75rem;
+      color: #8a94a6;
+      border-radius: 0 6px 6px 0;
+      margin-bottom: 18px;
+    }
+    .form-group {
+      margin-bottom: 14px;
+    }
+    label {
+      display: block;
+      font-size: 0.85rem;
+      color: #b0b7c3;
+      margin-bottom: 6px;
+    }
+    .row {
+      display: flex;
+      gap: 10px;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #3e4451;
+      background: #16181d;
+      color: #fff;
+      font-size: 1rem;
+    }
+    button.btn-add {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(180deg, #007aff, #0056b3);
+      border: none;
+      border-radius: 6px;
+      color: #fff;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 8px;
+      box-shadow: 0 2px 8px rgba(0,122,255,0.3);
+    }
+    button.btn-add:active {
+      transform: scale(0.98);
+    }
+    .table-container {
+      margin-top: 24px;
+      border-top: 1px solid #3d4450;
+      padding-top: 16px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    th {
+      text-align: left;
+      padding: 8px 6px;
+      color: #8a94a6;
+      border-bottom: 1px solid #373e4a;
+    }
+    td {
+      padding: 10px 6px;
+      border-bottom: 1px solid #282c35;
+    }
+    .status-pill {
+      display: inline-block;
+      padding: 3px 7px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .status-ok { background: rgba(34, 197, 94, 0.2); color: #4ade80; border: 1px solid #22c55e; }
+    .status-warn { background: rgba(245, 158, 11, 0.2); color: #facc15; border: 1px solid #f59e0b; }
+    .status-err { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid #ef4444; }
+    .btn-delete {
+      background: transparent;
+      border: none;
+      color: #8a94a6;
+      cursor: pointer;
+      font-size: 1.1rem;
+    }
+    .btn-delete:hover {
+      color: #f87171;
+    }
+  </style>
 </head>
-<body data-active-dir="">
+<body>
+  <div class="card">
+    <a href="index.html" class="back">‹ Zur Hauptseite</a>
+    <h1>Bündigkeits-Tool</h1>
+    <p class="sub">Haltegenauigkeit & Niveauabweichungen</p>
 
-<div class="layout-wrap">
-  <!-- Header mit animiertem Aufzug-Modell -->
-  <header class="top-bar">
-    <div class="nav-header">
-      <!-- Mechanisches Aufzug-Modell (Treibscheibe, Seil, Fahrkorb, Gegengewicht) -->
-      <div class="elevator-machinery" aria-hidden="true" title="Treibscheiben-Antrieb">
-        <div class="traction-sheave"></div>
-        <div class="rope-left"></div>
-        <div class="mach-car"></div>
-        <div class="rope-right"></div>
-        <div class="mach-counterweight"></div>
-      </div>
-      <div class="title-group">
-        <h1>Bündigkeiten</h1>
-      </div>
+    <div class="norm-info">
+      Norm-Toleranzen (EN 81-20):<br>
+      • Bündigkeit: max. <strong>±10 mm</strong> (Optimal)<br>
+      • Anhaltegenauigkeit: max. <strong>±20 mm</strong> (Grenzwert)
     </div>
-  </header>
 
-  <!-- Spaltenköpfe -->
-  <div class="grid-header">
-    <div class="header-pill">Et.</div>
-    <div class="header-pill up">
-      <span class="led-arrow">▲</span>
-      <span>Auf</span>
-    </div>
-    <div class="header-pill down">
-      <span class="led-arrow">▼</span>
-      <span>Ab</span>
-    </div>
-  </div>
-
-  <!-- Etagenliste -->
-  <main class="floor-list" id="listContainer"></main>
-
-  <!-- Rechts fest verankerte Mini-Map / Schacht -->
-  <aside class="shaft-panel" id="shaftPanel" aria-label="Schacht-Navigation">
-    <div class="shaft-track" id="shaftTrack">
-      <div class="shaft-cable"></div>
-      <div class="elevator-car" id="elevatorCar" style="display:none;"></div>
-      <div id="shaftNodes" style="display:flex; flex-direction:column; gap:4px; width:100%; align-items:center;"></div>
-    </div>
-  </aside>
-</div>
-
-<!-- Floating Bottom Bar mit Zahnrad-Button -->
-<nav class="bottom-bar">
-  <div class="bottom-progress-edge" aria-hidden="true">
-    <div class="bottom-progress-fill" id="bottomProgressBar"></div>
-  </div>
-  <div class="bottom-bar-inner">
-    <div class="bottom-info">
-      <span class="bottom-info-title">Status</span>
-      <span class="bottom-info-val" id="bottomStatus">0 / 0 gemessen</span>
-    </div>
-    <div class="bottom-actions">
-      <!-- ⚙️ Zahnrad Button -->
-      <button type="button" class="btn-thumb-settings" id="openSettingsBtn" title="Einstellungen">
-        ⚙️
-      </button>
-      <button type="button" class="btn-thumb-reset" id="resetBtn" title="Alle Werte löschen">
-        <span>🗑</span> <span id="resetBtnText">Leeren</span>
-      </button>
-      <button type="button" class="btn-thumb-protocol" id="openReportBtn">
-        <span>📊</span> Protokoll
-      </button>
-    </div>
-  </div>
-</nav>
-
-<!-- Einstellungs-Modal -->
-<div class="modal-overlay" id="settingsModal" onclick="closeModalOnOutsideClick(event)">
-  <div class="modal-card">
-    <div class="modal-header">
-      <h2>⚙️ Parameter & Richtlinien</h2>
-      <button type="button" class="modal-close" onclick="closeSettingsModal()">&times;</button>
-    </div>
-    <div class="modal-body">
-      <div class="settings-grid-modal">
-        <label class="setting-item-modal">
-          Etagen
-          <input id="floorCount" type="number" min="1" max="50" inputmode="numeric" value="5">
-        </label>
-        <label class="setting-item-modal">
-          Start
-          <input id="startFloor" type="number" inputmode="numeric" value="0">
-        </label>
-        <label class="setting-item-modal">
-          Toleranz ± mm
-          <input id="tolerance" type="number" min="0" step="1" inputmode="numeric" value="10">
-        </label>
-      </div>
-
-      <div class="setting-toggle-row-modal">
-        <span class="toggle-label">UG / EG Beschriftung (0=EG, -1=UG)</span>
-        <label class="switch">
-          <input type="checkbox" id="useEgUg">
-          <span class="slider"></span>
-        </label>
-      </div>
-
-      <div class="presets-wrap-modal">
-        <div class="presets-title-modal">Richtwerte / Norm-Toleranz</div>
-        <div class="presets-grid-modal">
-          <button type="button" class="btn-preset" data-tol="3">± 3 mm</button>
-          <button type="button" class="btn-preset" data-tol="5">± 5 mm</button>
-          <button type="button" class="btn-preset active" data-tol="10">± 10 mm</button>
-          <button type="button" class="btn-preset" data-tol="20">± 20 mm</button>
+    <form id="entryForm" onsubmit="addEntry(event)">
+      <div class="row">
+        <div class="form-group" style="flex: 1;">
+          <label for="floor">Etage / Haltestelle</label>
+          <input type="text" id="floor" placeholder="z. B. EG, 1.OG" required>
         </div>
-      </div>
-    </div>
-    <div class="modal-actions">
-      <button type="button" class="btn-modal print" onclick="closeSettingsModal()">Fertig</button>
-    </div>
-  </div>
-</div>
-
-<!-- Modal Pop-up Protokoll -->
-<div class="modal-overlay" id="reportModal" onclick="closeModalOnOutsideClick(event)">
-  <div class="modal-card">
-    <div class="modal-header">
-      <h2>📋 Messprotokoll</h2>
-      <button type="button" class="modal-close" onclick="closeReportModal()">&times;</button>
-    </div>
-    <div class="modal-body" id="reportBody"></div>
-    <div class="modal-actions">
-      <button type="button" class="btn-modal copy" onclick="copyReportText()">📋 Kopieren</button>
-      <button type="button" class="btn-modal print" onclick="window.print()">🖨 PDF / Drucken</button>
-    </div>
-  </div>
-</div>
-
-<script>
-  if ('serviceWorker' in navigator) {
-    const swCode = `
-      const CACHE_NAME = 'buendigkeit-elev-v15';
-      self.addEventListener('install', e => {
-        e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll([self.location.href])));
-        self.skipWaiting();
-      });
-      self.addEventListener('fetch', e => {
-        e.respondWith(caches.match(e.request).then(res => res || fetch(e.request).catch(() => caches.match(self.location.href))));
-      });
-    `;
-    const swBlob = new Blob([swCode], { type: 'application/javascript' });
-    navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
-  }
-
-  const STORAGE_KEY = 'buendigkeit-elev-v15';
-  let state = {
-    floorCount: 5,
-    startFloor: 0,
-    tolerance: 10,
-    useEgUg: true,
-    values: {}
-  };
-
-  const $ = id => document.getElementById(id);
-
-  function loadState() {
-    try {
-      const data = localStorage.getItem(STORAGE_KEY);
-      if (data) state = Object.assign(state, JSON.parse(data));
-    } catch (e) {}
-  }
-
-  function saveState() {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    } catch (e) {}
-  }
-
-  function parseVal(v) {
-    if (v === '' || v == null) return null;
-    const n = parseInt(v, 10);
-    return isNaN(n) ? null : n;
-  }
-
-  function getFloorLabel(f) {
-    if (!state.useEgUg) return String(f);
-    if (f === 0) return 'EG';
-    if (f === -1) return 'UG';
-    if (f < -1) return `${Math.abs(f)}.UG`;
-    return String(f);
-  }
-
-  function readSettings() {
-    state.floorCount = Math.min(50, Math.max(1, parseInt($('floorCount').value, 10) || 1));
-    state.startFloor = parseInt($('startFloor').value, 10) || 0;
-    const t = parseInt($('tolerance').value, 10);
-    state.tolerance = isNaN(t) ? 10 : Math.abs(t);
-    state.useEgUg = $('useEgUg').checked;
-    updatePresetButtons();
-  }
-
-  function updatePresetButtons() {
-    document.querySelectorAll('.btn-preset').forEach(btn => {
-      btn.classList.toggle('active', parseInt(btn.dataset.tol, 10) === state.tolerance);
-    });
-  }
-
-  function renderCell(floor, dir) {
-    const isBottom = floor === state.startFloor;
-    const isTop = floor === state.startFloor + state.floorCount - 1;
-    const dirClass = dir === 'down' ? 'dir-down' : 'dir-up';
-
-    if ((dir === 'up' && isBottom) || (dir === 'down' && isTop)) {
-      return `<div class="cell-card ${dirClass} na">Endhalt</div>`;
-    }
-
-    const key = `${floor}:${dir}`;
-    const val = state.values[key] ?? '';
-
-    return `
-      <form class="cell-card ${dirClass}" data-key="${key}" data-floor="${floor}" data-dir="${dir}" onsubmit="event.preventDefault(); handleMobileNext(this);">
-        <div class="cell-main">
-          <div class="input-wrapper">
-            <button type="button" class="sign-quick-toggle" tabindex="-1" title="Vorzeichen wechseln">±</button>
-            <input type="text" class="val-input" inputmode="decimal" pattern="[0-9\\-+]*" placeholder="0" value="${val}" enterkeyhint="next">
-          </div>
-          <div class="gauge-container" title="Doppelklick für 0 mm">
-            <div class="gauge-scale-ticks">
-              <span></span><span></span><span class="mid-tick"></span><span></span><span></span>
-            </div>
-            <div class="gauge-tolerance"></div>
-            <div class="gauge-center-line"></div>
-            <div class="gauge-pointer"></div>
-          </div>
-        </div>
-        <div class="status-text"></div>
-      </form>
-    `;
-  }
-
-  function renderShaft() {
-    const shaft = $('shaftNodes');
-    let html = '';
-    for (let f = state.startFloor + state.floorCount - 1; f >= state.startFloor; f--) {
-      const label = getFloorLabel(f);
-      html += `<div class="shaft-node" id="shaft-node-${f}" onclick="scrollToFloor(${f})">${label}</div>`;
-    }
-    shaft.innerHTML = html;
-  }
-
-  window.scrollToFloor = function(floor) {
-    const el = document.getElementById(`floor-card-${floor}`);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      const firstInput = el.querySelector('.val-input');
-      if (firstInput) {
-        setTimeout(() => firstInput.focus(), 250);
-      }
-    }
-  };
-
-  function renderList() {
-    readSettings();
-    const container = $('listContainer');
-    let html = '';
-
-    for (let f = state.startFloor + state.floorCount - 1; f >= state.startFloor; f--) {
-      const label = getFloorLabel(f);
-      html += `
-        <div class="floor-card" id="floor-card-${f}" data-floor="${f}">
-          <div class="floor-label">${label}</div>
-          ${renderCell(f, 'up')}
-          ${renderCell(f, 'down')}
-        </div>
-      `;
-    }
-
-    container.innerHTML = html;
-    renderShaft();
-    container.querySelectorAll('.cell-card[data-key]').forEach(applyCellStyles);
-    updateMetrics();
-    saveState();
-  }
-
-  function applyCellStyles(card) {
-    const input = card.querySelector('.val-input');
-    if (!input) return;
-    const n = parseVal(input.value);
-    const status = card.querySelector('.status-text');
-    const pointer = card.querySelector('.gauge-pointer');
-    const tolBand = card.querySelector('.gauge-tolerance');
-
-    card.classList.remove('ok', 'bad');
-
-    if (n === null) {
-      status.textContent = '';
-      return;
-    }
-
-    const isExceeded = Math.abs(n) > state.tolerance;
-    card.classList.add(isExceeded ? 'bad' : 'ok');
-
-    if (n === 0) {
-      status.textContent = 'bündig';
-    } else if (n > 0) {
-      status.textContent = `${n} mm zu hoch`;
-    } else {
-      status.textContent = `${Math.abs(n)} mm zu tief`;
-    }
-
-    const tolerance = Math.max(state.tolerance, 1);
-    const range = Math.max(14, tolerance * 1.5);
-    const tolPercent = Math.min(50, (tolerance / range) * 50);
-
-    tolBand.style.top = (50 - tolPercent) + '%';
-    tolBand.style.height = (tolPercent * 2) + '%';
-
-    const clamped = Math.max(-range, Math.min(range, n));
-    const normalized = (clamped / range);
-    const topPct = 50 - (normalized * 50);
-    pointer.style.top = `calc(${topPct}% - 2.5px)`;
-  }
-
-  function updateMetrics() {
-    const cells = document.querySelectorAll('.cell-card[data-key]');
-    let filled = 0;
-    let bad = 0;
-
-    cells.forEach(c => {
-      if (c.classList.contains('bad')) { bad++; filled++; }
-      else if (c.classList.contains('ok')) { filled++; }
-    });
-
-    const total = cells.length;
-    
-    const statusText = bad > 0 
-      ? `${filled} / ${total} (${bad} Fehler)` 
-      : `${filled} / ${total} gemessen`;
-    $('bottomStatus').textContent = statusText;
-
-    const pct = total ? (filled / total * 100) : 0;
-    $('bottomProgressBar').style.width = pct + '%';
-
-    for (let f = state.startFloor + state.floorCount - 1; f >= state.startFloor; f--) {
-      const node = $(`shaft-node-${f}`);
-      if (!node) continue;
-      const up = parseVal(state.values[`${f}:up`]);
-      const dn = parseVal(state.values[`${f}:down`]);
-      
-      const isTop = f === state.startFloor + state.floorCount - 1;
-      const isBottom = f === state.startFloor;
-      
-      const upBad = up !== null && Math.abs(up) > state.tolerance;
-      const dnBad = dn !== null && Math.abs(dn) > state.tolerance;
-
-      node.classList.remove('ok', 'bad', 'partial');
-
-      if (upBad || dnBad) {
-        node.classList.add('bad');
-      } else {
-        const upComplete = isBottom || up !== null;
-        const dnComplete = isTop || dn !== null;
-        if (upComplete && dnComplete) {
-          node.classList.add('ok');
-        } else if ((up !== null && !isBottom) || (dn !== null && !isTop)) {
-          node.classList.add('partial');
-        }
-      }
-    }
-  }
-
-  const container = $('listContainer');
-
-  /* Fokus & Fahrkorb-Animation */
-  container.addEventListener('focusin', e => {
-    const card = e.target.closest('.floor-card');
-    if (!card) return;
-    document.querySelectorAll('.floor-card.active-floor').forEach(c => c.classList.remove('active-floor'));
-    card.classList.add('active-floor');
-
-    const cell = e.target.closest('.cell-card');
-    const dir = cell ? cell.dataset.dir : '';
-    document.body.dataset.activeDir = dir;
-
-    const floor = card.dataset.floor;
-    const shaftNode = $(`shaft-node-${floor}`);
-    const elevatorCar = $('elevatorCar');
-    const shaftPanel = $('shaftPanel');
-
-    if (shaftNode && elevatorCar && shaftPanel) {
-      elevatorCar.style.display = 'flex';
-      const offsetTop = shaftNode.offsetTop;
-      elevatorCar.style.top = `${offsetTop - 1}px`;
-      shaftNode.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
-  });
-
-  container.addEventListener('focusout', () => {
-    document.body.dataset.activeDir = '';
-  });
-
-  /* Tastatur-Erkennung */
-  if (window.visualViewport) {
-    window.visualViewport.addEventListener('resize', () => {
-      const panel = $('shaftPanel');
-      if (!panel) return;
-      const availableH = window.visualViewport.height - 120;
-      panel.style.maxHeight = `${Math.max(120, availableH)}px`;
-    });
-  }
-
-  container.addEventListener('click', e => {
-    const signBtn = e.target.closest('.sign-quick-toggle');
-    if (signBtn) {
-      const input = signBtn.closest('.input-wrapper').querySelector('.val-input');
-      let val = input.value.trim();
-      if (val.startsWith('-')) {
-        input.value = val.substring(1);
-      } else if (val !== '') {
-        input.value = '-' + val;
-      } else {
-        input.value = '-';
-      }
-      input.dispatchEvent(new Event('input', { bubbles: true }));
-      input.focus();
-    }
-  });
-
-  container.addEventListener('dblclick', e => {
-    const card = e.target.closest('.cell-card');
-    if (!card || card.classList.contains('na')) return;
-    const input = card.querySelector('.val-input');
-    if (input) {
-      input.value = '0';
-      input.dispatchEvent(new Event('input', { bubbles: true }));
-      
-      card.classList.remove('success-pulse');
-      void card.offsetWidth;
-      card.classList.add('success-pulse');
-      
-      advanceDirectional(card);
-    }
-  });
-
-  window.handleMobileNext = function(card) { advanceDirectional(card); };
-
-  container.addEventListener('keydown', e => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      const card = e.target.closest('.cell-card');
-      if (card) advanceDirectional(card);
-    }
-  });
-
-  function advanceDirectional(currentCard) {
-    const floor = parseInt(currentCard.dataset.floor, 10);
-    const dir = currentCard.dataset.dir;
-    let targetCard = null;
-
-    if (dir === 'up') {
-      const nextFloor = floor + 1;
-      targetCard = container.querySelector(`.cell-card[data-key="${nextFloor}:up"]`);
-    } else if (dir === 'down') {
-      const nextFloor = floor - 1;
-      targetCard = container.querySelector(`.cell-card[data-key="${nextFloor}:down"]`);
-    }
-
-    if (targetCard) {
-      const nextInput = targetCard.querySelector('.val-input');
-      if (nextInput) {
-        setTimeout(() => {
-          nextInput.focus();
-          nextInput.select();
-          targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }, 50);
-      }
-    } else {
-      const currentInput = currentCard.querySelector('.val-input');
-      if (currentInput) currentInput.blur();
-    }
-  }
-
-  container.addEventListener('input', e => {
-    const input = e.target;
-    if (!input.classList.contains('val-input')) return;
-
-    let val = input.value.trim();
-    let prefix = '';
-    if (val.startsWith('-')) {
-      prefix = '-';
-    } else if (val.startsWith('+')) {
-      prefix = '+';
-    }
-
-    val = val.replace(/[^0-9]/g, '');
-    input.value = prefix + val;
-
-    const card = input.closest('.cell-card');
-    const key = card.dataset.key;
-
-    if (input.value === '' || input.value === '-' || input.value === '+') {
-      delete state.values[key];
-    } else {
-      state.values[key] = input.value;
-    }
-
-    applyCellStyles(card);
-
-    const num = parseVal(input.value);
-    if (num !== null && Math.abs(num) > state.tolerance) {
-      card.classList.remove('shake');
-      void card.offsetWidth;
-      card.classList.add('shake');
-    } else if (num === 0) {
-      card.classList.remove('success-pulse');
-      void card.offsetWidth;
-      card.classList.add('success-pulse');
-    }
-
-    updateMetrics();
-    saveState();
-  });
-
-  document.querySelectorAll('.btn-preset').forEach(btn => {
-    btn.addEventListener('click', () => {
-      $('tolerance').value = btn.dataset.tol;
-      renderList();
-    });
-  });
-
-  $('useEgUg').addEventListener('change', renderList);
-  ['floorCount', 'startFloor', 'tolerance'].forEach(id => {
-    $(id).addEventListener('input', renderList);
-  });
-
-  /* Zweistufiger Daumen-Löschbutton */
-  let armTimer = null;
-  const resetBtn = $('resetBtn');
-  const resetBtnText = $('resetBtnText');
-
-  resetBtn.addEventListener('click', function () {
-    if (!resetBtn.classList.contains('armed')) {
-      resetBtn.classList.add('armed');
-      resetBtnText.textContent = 'Sicher?';
-      armTimer = setTimeout(() => {
-        resetBtn.classList.remove('armed');
-        resetBtnText.textContent = 'Leeren';
-      }, 3500);
-      return;
-    }
-    clearTimeout(armTimer);
-    resetBtn.classList.remove('armed');
-    resetBtnText.textContent = 'Leeren';
-    state.values = {};
-    renderList();
-  });
-
-  /* Einstellungs-Modal Steuerung */
-  const settingsModal = $('settingsModal');$('openSettingsBtn').addEventListener('click', () => {
-    settingsModal.classList.add('active');
-  });
-  window.closeSettingsModal = function() {
-    settingsModal.classList.remove('active');
-  };
-
-  /* Protokoll-Modal */
-  const reportModal = $('reportModal');$('openReportBtn').addEventListener('click', () => {
-    buildReportHtml();
-    reportModal.classList.add('active');
-  });
-  window.closeReportModal = function() { reportModal.classList.remove('active'); };
-
-  window.closeModalOnOutsideClick = function(e) {
-    if (e.target === reportModal) closeReportModal();
-    if (e.target === settingsModal) closeSettingsModal();
-  };
-
-  function buildReportHtml() {
-    const body = $('reportBody');
-    const now = new Date();
-    const dateStr = now.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
-    const timeStr = now.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
-
-    let badCount = 0;
-    let measuredCount = 0;
-    let totalCells = 0;
-    let tableRows = '';
-
-    const chartData = [];
-
-    for (let f = state.startFloor + state.floorCount - 1; f >= state.startFloor; f--) {
-      const isTop = f === state.startFloor + state.floorCount - 1;
-      const isBottom = f === state.startFloor;
-      const label = getFloorLabel(f);
-
-      const upVal = parseVal(state.values[`${f}:up`]);
-      const dnVal = parseVal(state.values[`${f}:down`]);
-
-      chartData.push({ floor: f, label: label, up: upVal, down: dnVal, isTop, isBottom });
-
-      let upHtml = '';
-      if (isBottom) {
-        upHtml = '<span class="report-val na">—</span>';
-      } else {
-        totalCells++;
-        if (upVal !== null) {
-          measuredCount++;
-          const bad = Math.abs(upVal) > state.tolerance;
-          if (bad) badCount++;
-          upHtml = `<span class="report-val ${bad ? 'bad' : 'ok'}">${upVal > 0 ? '+' : ''}${upVal} mm</span>`;
-        } else {
-          upHtml = '<span class="report-val na">offen</span>';
-        }
-      }
-
-      let dnHtml = '';
-      if (isTop) {
-        dnHtml = '<span class="report-val na">—</span>';
-      } else {
-        totalCells++;
-        if (dnVal !== null) {
-          measuredCount++;
-          const bad = Math.abs(dnVal) > state.tolerance;
-          if (bad) badCount++;
-          dnHtml = `<span class="report-val ${bad ? 'bad' : 'ok'}">${dnVal > 0 ? '+' : ''}${dnVal} mm</span>`;
-        } else {
-          dnHtml = '<span class="report-val na">offen</span>';
-        }
-      }
-
-      let diffHtml = '<span class="report-val na">—</span>';
-      if (upVal !== null && dnVal !== null) {
-        const diff = Math.abs(upVal - dnVal);
-        diffHtml = `<span class="diff-tag">Δ ${diff} mm</span>`;
-      }
-
-      tableRows += `
-        <tr>
-          <td><strong>${label}</strong></td>
-          <td>${upHtml}</td>
-          <td>${dnHtml}</td>
-          <td>${diffHtml}</td>
-        </tr>
-      `;
-    }
-
-    const normLabel = state.tolerance === 10 ? ' (gemäß DIN EN 81-20)' : '';
-    const statusText = badCount > 0 
-      ? `⚠️ ${badCount} Mangel: Toleranzgrenze überschritten`
-      : (measuredCount === totalCells ? `✓ Bestanden: Alle Haltepunkte im Toleranzbereich${normLabel}` : `ℹ ${measuredCount} von ${totalCells} Messwerten erfasst`);
-
-    const chartSvg = generateCurveChart(chartData, state.tolerance);
-
-    body.innerHTML = `
-      <div class="report-meta">
-        <div>Datum: <strong>${dateStr} ${timeStr}</strong></div>
-        <div>Toleranz: <strong>±${state.tolerance} mm</strong></div>
-        <div class="report-status-badge ${badCount > 0 ? 'bad' : 'ok'}">
-          ${statusText}
+        <div class="form-group" style="flex: 1;">
+          <label for="direction">Fahrtrichtung</label>
+          <select id="direction">
+            <option value="Aufwärts">Aufwärts (▲)</option>
+            <option value="Abwärts">Abwärts (▼)</option>
+          </select>
         </div>
       </div>
 
-      <div class="chart-section">
-        <div class="chart-header">
-          <span>Bündigkeits-Verlauf (Schachtkurve)</span>
-          <div class="chart-legend">
-            <span><i class="legend-dot-up"></i> Auf</span>
-            <span><i class="legend-dot-down"></i> Ab</span>
-          </div>
-        </div>
-        ${chartSvg}
+      <div class="form-group">
+        <label for="offset">Abweichung Kabine zur Schwelle (in mm)</label>
+        <input type="number" id="offset" placeholder="+ für zu hoch, - für zu tief" step="1" required>
       </div>
 
-      <table class="report-table">
+      <button type="submit" class="btn-add">+ Messwert erfassen</button>
+    </form>
+
+    <div class="table-container">
+      <table>
         <thead>
           <tr>
-            <th style="width: 44px;">Et.</th>
-            <th>▲ Auf</th>
-            <th>▼ Ab</th>
-            <th>Δ Diff</th>
+            <th>Etage</th>
+            <th>Richtung</th>
+            <th>Wert</th>
+            <th>Status</th>
+            <th></th>
           </tr>
         </thead>
-        <tbody>
-          ${tableRows}
+        <tbody id="resultList">
+          <!-- Dynamische Einträge -->
         </tbody>
       </table>
-    `;
-  }
+    </div>
+  </div>
 
-  function generateCurveChart(data, tol) {
-    const W = 380;
-    const H = 130;
-    const padX = 35;
-    const padY = 18;
-    const maxTol = Math.max(16, tol * 1.5);
-    const midX = W / 2;
+  <script>
+    let measurements = JSON.parse(localStorage.getItem('buendigkeit_data') || '[]');
 
-    const count = data.length;
-    const stepY = (H - 2 * padY) / Math.max(1, count - 1);
+    function renderList() {
+      const tbody = document.getElementById('resultList');
+      tbody.innerHTML = '';
 
-    const tolWidth = (tol / maxTol) * (W / 2 - padX);
-    const tolLeft = midX - tolWidth;
-    const tolRight = midX + tolWidth;
+      measurements.forEach((item, index) => {
+        const val = parseInt(item.offset, 10);
+        const absVal = Math.abs(val);
 
-    let pointsUp = [];
-    let pointsDown = [];
-    let labelsY = '';
+        let statusClass = 'status-ok';
+        let statusText = 'OK';
 
-    data.forEach((d, i) => {
-      const y = padY + i * stepY;
-      labelsY += `<text x="14" y="${y + 3}" fill="#64748b" font-size="9" font-family="ui-monospace" font-weight="900" text-anchor="middle">${d.label}</text>`;
+        if (absVal > 20) {
+          statusClass = 'status-err';
+          statusText = '> 20mm';
+        } else if (absVal > 10) {
+          statusClass = 'status-warn';
+          statusText = 'Warnung';
+        }
 
-      if (d.up !== null && !d.isBottom) {
-        const x = midX + (Math.max(-maxTol, Math.min(maxTol, d.up)) / maxTol) * (W / 2 - padX);
-        pointsUp.push({ x, y });
-      }
-      if (d.down !== null && !d.isTop) {
-        const x = midX + (Math.max(-maxTol, Math.min(maxTol, d.down)) / maxTol) * (W / 2 - padX);
-        pointsDown.push({ x, y });
-      }
-    });
+        const formattedVal = (val > 0 ? '+' : '') + val + ' mm';
 
-    const upPath = pointsUp.length > 1 ? `d="M ${pointsUp.map(p => `${p.x}${p.y}`).join(' L ')}"` : '';
-    const downPath = pointsDown.length > 1 ? `d="M ${pointsDown.map(p => `${p.x}${p.y}`).join(' L ')}"` : '';
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${item.floor}</strong></td>
+          <td>${item.direction}</td>
+          <td>${formattedVal}</td>
+          <td><span class="status-pill ${statusClass}">${statusText}</span></td>
+          <td><button class="btn-delete" onclick="deleteEntry(${index})" title="Löschen">&times;</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
 
-    return `
-      <svg class="curve-chart-svg" viewBox="0 0 ${W} ${H}">
-        <rect x="${tolLeft}" y="${padY - 4}" width="${tolRight - tolLeft}" height="${H - 2 * padY + 8}" fill="rgba(16, 185, 129, 0.12)" rx="4" />
-        <line x1="${tolLeft}" y1="${padY - 4}" x2="${tolLeft}" y2="${H - padY + 4}" stroke="rgba(16, 185, 129, 0.4)" stroke-dasharray="2 2" />
-        <line x1="${tolRight}" y1="${padY - 4}" x2="${tolRight}" y2="${H - padY + 4}" stroke="rgba(16, 185, 129, 0.4)" stroke-dasharray="2 2" />
-
-        <line x1="${midX}" y1="${padY - 8}" x2="${midX}" y2="${H - padY + 8}" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.8" />
-        <text x="${midX}" y="${padY - 10}" fill="#f59e0b" font-size="8" font-family="ui-monospace" font-weight="900" text-anchor="middle">0 mm</text>
-
-        ${labelsY}
-
-        ${upPath ? `<path ${upPath} fill="none" stroke="var(--up-color)" stroke-width="2" stroke-linecap="round" />` : ''}
-        ${downPath ? `<path ${downPath} fill="none" stroke="var(--down-color)" stroke-width="2" stroke-linecap="round" />` : ''}
-
-        ${pointsUp.map(p => `<circle cx="${p.x}" cy="${p.y}" r="3.5" fill="var(--up-color)" stroke="#070b14" stroke-width="1.5" />`).join('')}
-        ${pointsDown.map(p => `<circle cx="${p.x}" cy="${p.y}" r="3.5" fill="var(--down-color)" stroke="#070b14" stroke-width="1.5" />`).join('')}
-      </svg>
-    `;
-  }
-
-  window.copyReportText = async function() {
-    let report = `BÜNDIGKEITSMESSUNG PROTOKOLL\n`;
-    report += `Datum: ${new Date().toLocaleDateString('de-DE')} | Grenz-Toleranz: ±${state.tolerance} mm\n`;
-    report += `------------------------------------\n`;
-    for (let f = state.startFloor + state.floorCount - 1; f >= state.startFloor; f--) {
-      const label = getFloorLabel(f);
-      const up = state.values[`${f}:up`] !== undefined ? `${state.values[`${f}:up`]} mm` : (f === state.startFloor ? '—' : 'offen');
-      const dn = state.values[`${f}:down`] !== undefined ? `${state.values[`${f}:down`]} mm` : (f === state.startFloor + state.floorCount - 1 ? '—' : 'offen');
-      report += `Etage ${label.padStart(4, ' ')} | ▲ Auf: ${up.padEnd(8, ' ')} | ▼ Ab: ${dn}\n`;
+      localStorage.setItem('buendigkeit_data', JSON.stringify(measurements));
     }
 
-    try {
-      await navigator.clipboard.writeText(report);
-      alert('Protokoll in die Zwischenablage kopiert!');
-    } catch(err) {
-      alert(report);
-    }
-  };
+    function addEntry(e) {
+      e.preventDefault();
+      const floor = document.getElementById('floor').value.trim();
+      const direction = document.getElementById('direction').value;
+      const offset = document.getElementById('offset').value;
 
-  loadState();
-  $('floorCount').value = state.floorCount;
-  $('startFloor').value = state.startFloor;
-  $('tolerance').value = state.tolerance;
-  $('useEgUg').checked = state.useEgUg !== false;
-  renderList();
-</script>
+      measurements.push({ floor, direction, offset });
+      renderList();
+
+      document.getElementById('floor').value = '';
+      document.getElementById('offset').value = '';
+      document.getElementById('floor').focus();
+    }
+
+    function deleteEntry(index) {
+      measurements.splice(index, 1);
+      renderList();
+    }
+
+    renderList();
+  </script>
 </body>
 </html>
