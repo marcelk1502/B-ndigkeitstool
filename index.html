@@ -64,7 +64,7 @@
   
   body {
     margin: 0;
-    padding: env(safe-area-inset-top, 8px) 8px calc(env(safe-area-inset-bottom, 10px) + 76px);
+    padding: env(safe-area-inset-top, 8px) 8px calc(env(safe-area-inset-bottom, 10px) + 84px);
     background: radial-gradient(circle at 50% 0%, #2b313c 0%, #121419 75%);
     min-height: 100vh;
     color: var(--text);
@@ -73,7 +73,7 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* Tableau-Hauptgehäuse */
+  /* Tableau-Hauptgehäuse mit vergrößertem Rand-Abstand (Padding) */
   .layout-wrap {
     max-width: 610px;
     margin: 0 auto;
@@ -81,7 +81,7 @@
     background: linear-gradient(135deg, #3d434f 0%, #262a32 30%, #3a404c 60%, #1f2229 100%);
     border: 2px solid var(--steel-light);
     border-radius: var(--radius-lg);
-    padding: 12px 8px 14px 12px;
+    padding: 18px 16px 36px 16px; /* Großzügiger Abstand zu Schrauben und Gehäusekanten */
     box-shadow: 
       inset 0 1px 2px var(--steel-bevel),
       inset 0 -2px 5px rgba(0,0,0,0.8),
@@ -108,22 +108,22 @@
     height: 1.5px;
     background: #0f1115;
   }
-  .s-tl { top: 8px; left: 8px; }
-  .s-tr { top: 8px; right: 8px; }
-  .s-bl { bottom: 8px; left: 8px; }
-  .s-br { bottom: 8px; right: 8px; }
+  .s-tl { top: 10px; left: 10px; }
+  .s-tr { top: 10px; right: 10px; }
+  .s-bl { bottom: 10px; left: 10px; }
+  .s-br { bottom: 10px; right: 10px; }
 
   /* Navigation zurück */
   .tableau-nav {
     display: flex;
     align-items: center;
-    margin-bottom: 6px;
-    padding-left: 14px;
+    margin-bottom: 10px;
+    padding-left: 6px;
   }
   .nav-back {
     color: #79b8ff;
     text-decoration: none;
-    font-size: 0.8rem;
+    font-size: 0.82rem;
     font-weight: 700;
     letter-spacing: 0.05em;
     text-transform: uppercase;
@@ -134,12 +134,12 @@
   }
   .nav-back:active { color: #bae6fd; }
 
-  /* Header */
+  /* Header ohne Animation */
   header.top-bar {
     position: sticky;
     top: 0;
     z-index: 20;
-    padding: 4px 0 8px;
+    padding: 2px 0 10px;
     background: transparent;
   }
 
@@ -147,130 +147,33 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 12px;
     background: #090b0f;
     border: 2px solid #2b303a;
     border-radius: var(--radius-md);
-    padding: 8px 14px;
+    padding: 10px 16px;
     box-shadow: inset 0 2px 6px rgba(0,0,0,0.9), 0 2px 4px rgba(255,255,255,0.06);
   }
 
-  /* Treibscheiben-Antrieb */
-  .elevator-machinery {
-    width: 38px;
-    height: 44px;
-    position: relative;
-    background: #101217;
-    border: 1.5px solid #3e4450;
-    border-radius: var(--radius-sm);
-    box-shadow: var(--shadow-sunken);
-    overflow: hidden;
-    flex: none;
-  }
-
-  .traction-sheave {
-    position: absolute;
-    top: 3px;
-    left: 50%;
-    width: 20px;
-    height: 20px;
-    margin-left: -10px;
-    border-radius: 50%;
-    border: 1.5px solid var(--accent);
-    background: #252a33;
-    box-shadow: 0 0 6px var(--accent-glow);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.3s ease;
-  }
-  .traction-sheave::after {
-    content: "";
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--accent);
-  }
-  .traction-sheave::before {
-    content: "";
-    position: absolute;
-    width: 14px;
-    height: 2px;
-    background: #64748b;
-  }
-
-  .rope-left, .rope-right {
-    position: absolute;
-    top: 13px;
-    width: 1px;
-    background: #cbd5e1;
-    z-index: 1;
-    transition: height 1.2s ease;
-  }
-  .rope-left { left: 8px; height: 16px; }
-  .rope-right { right: 8px; height: 10px; }
-
-  .mach-car {
-    position: absolute;
-    left: 4px;
-    top: 27px;
-    width: 9px;
-    height: 12px;
-    border-radius: 1.5px;
-    background: linear-gradient(135deg, #475569, #1e293b);
-    border: 1px solid #94a3b8;
-    box-shadow: 0 0 4px rgba(56, 189, 248, 0.6);
-    z-index: 2;
-    transition: top 1.2s ease;
-  }
-
-  .mach-counterweight {
-    position: absolute;
-    right: 5px;
-    top: 22px;
-    width: 7px;
-    height: 10px;
-    border-radius: 1px;
-    background: #f59e0b;
-    border: 1px solid #fde68a;
-    box-shadow: 0 0 4px var(--accent-glow);
-    z-index: 2;
-    transition: top 1.2s ease;
-  }
-
-  @keyframes rotateCW { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-  @keyframes rotateCCW { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
-
-  body[data-active-dir="up"] .traction-sheave { animation: rotateCW 2.4s infinite linear; }
-  body[data-active-dir="up"] .mach-car { top: 18px; }
-  body[data-active-dir="up"] .rope-left { height: 7px; }
-  body[data-active-dir="up"] .mach-counterweight { top: 29px; }
-  body[data-active-dir="up"] .rope-right { height: 18px; }
-
-  body[data-active-dir="down"] .traction-sheave { animation: rotateCCW 2.4s infinite linear; }
-  body[data-active-dir="down"] .mach-car { top: 29px; }
-  body[data-active-dir="down"] .rope-left { height: 18px; }
-  body[data-active-dir="down"] .mach-counterweight { top: 18px; }
-  body[data-active-dir="down"] .rope-right { height: 7px; }
-
   .title-group h1 {
-    font-size: 1.3rem;
+    font-size: 1.35rem;
     font-weight: 900;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.1em;
     margin: 0;
     text-transform: uppercase;
     color: #e2e8f0;
     text-shadow: 0 0 10px rgba(255,255,255,0.3);
     font-family: var(--font-display);
+    text-align: center;
   }
 
-  /* Grid Layout: Links Scrollbereich (Liste), Rechts fester Schacht */
+  /* Zweispaltiges Layout: Links Scrollbereich (Liste), Rechts fester Schacht */
   .inspection-split {
     display: grid;
     grid-template-columns: 1fr 42px;
-    gap: 8px;
+    gap: 12px;
     align-items: start;
     position: relative;
+    margin-bottom: 10px;
   }
 
   .main-column {
@@ -566,13 +469,13 @@
   }
 
   /* ========================================================
-     ANIMIERTER EDELSTAHL-SCHACHT RECHTS (FEST AN OBERKANTE FIXIERT)
+     ANIMIERTER EDELSTAHL-SCHACHT RECHTS (STICKY FIXIERT)
      ======================================================== */
   .shaft-panel {
     position: sticky;
-    top: 68px; /* Bleibt bei scrollender Seite fest oben verankert */
+    top: 68px;
     width: 38px;
-    max-height: calc(100vh - 160px);
+    max-height: calc(100vh - 170px);
     background: #090a0e;
     border: 2px solid var(--steel-mid);
     border-radius: var(--radius-md);
@@ -1076,23 +979,16 @@
     <a href="index.html" class="nav-back">‹ Hauptmenü</a>
   </div>
 
-  <!-- Header -->
+  <!-- Header ohne Animation -->
   <header class="top-bar">
     <div class="nav-header">
-      <div class="elevator-machinery" aria-hidden="true" title="Treibscheiben-Antrieb">
-        <div class="traction-sheave"></div>
-        <div class="rope-left"></div>
-        <div class="mach-car"></div>
-        <div class="rope-right"></div>
-        <div class="mach-counterweight"></div>
-      </div>
       <div class="title-group">
         <h1>Bündigkeiten</h1>
       </div>
     </div>
   </header>
 
-  <!-- Zweispaltiges Layout: Links die scrollende Etagenliste, rechts der fix verankerte Schacht -->
+  <!-- Zweispaltiges Layout: Links Etagen, rechts Schacht mit Abstand zu Kanten -->
   <div class="inspection-split">
     <div class="main-column">
       <!-- Spaltenköpfe -->
@@ -1112,7 +1008,7 @@
       <main class="floor-list" id="listContainer"></main>
     </div>
 
-    <!-- Rechts feststehender Schacht -->
+    <!-- Rechts fixierter Schacht -->
     <aside class="shaft-panel" id="shaftPanel" aria-label="Schacht-Navigation">
       <div class="shaft-track" id="shaftTrack">
         <div class="shaft-rail-l"></div>
@@ -1218,7 +1114,7 @@
 <script>
   if ('serviceWorker' in navigator) {
     const swCode = `
-      const CACHE_NAME = 'buendigkeit-elev-v21';
+      const CACHE_NAME = 'buendigkeit-elev-v22';
       self.addEventListener('install', e => {
         e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll([self.location.href])));
         self.skipWaiting();
@@ -1231,7 +1127,7 @@
     navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
   }
 
-  const STORAGE_KEY = 'buendigkeit-elev-v21';
+  const STORAGE_KEY = 'buendigkeit-elev-v22';
   let state = {
     floorCount: 5,
     startFloor: 0,
@@ -1453,7 +1349,7 @@
 
   const container = $('listContainer');
 
-  /* Fokus & ruhige Fahrt mit starrer Schachtverankerung */
+  /* Fokus & ruhige Fahrt */
   container.addEventListener('focusin', e => {
     const card = e.target.closest('.floor-card');
     if (!card) return;
@@ -1473,7 +1369,6 @@
     if (shaftNode && elevatorCar && shaftPanel) {
       elevatorCar.style.display = 'flex';
 
-      // Wenn gleiche Etage: Keine Türbewegung
       if (currentElevatorFloor === floor) {
         if (!elevatorCar.classList.contains('doors-open')) {
           elevatorCar.classList.add('doors-open');
@@ -1481,7 +1376,6 @@
         return;
       }
 
-      // Neue Etage: Türen zu, sanft anfahren, ankommen, öffnen
       currentElevatorFloor = floor;
       elevatorCar.classList.remove('doors-open');
       carFloorText.textContent = getFloorLabel(floor);
