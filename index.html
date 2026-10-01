@@ -188,7 +188,7 @@
     z-index: 15;
     display: grid;
     grid-template-columns: 46px 1fr 1fr;
-    gap: 6px;
+    gap: 0; /* Zusammenhängend für durchgehende Trennfuge */
     padding: 2px 0 6px 0;
     background: transparent;
   }
@@ -209,8 +209,27 @@
     letter-spacing: 0.05em;
   }
 
-  .header-pill.up { color: var(--up-color); border-color: var(--up-border); }
-  .header-pill.down { color: var(--down-color); border-color: var(--down-border); }
+  .header-pill.floor-th {
+    margin-right: 6px;
+  }
+
+  .header-pill.up { 
+    color: var(--up-color); 
+    border-color: var(--up-border);
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right: none;
+  }
+  
+  .header-pill.down { 
+    color: var(--down-color); 
+    border-color: var(--down-border);
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    /* Vertikale Trennfuge auch im Header */
+    border-left: 2px solid #090b0e;
+    box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.15), var(--shadow-raised);
+  }
 
   @keyframes pulseUp {
     0%, 100% { transform: translateY(0); opacity: 0.8; }
@@ -277,10 +296,18 @@
     cursor: pointer;
   }
 
-  .cell-card.dir-up { background: rgba(56, 189, 248, 0.03); }
+  .cell-card.dir-up { 
+    background: rgba(56, 189, 248, 0.03); 
+  }
+
+  /* ========================================================
+     VERTIKALE TRENNUNG ZWISCHEN AUF- UND AB-SPALTE
+     (Eingelassene Edelstahl-Nut mit Lichtkante)
+     ======================================================== */
   .cell-card.dir-down {
-    border-left: 1.5px dashed rgba(245, 158, 11, 0.3);
     background: rgba(245, 158, 11, 0.03);
+    border-left: 2px solid #090b0e;
+    box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.12);
   }
 
   .cell-card.focused-cell {
@@ -320,9 +347,7 @@
 
   .cell-main { display: flex; align-items: center; gap: 6px; }
 
-  /* ========================================================
-     KABINENZEIGER-DISPLAY (Eingelassener Digital-Anzeiger)
-     ======================================================== */
+  /* KABINENZEIGER-DISPLAY */
   .display-wrapper {
     flex: 1;
     min-width: 0;
@@ -345,7 +370,6 @@
     box-shadow: inset 0 3px 8px rgba(0,0,0,0.9), 0 0 8px rgba(56, 189, 248, 0.5);
   }
 
-  /* Feines Display-Raster für echten Anzeigetafel-Look */
   .display-wrapper::before {
     content: '';
     position: absolute;
@@ -388,7 +412,6 @@
     text-transform: uppercase;
   }
 
-  /* Farbige LED-Optik je nach Richtung / Zustand */
   .dir-up .indicator-val {
     color: #7dd3fc;
     text-shadow: 0 0 6px rgba(56, 189, 248, 0.6);
@@ -617,7 +640,7 @@
   .elevator-car.doors-open .car-door-left { transform: translateX(-88%); }
   .elevator-car.doors-open .car-door-right { transform: translateX(88%); }
 
-  /* Virtuelles Vor-Ort Tastenfeld (sauber über der Leiste platziert) */
+  /* Virtuelles Vor-Ort Tastenfeld */
   .numpad-drawer {
     position: fixed;
     bottom: calc(env(safe-area-inset-bottom, 8px) + 58px);
@@ -1045,7 +1068,7 @@
   <div class="inspection-split">
     <div class="main-column">
       <div class="grid-header">
-        <div class="header-pill engraved-text">Et.</div>
+        <div class="header-pill floor-th engraved-text">Et.</div>
         <div class="header-pill up engraved-text">
           <span class="led-arrow">▲</span>
           <span>Auf</span>
@@ -1077,7 +1100,7 @@
   </div>
 </div>
 
-<!-- Vor-Ort Industrie Schnell-Tastenfeld (ohne ±2) -->
+<!-- Vor-Ort Industrie Schnell-Tastenfeld -->
 <div class="numpad-drawer" id="numpadDrawer">
   <div class="numpad-grid">
     <button type="button" class="num-key" onclick="numpadAdd(1)">+1</button>
@@ -1180,7 +1203,7 @@
 <script>
   if ('serviceWorker' in navigator) {
     const swCode = `
-      const CACHE_NAME = 'buendigkeit-elev-v26';
+      const CACHE_NAME = 'buendigkeit-elev-v27';
       self.addEventListener('install', e => {
         e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll([self.location.href])));
         self.skipWaiting();
@@ -1193,7 +1216,7 @@
     navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
   }
 
-  const STORAGE_KEY = 'buendigkeit-elev-v26';
+  const STORAGE_KEY = 'buendigkeit-elev-v27';
   let state = {
     floorCount: 5,
     startFloor: 0,
