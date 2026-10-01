@@ -3,33 +3,39 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
-<meta name="theme-color" content="#0a0e17">
+<meta name="theme-color" content="#1a1d24">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Bündigkeiten">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%231e293b'/><rect x='10' y='10' width='80' height='80' rx='14' fill='%230f172a' stroke='%23f59e0b' stroke-width='4'/><text y='.9em' x='22' font-size='68' fill='%23f59e0b'>⇕</text></svg>">
 <title>Bündigkeiten - Aufzugservice</title>
 <style>
   :root {
     --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     --font-display: "SF Mono", "Roboto Mono", "Consolas", "Liberation Mono", ui-monospace, monospace;
     
-    --bg-base: #0a0e17;
-    --card-surface: linear-gradient(165deg, #1e293b 0%, #0f172a 100%);
-    --card-border: #334155;
-    --text: #f8fafc;
+    /* Edelstahl-Farbpalette & Schliff */
+    --bg-base: #121419;
+    --steel-light: #687182;
+    --steel-mid: #3d434f;
+    --steel-dark: #232730;
+    --steel-deep: #16181f;
+    --steel-bevel: rgba(255, 255, 255, 0.35);
+
+    --card-surface: linear-gradient(145deg, #323843 0%, #20242c 100%);
+    --card-border: #4d5564;
+    --text: #f1f5f9;
     --text-muted: #94a3b8;
 
     --up-color: #38bdf8;
-    --up-border: rgba(56, 189, 248, 0.35);
-    --up-glow: rgba(56, 189, 248, 0.2);
+    --up-border: rgba(56, 189, 248, 0.45);
+    --up-glow: rgba(56, 189, 248, 0.25);
 
     --down-color: #f59e0b;
-    --down-border: rgba(245, 158, 11, 0.35);
-    --down-glow: rgba(245, 158, 11, 0.2);
+    --down-border: rgba(245, 158, 11, 0.45);
+    --down-glow: rgba(245, 158, 11, 0.25);
 
     --accent: #f59e0b;
-    --accent-glow: rgba(245, 158, 11, 0.4);
+    --accent-glow: rgba(245, 158, 11, 0.45);
 
     --ok: #10b981;
     --ok-bg: rgba(16, 185, 129, 0.18);
@@ -42,23 +48,24 @@
     --bad-text: #fca5a5;
 
     --shadow-raised: 
-      0 4px 10px -1px rgba(0, 0, 0, 0.6), 
-      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      0 4px 12px rgba(0, 0, 0, 0.5), 
+      inset 0 1px 0 rgba(255, 255, 255, 0.2),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.4);
     --shadow-sunken: 
-      inset 0 2px 6px rgba(0, 0, 0, 0.75),
-      inset 0 -1px 0 rgba(255, 255, 255, 0.04);
+      inset 0 2px 5px rgba(0, 0, 0, 0.8),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.08);
     
     --radius-sm: 6px;
     --radius-md: 10px;
-    --radius-lg: 14px;
+    --radius-lg: 16px;
   }
 
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   
   body {
     margin: 0;
-    padding: env(safe-area-inset-top, 8px) 8px calc(env(safe-area-inset-bottom, 10px) + 74px);
-    background: var(--bg-base);
+    padding: env(safe-area-inset-top, 8px) 8px calc(env(safe-area-inset-bottom, 10px) + 76px);
+    background: radial-gradient(circle at 50% 0%, #2b313c 0%, #121419 75%);
     min-height: 100vh;
     color: var(--text);
     font-family: var(--font-ui);
@@ -66,11 +73,71 @@
     -webkit-font-smoothing: antialiased;
   }
 
+  /* Tableau-Hauptgehäuse mit seitlich sichtbaren Inbusschrauben */
   .layout-wrap {
-    max-width: 600px;
+    max-width: 610px;
     margin: 0 auto;
     position: relative;
-    padding-right: 42px;
+    padding-right: 50px;
+    background: linear-gradient(135deg, #3d434f 0%, #262a32 30%, #3a404c 60%, #1f2229 100%);
+    border: 2px solid var(--steel-light);
+    border-radius: var(--radius-lg);
+    padding-left: 12px;
+    padding-top: 10px;
+    padding-bottom: 14px;
+    box-shadow: 
+      inset 0 1px 2px var(--steel-bevel),
+      inset 0 -2px 5px rgba(0,0,0,0.8),
+      0 12px 30px rgba(0, 0, 0, 0.7);
+  }
+
+  /* Tableau-Schrauben */
+  .screw {
+    position: absolute;
+    width: 11px;
+    height: 11px;
+    background: radial-gradient(circle, #a0aab8, #2a2e37);
+    border-radius: 50%;
+    border: 1px solid #1a1d24;
+    box-shadow: inset 0 1px 1px #fff, 0 1px 3px #000;
+    z-index: 10;
+  }
+  .screw::after {
+    content: '';
+    position: absolute;
+    top: 4.5px;
+    left: 1.5px;
+    width: 7px;
+    height: 1.5px;
+    background: #0f1115;
+  }
+  .s-tl { top: 8px; left: 8px; }
+  .s-tr { top: 8px; right: 8px; }
+  .s-bl { bottom: 8px; left: 8px; }
+  .s-br { bottom: 8px; right: 8px; }
+
+  /* Navigation zurück */
+  .tableau-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+    padding-right: 12px;
+  }
+  .nav-back {
+    color: #79b8ff;
+    text-decoration: none;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .tableau-badge {
+    font-size: 0.65rem;
+    font-family: var(--font-display);
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
   }
 
   /* Header */
@@ -78,10 +145,8 @@
     position: sticky;
     top: 0;
     z-index: 20;
-    background: rgba(10, 14, 23, 0.94);
     padding: 6px 0 8px;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background: transparent;
   }
 
   .nav-header {
@@ -89,24 +154,27 @@
     justify-content: center;
     align-items: center;
     gap: 12px;
+    background: #090b0f;
+    border: 2px solid #2b303a;
+    border-radius: var(--radius-md);
+    padding: 8px 14px;
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.9), 0 2px 4px rgba(255,255,255,0.06);
+    margin-right: 12px;
   }
 
-  /* ========================================================
-     ANIMIERTES AUFZUG-MODELL (TREIBSCHEIBE & GEGENGEWICHT)
-     ======================================================== */
+  /* Treibscheiben-Antrieb (Edelstahl Maschinenraum) */
   .elevator-machinery {
     width: 38px;
     height: 44px;
     position: relative;
-    background: #060910;
-    border: 1.5px solid var(--card-border);
+    background: #101217;
+    border: 1.5px solid #3e4450;
     border-radius: var(--radius-sm);
     box-shadow: var(--shadow-sunken);
     overflow: hidden;
     flex: none;
   }
 
-  /* Treibscheibe */
   .traction-sheave {
     position: absolute;
     top: 3px;
@@ -116,7 +184,7 @@
     margin-left: -10px;
     border-radius: 50%;
     border: 1.5px solid var(--accent);
-    background: #1e293b;
+    background: #252a33;
     box-shadow: 0 0 6px var(--accent-glow);
     display: flex;
     align-items: center;
@@ -135,22 +203,20 @@
     position: absolute;
     width: 14px;
     height: 2px;
-    background: #475569;
+    background: #64748b;
   }
 
-  /* Tragseile */
   .rope-left, .rope-right {
     position: absolute;
     top: 13px;
     width: 1px;
-    background: #94a3b8;
+    background: #cbd5e1;
     z-index: 1;
     transition: height 0.35s cubic-bezier(0.34, 1.3, 0.64, 1);
   }
   .rope-left { left: 8px; height: 16px; }
   .rope-right { right: 8px; height: 10px; }
 
-  /* Fahrkorb (links) */
   .mach-car {
     position: absolute;
     left: 4px;
@@ -158,14 +224,13 @@
     width: 9px;
     height: 12px;
     border-radius: 1.5px;
-    background: linear-gradient(135deg, #38bdf8, #0284c7);
-    border: 1px solid #7dd3fc;
-    box-shadow: 0 0 4px rgba(56, 189, 248, 0.5);
+    background: linear-gradient(135deg, #475569, #1e293b);
+    border: 1px solid #94a3b8;
+    box-shadow: 0 0 4px rgba(56, 189, 248, 0.6);
     z-index: 2;
     transition: top 0.35s cubic-bezier(0.34, 1.3, 0.64, 1);
   }
 
-  /* Gegengewicht (rechts) */
   .mach-counterweight {
     position: absolute;
     right: 5px;
@@ -180,73 +245,46 @@
     transition: top 0.35s cubic-bezier(0.34, 1.3, 0.64, 1);
   }
 
-  /* Drehungs-Animationen */
-  @keyframes rotateCW {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-  }
-  @keyframes rotateCCW {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(-360deg); }
-  }
+  @keyframes rotateCW { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  @keyframes rotateCCW { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
 
-  /* Zustände bei Aufwärts-/Abwärtsfahrt */
-  body[data-active-dir="up"] .traction-sheave {
-    animation: rotateCW 1.2s infinite linear;
-  }
-  body[data-active-dir="up"] .mach-car {
-    top: 18px;
-  }
-  body[data-active-dir="up"] .rope-left {
-    height: 7px;
-  }
-  body[data-active-dir="up"] .mach-counterweight {
-    top: 29px;
-  }
-  body[data-active-dir="up"] .rope-right {
-    height: 18px;
-  }
+  body[data-active-dir="up"] .traction-sheave { animation: rotateCW 1.2s infinite linear; }
+  body[data-active-dir="up"] .mach-car { top: 18px; }
+  body[data-active-dir="up"] .rope-left { height: 7px; }
+  body[data-active-dir="up"] .mach-counterweight { top: 29px; }
+  body[data-active-dir="up"] .rope-right { height: 18px; }
 
-  body[data-active-dir="down"] .traction-sheave {
-    animation: rotateCCW 1.2s infinite linear;
-  }
-  body[data-active-dir="down"] .mach-car {
-    top: 29px;
-  }
-  body[data-active-dir="down"] .rope-left {
-    height: 18px;
-  }
-  body[data-active-dir="down"] .mach-counterweight {
-    top: 18px;
-  }
-  body[data-active-dir="down"] .rope-right {
-    height: 7px;
-  }
+  body[data-active-dir="down"] .traction-sheave { animation: rotateCCW 1.2s infinite linear; }
+  body[data-active-dir="down"] .mach-car { top: 29px; }
+  body[data-active-dir="down"] .rope-left { height: 18px; }
+  body[data-active-dir="down"] .mach-counterweight { top: 18px; }
+  body[data-active-dir="down"] .rope-right { height: 7px; }
 
   .title-group h1 {
-    font-size: 1.55rem;
+    font-size: 1.3rem;
     font-weight: 900;
-    letter-spacing: -0.02em;
+    letter-spacing: 0.08em;
     margin: 0;
     text-transform: uppercase;
-    color: #fff;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+    color: #e2e8f0;
+    text-shadow: 0 0 10px rgba(255,255,255,0.3);
+    font-family: var(--font-display);
   }
 
   /* Spaltenköpfe */
   .grid-header {
     position: sticky;
-    top: 54px;
+    top: 68px;
     z-index: 15;
     display: grid;
     grid-template-columns: 46px 1fr 1fr;
     gap: 6px;
-    padding: 2px 0 6px;
-    background: var(--bg-base);
+    padding: 2px 12px 6px 0;
+    background: transparent;
   }
 
   .header-pill {
-    background: #111827;
+    background: linear-gradient(180deg, #30353f 0%, #1e2229 100%);
     border: 1.5px solid var(--card-border);
     border-radius: var(--radius-sm);
     padding: 6px 2px;
@@ -254,23 +292,23 @@
     align-items: center;
     justify-content: center;
     gap: 4px;
-    font-size: 0.82rem;
+    font-size: 0.8rem;
     font-weight: 900;
     box-shadow: var(--shadow-raised);
     text-transform: uppercase;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.05em;
   }
 
-  .header-pill.up { color: var(--up-color); border-color: var(--up-border); background: #0c1a2e; }
-  .header-pill.down { color: var(--down-color); border-color: var(--down-border); background: #23190b; }
+  .header-pill.up { color: var(--up-color); border-color: var(--up-border); }
+  .header-pill.down { color: var(--down-color); border-color: var(--down-border); }
 
   @keyframes pulseUp {
     0%, 100% { transform: translateY(0); opacity: 0.8; }
-    50% { transform: translateY(-2px); opacity: 1; filter: drop-shadow(0 0 4px var(--up-color)); }
+    50% { transform: translateY(-2px); opacity: 1; filter: drop-shadow(0 0 5px var(--up-color)); }
   }
   @keyframes pulseDown {
     0%, 100% { transform: translateY(0); opacity: 0.8; }
-    50% { transform: translateY(2px); opacity: 1; filter: drop-shadow(0 0 4px var(--down-color)); }
+    50% { transform: translateY(2px); opacity: 1; filter: drop-shadow(0 0 5px var(--down-color)); }
   }
 
   body[data-active-dir="up"] .header-pill.up .led-arrow { animation: pulseUp 0.8s infinite ease-in-out; }
@@ -282,6 +320,7 @@
     flex-direction: column;
     gap: 8px;
     margin-top: 4px;
+    padding-right: 12px;
   }
 
   .floor-card {
@@ -292,13 +331,13 @@
     display: grid;
     grid-template-columns: 46px 1fr 1fr;
     overflow: hidden;
-    scroll-margin-top: 110px;
+    scroll-margin-top: 130px;
     transition: border-color 0.2s, box-shadow 0.2s;
   }
 
   .floor-card.active-floor {
-    border-color: var(--accent);
-    box-shadow: 0 0 14px rgba(245, 158, 11, 0.4), var(--shadow-raised);
+    border-color: #38bdf8;
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.4), var(--shadow-raised);
   }
 
   .floor-label {
@@ -308,9 +347,9 @@
     font-family: var(--font-display);
     font-size: 1.15rem;
     font-weight: 900;
-    background: #060910;
+    background: #11141a;
     border-right: 1.5px solid var(--card-border);
-    color: #fff;
+    color: #f8fafc;
     user-select: none;
     box-shadow: inset -2px 0 6px rgba(0,0,0,0.8);
     letter-spacing: -0.05em;
@@ -329,10 +368,10 @@
     transition: background 0.2s;
   }
 
-  .cell-card.dir-up { background: rgba(56, 189, 248, 0.02); }
+  .cell-card.dir-up { background: rgba(56, 189, 248, 0.03); }
   .cell-card.dir-down {
     border-left: 1.5px dashed rgba(245, 158, 11, 0.3);
-    background: rgba(245, 158, 11, 0.02);
+    background: rgba(245, 158, 11, 0.03);
   }
 
   .cell-card.ok { background: var(--ok-bg) !important; }
@@ -353,8 +392,8 @@
   .cell-card.success-pulse { animation: okPulse 0.6s ease-out; }
 
   .cell-card.na {
-    background: rgba(15, 23, 42, 0.6) !important;
-    color: #475569;
+    background: rgba(22, 25, 32, 0.75) !important;
+    color: #64748b;
     font-size: 0.72rem;
     font-weight: 800;
     display: flex;
@@ -376,7 +415,7 @@
     position: absolute;
     left: 3px;
     z-index: 2;
-    background: #1e293b;
+    background: linear-gradient(180deg, #374151, #1f2937);
     border: 1px solid var(--card-border);
     color: var(--text-muted);
     border-radius: 4px;
@@ -389,6 +428,7 @@
     justify-content: center;
     cursor: pointer;
     user-select: none;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.5);
   }
   .sign-quick-toggle:active {
     background: var(--accent);
@@ -400,10 +440,10 @@
     height: 40px;
     border: 1.5px solid var(--card-border);
     border-radius: var(--radius-sm);
-    background: #050811;
+    background: #0b0d12;
     color: #fff;
     font-family: var(--font-display);
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     font-weight: 900;
     text-align: center;
     padding-left: 20px;
@@ -428,8 +468,8 @@
     flex: none;
     width: 12px;
     height: 40px;
-    background: #050811;
-    border: 1px solid #1e293b;
+    background: #0a0d13;
+    border: 1px solid #2d333f;
     border-radius: 4px;
     position: relative;
     overflow: hidden;
@@ -493,8 +533,8 @@
 
   /* Statustext */
   .status-text {
-    font-size: 0.85rem;
-    font-weight: 900;
+    font-size: 0.82rem;
+    font-weight: 800;
     margin-top: 4px;
     text-align: center;
     color: var(--text-muted);
@@ -503,7 +543,6 @@
     align-items: center;
     justify-content: center;
     border-radius: 4px;
-    letter-spacing: -0.01em;
     padding: 1px 4px;
     background: transparent;
   }
@@ -521,97 +560,135 @@
     text-shadow: 0 1px 2px rgba(0,0,0,0.7);
   }
 
-  /* Schacht-Navigation (Mini-Map rechts) */
+  /* ========================================================
+     ANIMIERTER EDELSTAHL-SCHACHT RECHTS (KABINE & FÜHRUNG)
+     ======================================================== */
   .shaft-panel {
-    position: fixed;
-    right: max(6px, calc((100vw - 600px) / 2 + 6px));
-    top: calc(env(safe-area-inset-top, 8px) + 54px);
-    width: 36px;
-    max-height: calc(100vh - 140px);
+    position: absolute;
+    right: 8px;
+    top: 54px;
+    bottom: 12px;
+    width: 38px;
+    background: #090a0e;
+    border: 2px solid var(--steel-mid);
+    border-radius: var(--radius-md);
+    padding: 6px 2px;
+    box-shadow: inset 0 0 12px #000, 0 4px 10px rgba(0,0,0,0.5);
+    z-index: 25;
     overflow-y: auto;
     overflow-x: hidden;
     scrollbar-width: none;
-    background: #070b14;
-    border: 1.5px solid var(--card-border);
-    border-radius: var(--radius-md);
-    padding: 4px 2px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.85);
-    z-index: 25;
-    transition: transform 0.2s ease, top 0.2s ease;
   }
   .shaft-panel::-webkit-scrollbar { display: none; }
 
   .shaft-track {
     position: relative;
     width: 100%;
+    min-height: 100%;
     display: flex;
     flex-direction: column;
-    gap: 4px;
     align-items: center;
   }
 
-  .shaft-cable {
+  /* Zwei durchgehende Führungsschienen */
+  .shaft-rail-l, .shaft-rail-r {
     position: absolute;
     top: 0;
     bottom: 0;
-    left: 50%;
     width: 2px;
-    background: #1e293b;
-    transform: translateX(-50%);
+    background: linear-gradient(180deg, #475569, #334155);
     z-index: 0;
+  }
+  .shaft-rail-l { left: 4px; }
+  .shaft-rail-r { right: 4px; }
+
+  .shaft-nodes-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+    align-items: center;
+    position: relative;
+    z-index: 1;
   }
 
   .shaft-node {
     width: 28px;
-    height: 20px;
+    height: 22px;
     border-radius: 4px;
-    background: #131d2e;
-    border: 1px solid #23344d;
+    background: linear-gradient(180deg, #2b303c 0%, #171a21 100%);
+    border: 1px solid #3e4756;
     font-family: var(--font-display);
-    font-size: 0.62rem;
+    font-size: 0.65rem;
     font-weight: 900;
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--text-muted);
     cursor: pointer;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.6);
     transition: all 0.15s ease;
-    position: relative;
-    z-index: 1;
-    overflow: hidden;
     flex: none;
+    position: relative;
   }
 
-  .shaft-node:active { transform: scale(0.85); }
-  .shaft-node.ok { background: #065f46; border-color: #10b981; color: #fff; }
-  .shaft-node.bad { background: #7f1d1d; border-color: #ef4444; color: #fff; box-shadow: 0 0 6px rgba(239, 68, 68, 0.5); }
+  /* Schwellenstrich pro Etage */
+  .shaft-node::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 2px;
+    right: 2px;
+    height: 1px;
+    background: #64748b;
+  }
+
+  .shaft-node:active { transform: scale(0.9); }
+  .shaft-node.ok { background: #064e3b; border-color: #10b981; color: #fff; }
+  .shaft-node.bad { background: #7f1d1d; border-color: #ef4444; color: #fff; box-shadow: 0 0 6px rgba(239, 68, 68, 0.6); }
   .shaft-node.partial { background: #1e3a8a; border-color: #3b82f6; color: #fff; }
 
+  /* Die realistische animierte Aufzugskabine */
   .elevator-car {
     position: absolute;
-    left: 1px;
-    right: 1px;
-    height: 22px;
-    border-radius: 4px;
-    border: 1.5px solid var(--accent);
-    background: rgba(245, 158, 11, 0.25);
-    box-shadow: 0 0 8px var(--accent-glow), inset 0 0 4px var(--accent-glow);
+    left: 2px;
+    right: 2px;
+    height: 24px;
+    border-radius: 3px;
+    background: linear-gradient(135deg, #475569 0%, #1e293b 100%);
+    border: 1.5px solid #94a3b8;
+    box-shadow: 
+      0 0 10px rgba(56, 189, 248, 0.5), 
+      inset 0 1px 1px #fff,
+      inset 0 -2px 4px rgba(0,0,0,0.8);
     pointer-events: none;
-    z-index: 2;
-    transition: top 0.3s cubic-bezier(0.34, 1.3, 0.64, 1);
+    z-index: 3;
+    transition: top 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.2);
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  /* Kabinentürspalt & Leuchtanzeige */
+  .elevator-car::before {
+    content: '';
+    position: absolute;
+    width: 1px;
+    top: 2px;
+    bottom: 2px;
+    background: #000;
+    box-shadow: 0 0 2px rgba(255, 255, 255, 0.4);
   }
   .elevator-car::after {
-    content: "◀";
-    font-size: 7px;
-    color: var(--accent);
-    margin-right: -6px;
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 4px;
+    right: 4px;
+    height: 2px;
+    background: var(--up-color);
+    box-shadow: 0 0 4px var(--up-color);
   }
 
   /* Floating Bottom Bar */
@@ -621,12 +698,10 @@
     left: 0;
     right: 0;
     z-index: 30;
-    background: rgba(10, 14, 23, 0.96);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border-top: 1.5px solid var(--card-border);
+    background: linear-gradient(180deg, #2a2f3a 0%, #16181f 100%);
+    border-top: 2px solid var(--steel-light);
     padding: 8px 12px calc(env(safe-area-inset-bottom, 8px) + 6px);
-    box-shadow: 0 -8px 24px rgba(0,0,0,0.6);
+    box-shadow: 0 -8px 24px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.2);
   }
 
   .bottom-progress-edge {
@@ -635,20 +710,20 @@
     left: 0;
     right: 0;
     height: 4px;
-    background: #1e293b;
+    background: #11141a;
     overflow: hidden;
   }
 
   .bottom-progress-fill {
     height: 100%;
     width: 0%;
-    background: linear-gradient(90deg, var(--accent), #eab308);
+    background: linear-gradient(90deg, #38bdf8, #f59e0b);
     box-shadow: 0 0 10px var(--accent-glow);
     transition: width 0.25s ease;
   }
 
   .bottom-bar-inner {
-    max-width: 600px;
+    max-width: 610px;
     margin: 0 auto;
     display: flex;
     align-items: center;
@@ -665,15 +740,16 @@
   }
 
   .bottom-info-title {
-    font-size: 0.6rem;
-    font-weight: 900;
+    font-size: 0.65rem;
+    font-weight: 800;
     color: var(--text-muted);
     text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
 
   .bottom-info-val {
     font-family: var(--font-display);
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     font-weight: 900;
     color: #fff;
     white-space: nowrap;
@@ -688,28 +764,28 @@
     flex: none;
   }
 
-  /* Zahnrad Button für Einstellungen */
+  /* Edelstahl Buttons */
   .btn-thumb-settings {
     height: 40px;
     width: 40px;
     border-radius: var(--radius-md);
-    background: #1e293b;
-    border: 1.5px solid var(--card-border);
+    background: linear-gradient(180deg, #374151 0%, #1f2937 100%);
+    border: 1.5px solid var(--steel-light);
     color: #fff;
     font-size: 1.15rem;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: transform 0.1s ease, border-color 0.2s;
+    box-shadow: var(--shadow-raised);
   }
-  .btn-thumb-settings:active { transform: translateY(2px); border-color: var(--accent); }
+  .btn-thumb-settings:active { transform: translateY(1px); border-color: var(--accent); }
 
   .btn-thumb-reset {
     height: 40px;
     padding: 0 10px;
     border-radius: var(--radius-md);
-    background: #1e293b;
+    background: linear-gradient(180deg, #374151 0%, #1f2937 100%);
     border: 1.5px solid var(--bad-border);
     color: var(--bad-text);
     font-weight: 900;
@@ -719,8 +795,9 @@
     align-items: center;
     gap: 4px;
     text-transform: uppercase;
+    box-shadow: var(--shadow-raised);
   }
-  .btn-thumb-reset:active { transform: translateY(2px); }
+  .btn-thumb-reset:active { transform: translateY(1px); }
   .btn-thumb-reset.armed {
     background: #dc2626;
     border-color: #ef4444;
@@ -732,26 +809,26 @@
     height: 40px;
     padding: 0 14px;
     border-radius: var(--radius-md);
-    background: linear-gradient(135deg, #f59e0b, #d97706);
-    border: 1.5px solid #b45309;
-    color: #000;
+    background: linear-gradient(180deg, #475569 0%, #1e293b 100%);
+    border: 1.5px solid var(--steel-light);
+    color: #38bdf8;
     font-weight: 900;
     font-size: 0.85rem;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 5px;
-    box-shadow: 0 3px 12px var(--accent-glow);
+    box-shadow: var(--shadow-raised);
     text-transform: uppercase;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.05em;
   }
-  .btn-thumb-protocol:active { transform: translateY(2px); }
+  .btn-thumb-protocol:active { transform: translateY(1px); border-color: #38bdf8; }
 
   /* Modals */
   .modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.82);
+    background: rgba(0, 0, 0, 0.85);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     display: flex;
@@ -763,16 +840,15 @@
     pointer-events: none;
     transition: opacity 0.25s ease;
   }
-
   .modal-overlay.active { opacity: 1; pointer-events: auto; }
 
   .modal-card {
-    background: #0f172a;
-    border: 1.5px solid var(--card-border);
+    background: linear-gradient(145deg, #2f3542, #1a1d24);
+    border: 2px solid var(--steel-light);
     border-radius: var(--radius-lg);
-    box-shadow: 0 20px 35px rgba(0,0,0,0.85);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.9), inset 0 1px 1px #fff;
     width: 100%;
-    max-width: 460px;
+    max-width: 480px;
     max-height: 90vh;
     display: flex;
     flex-direction: column;
@@ -780,7 +856,6 @@
     transform: translateY(12px) scale(0.97);
     transition: transform 0.25s cubic-bezier(0.34, 1.4, 0.64, 1);
   }
-
   .modal-overlay.active .modal-card { transform: translateY(0) scale(1); }
 
   .modal-header {
@@ -789,15 +864,16 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: #070b14;
+    background: #11141a;
   }
 
   .modal-header h2 {
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     font-weight: 900;
     margin: 0;
     color: #fff;
     text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
 
   .modal-close {
@@ -809,7 +885,7 @@
     padding: 2px 6px;
   }
 
-  .modal-body { padding: 12px 14px; overflow-y: auto; }
+  .modal-body { padding: 14px; overflow-y: auto; }
 
   .settings-grid-modal {
     display: grid;
@@ -853,32 +929,28 @@
     box-shadow: var(--shadow-sunken);
   }
 
-  .presets-wrap-modal {
-    margin-top: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
+  .presets-wrap-modal { margin-top: 12px; display: flex; flex-direction: column; gap: 6px; }
+  .presets-title-modal { font-size: 0.68rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; }
+  .presets-grid-modal { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
 
-  .presets-title-modal {
-    font-size: 0.68rem;
+  .btn-preset {
+    padding: 8px 4px;
+    background: #1e2430;
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-sm);
+    color: #cbd5e1;
     font-weight: 800;
-    color: var(--text-muted);
-    text-transform: uppercase;
+    font-size: 0.8rem;
+    cursor: pointer;
   }
-
-  .presets-grid-modal {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 6px;
-  }
+  .btn-preset.active { background: #38bdf8; color: #000; border-color: #7dd3fc; }
 
   .report-meta {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 8px;
     margin-bottom: 12px;
-    background: #070b14;
+    background: #10131a;
     padding: 10px;
     border-radius: var(--radius-sm);
     border: 1px solid var(--card-border);
@@ -894,20 +966,11 @@
     text-align: center;
     font-size: 0.82rem;
   }
-
-  .report-status-badge.ok {
-    background: var(--ok-bg);
-    color: var(--ok-text);
-    border: 1px solid var(--ok-border);
-  }
-  .report-status-badge.bad {
-    background: var(--bad-bg);
-    color: var(--bad-text);
-    border: 1px solid var(--bad-border);
-  }
+  .report-status-badge.ok { background: var(--ok-bg); color: var(--ok-text); border: 1px solid var(--ok-border); }
+  .report-status-badge.bad { background: var(--bad-bg); color: var(--bad-text); border: 1px solid var(--bad-border); }
 
   .chart-section {
-    background: #070b14;
+    background: #10131a;
     border: 1px solid var(--card-border);
     border-radius: var(--radius-sm);
     padding: 10px;
@@ -924,30 +987,15 @@
     color: var(--text-muted);
   }
   .chart-legend { display: flex; gap: 10px; }
-  .chart-legend span {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 0.65rem;
-  }
+  .chart-legend span { display: flex; align-items: center; gap: 4px; font-size: 0.65rem; }
   .legend-dot-up { width: 8px; height: 8px; border-radius: 2px; background: var(--up-color); }
   .legend-dot-down { width: 8px; height: 8px; border-radius: 2px; background: var(--down-color); }
 
-  .curve-chart-svg {
-    width: 100%;
-    height: 130px;
-    overflow: visible;
-  }
+  .curve-chart-svg { width: 100%; height: 130px; overflow: visible; }
 
-  .report-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 4px;
-    text-align: center;
-  }
-
+  .report-table { width: 100%; border-collapse: collapse; margin-top: 4px; text-align: center; }
   .report-table th {
-    background: #070b14;
+    background: #11141a;
     padding: 7px;
     font-size: 0.72rem;
     font-weight: 900;
@@ -955,35 +1003,25 @@
     border-bottom: 2px solid var(--card-border);
     text-transform: uppercase;
   }
-
   .report-table td {
     padding: 7px 4px;
-    border-bottom: 1px solid #1e293b;
+    border-bottom: 1px solid #242a35;
     font-family: var(--font-display);
     font-weight: 800;
     font-size: 0.88rem;
   }
 
-  .report-val {
-    display: inline-block;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-size: 0.8rem;
-  }
+  .report-val { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 0.8rem; }
   .report-val.ok { color: var(--ok-text); background: var(--ok-bg); }
   .report-val.bad { color: var(--bad-text); background: var(--bad-bg); font-weight: 900; }
   .report-val.na { color: #475569; }
 
-  .diff-tag {
-    font-size: 0.78rem;
-    font-weight: 900;
-    color: var(--accent);
-  }
+  .diff-tag { font-size: 0.78rem; font-weight: 900; color: var(--accent); }
 
   .modal-actions {
     padding: 12px 16px;
     border-top: 1.5px solid var(--card-border);
-    background: #070b14;
+    background: #10131a;
     display: flex;
     gap: 8px;
   }
@@ -999,19 +1037,29 @@
     align-items: center;
     justify-content: center;
     text-transform: uppercase;
-    border: 1px solid var(--card-border);
+    border: 1.5px solid var(--steel-light);
   }
-  .btn-modal.copy { background: #1e293b; color: #fff; }
+  .btn-modal.copy { background: #1e2430; color: #fff; }
   .btn-modal.print { background: var(--accent); color: #000; border-color: #b45309; }
 </style>
 </head>
 <body data-active-dir="">
 
 <div class="layout-wrap">
-  <!-- Header mit animiertem Aufzug-Modell -->
+  <!-- Gehäuse-Schrauben -->
+  <div class="screw s-tl"></div>
+  <div class="screw s-tr"></div>
+  <div class="screw s-bl"></div>
+  <div class="screw s-br"></div>
+
+  <div class="tableau-nav">
+    <a href="index.html" class="nav-back">‹ Hauptmenü</a>
+    <span class="tableau-badge">EN 81-20 INSPECTION</span>
+  </div>
+
+  <!-- Header mit animiertem Antriebsmodell -->
   <header class="top-bar">
     <div class="nav-header">
-      <!-- Mechanisches Aufzug-Modell (Treibscheibe, Seil, Fahrkorb, Gegengewicht) -->
       <div class="elevator-machinery" aria-hidden="true" title="Treibscheiben-Antrieb">
         <div class="traction-sheave"></div>
         <div class="rope-left"></div>
@@ -1041,17 +1089,18 @@
   <!-- Etagenliste -->
   <main class="floor-list" id="listContainer"></main>
 
-  <!-- Rechts fest verankerte Mini-Map / Schacht -->
+  <!-- Rechts im Tableau verankerter animierter Schacht -->
   <aside class="shaft-panel" id="shaftPanel" aria-label="Schacht-Navigation">
     <div class="shaft-track" id="shaftTrack">
-      <div class="shaft-cable"></div>
+      <div class="shaft-rail-l"></div>
+      <div class="shaft-rail-r"></div>
       <div class="elevator-car" id="elevatorCar" style="display:none;"></div>
-      <div id="shaftNodes" style="display:flex; flex-direction:column; gap:4px; width:100%; align-items:center;"></div>
+      <div class="shaft-nodes-wrap" id="shaftNodes"></div>
     </div>
   </aside>
 </div>
 
-<!-- Floating Bottom Bar mit Zahnrad-Button -->
+<!-- Floating Bottom Bar -->
 <nav class="bottom-bar">
   <div class="bottom-progress-edge" aria-hidden="true">
     <div class="bottom-progress-fill" id="bottomProgressBar"></div>
@@ -1062,10 +1111,7 @@
       <span class="bottom-info-val" id="bottomStatus">0 / 0 gemessen</span>
     </div>
     <div class="bottom-actions">
-      <!-- ⚙️ Zahnrad Button -->
-      <button type="button" class="btn-thumb-settings" id="openSettingsBtn" title="Einstellungen">
-        ⚙️
-      </button>
+      <button type="button" class="btn-thumb-settings" id="openSettingsBtn" title="Einstellungen">⚙️</button>
       <button type="button" class="btn-thumb-reset" id="resetBtn" title="Alle Werte löschen">
         <span>🗑</span> <span id="resetBtnText">Leeren</span>
       </button>
@@ -1123,7 +1169,7 @@
   </div>
 </div>
 
-<!-- Modal Pop-up Protokoll -->
+<!-- Modal Protokoll -->
 <div class="modal-overlay" id="reportModal" onclick="closeModalOnOutsideClick(event)">
   <div class="modal-card">
     <div class="modal-header">
@@ -1141,7 +1187,7 @@
 <script>
   if ('serviceWorker' in navigator) {
     const swCode = `
-      const CACHE_NAME = 'buendigkeit-elev-v15';
+      const CACHE_NAME = 'buendigkeit-elev-v16';
       self.addEventListener('install', e => {
         e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll([self.location.href])));
         self.skipWaiting();
@@ -1154,7 +1200,7 @@
     navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
   }
 
-  const STORAGE_KEY = 'buendigkeit-elev-v15';
+  const STORAGE_KEY = 'buendigkeit-elev-v16';
   let state = {
     floorCount: 5,
     startFloor: 0,
@@ -1373,7 +1419,7 @@
 
   const container = $('listContainer');
 
-  /* Fokus & Fahrkorb-Animation */
+  /* Fokus & Fahrkorb-Animation im Schacht rechts */
   container.addEventListener('focusin', e => {
     const card = e.target.closest('.floor-card');
     if (!card) return;
@@ -1400,16 +1446,6 @@
   container.addEventListener('focusout', () => {
     document.body.dataset.activeDir = '';
   });
-
-  /* Tastatur-Erkennung */
-  if (window.visualViewport) {
-    window.visualViewport.addEventListener('resize', () => {
-      const panel = $('shaftPanel');
-      if (!panel) return;
-      const availableH = window.visualViewport.height - 120;
-      panel.style.maxHeight = `${Math.max(120, availableH)}px`;
-    });
-  }
 
   container.addEventListener('click', e => {
     const signBtn = e.target.closest('.sign-quick-toggle');
@@ -1557,7 +1593,7 @@
     renderList();
   });
 
-  /* Einstellungs-Modal Steuerung */
+  /* Einstellungen Modal */
   const settingsModal = $('settingsModal');$('openSettingsBtn').addEventListener('click', () => {
     settingsModal.classList.add('active');
   });
@@ -1565,7 +1601,7 @@
     settingsModal.classList.remove('active');
   };
 
-  /* Protokoll-Modal */
+  /* Protokoll Modal */
   const reportModal = $('reportModal');$('openReportBtn').addEventListener('click', () => {
     buildReportHtml();
     reportModal.classList.add('active');
@@ -1648,7 +1684,7 @@
 
     const normLabel = state.tolerance === 10 ? ' (gemäß DIN EN 81-20)' : '';
     const statusText = badCount > 0 
-      ? `⚠️ ${badCount} Mangel: Toleranzgrenze überschritten`
+      ? `⚠️ ${badCount} Mangel: Toleranzgrenze überschritten` 
       : (measuredCount === totalCells ? `✓ Bestanden: Alle Haltepunkte im Toleranzbereich${normLabel}` : `ℹ ${measuredCount} von ${totalCells} Messwerten erfasst`);
 
     const chartSvg = generateCurveChart(chartData, state.tolerance);
