@@ -17,14 +17,13 @@
       min-height: 100vh;
       display: flex;
       justify-content: center;
-      align-items: flex-start;
       padding: 20px 12px;
     }
 
     /* Aufzugstableau Gehäuse (gebürsteter Edelstahl) */
     .tableau {
       width: 100%;
-      max-width: 520px;
+      max-width: 540px;
       background: linear-gradient(135deg, #4b525d 0%, #2e3440 25%, #4b525d 50%, #262a33 75%, #3b4250 100%);
       border: 2px solid #5a6373;
       border-radius: 18px;
@@ -71,7 +70,7 @@
       text-transform: uppercase;
     }
 
-    /* Punktmatrix / Digital-Display oben */
+    /* Digitalanzeige oben */
     .display-bezel {
       background: #08090b;
       border: 2px solid #23272f;
@@ -80,12 +79,12 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
       box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.9);
     }
     .display-title {
       font-family: "Courier New", monospace;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       color: #38bdf8;
       letter-spacing: 0.15em;
       text-transform: uppercase;
@@ -93,61 +92,104 @@
     }
     .dot-matrix {
       font-family: "Courier New", monospace;
-      font-size: 1.2rem;
+      font-size: 1.15rem;
       font-weight: bold;
       color: #f59e0b;
       text-shadow: 0 0 8px rgba(245, 158, 11, 0.7);
     }
 
-    /* Layout-Split: Links Eingabe / Rechts Schacht-Animation */
-    .main-view {
+    /* Hauptbereich: links Liste der Haltestellen, rechts Schachtanimation */
+    .inspection-layout {
       display: grid;
-      grid-template-columns: 1fr 140px;
-      gap: 16px;
-      margin-bottom: 20px;
+      grid-template-columns: 1fr 130px;
+      gap: 14px;
+      margin-bottom: 16px;
     }
 
-    .form-panel {
+    /* Etagen-Tabelle / Eingabegitter */
+    .floors-container {
+      background: #121418;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 8px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
-    }
-    .field label {
-      display: block;
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: #cbd5e1;
-      margin-bottom: 4px;
-      font-weight: 600;
-    }
-    .field input, .field select {
-      width: 100%;
-      background: #14171d;
-      border: 1px solid #475569;
-      border-radius: 6px;
-      color: #fff;
-      padding: 8px 10px;
-      font-size: 0.95rem;
-      outline: none;
-      box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
-    }
-    .field input:focus, .field select:focus {
-      border-color: #38bdf8;
-      box-shadow: 0 0 0 1px #38bdf8;
+      gap: 8px;
+      max-height: 420px;
+      overflow-y: auto;
     }
 
-    /* Schachtdarstellung rechts */
+    .floor-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #1c2027;
+      border: 1px solid #2d333f;
+      border-radius: 6px;
+      padding: 6px 8px;
+      transition: border-color 0.2s;
+    }
+    .floor-row:focus-within {
+      border-color: #38bdf8;
+    }
+
+    .floor-name {
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: #cbd5e1;
+      min-width: 32px;
+      text-align: center;
+    }
+
+    .dir-tag {
+      font-size: 0.75rem;
+      color: #94a3b8;
+      font-weight: bold;
+    }
+
+    .val-input {
+      width: 58px;
+      padding: 6px 4px;
+      background: #0f1115;
+      border: 1px solid #475569;
+      border-radius: 4px;
+      color: #fff;
+      font-size: 0.9rem;
+      text-align: right;
+      outline: none;
+    }
+    .val-input:focus {
+      border-color: #38bdf8;
+    }
+
+    .val-unit {
+      font-size: 0.7rem;
+      color: #64748b;
+    }
+
+    .status-indicator {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #334155;
+      margin-left: auto;
+      border: 1px solid #475569;
+      flex-shrink: 0;
+    }
+    .st-ok { background: #10b981; border-color: #059669; box-shadow: 0 0 6px #10b981; }
+    .st-warn { background: #f59e0b; border-color: #d97706; box-shadow: 0 0 6px #f59e0b; }
+    .st-err { background: #ef4444; border-color: #dc2626; box-shadow: 0 0 6px #ef4444; }
+
+    /* Rechter Schacht */
     .shaft-frame {
-      background: #0d0f12;
+      background: #090a0d;
       border: 2px solid #334155;
       border-radius: 8px;
       position: relative;
-      height: 230px;
+      height: 420px;
       overflow: hidden;
-      box-shadow: inset 0 0 10px #000;
+      box-shadow: inset 0 0 12px #000;
     }
-    /* Führungsschienen */
     .guide-rail {
       position: absolute;
       top: 0;
@@ -158,140 +200,97 @@
     .rail-left { left: 8px; }
     .rail-right { right: 8px; }
 
-    /* Schwellen-Linie (Referenz Etage) */
-    .landing-sill {
+    /* Schwellen-Linie */
+    .sill-marker {
       position: absolute;
       top: 50%;
       left: 0;
       right: 0;
       height: 2px;
       background: #ef4444;
-      z-index: 5;
+      z-index: 4;
       box-shadow: 0 0 4px #ef4444;
     }
-    .sill-label {
+    .sill-text {
       position: absolute;
       top: 50%;
       right: 12px;
-      transform: translateY(-100%);
-      font-size: 0.6rem;
+      transform: translateY(-105%);
+      font-size: 0.55rem;
       color: #ef4444;
       font-weight: bold;
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
 
-    /* Animierte Kabine */
+    /* Aufzugskabine */
     .car-box {
       position: absolute;
-      left: 18px;
-      right: 18px;
-      height: 80px;
-      top: calc(50% - 40px); /* 0mm = Schwelle fluchtet mit Kabinenboden */
+      left: 16px;
+      right: 16px;
+      height: 70px;
+      top: calc(50% - 35px);
       background: linear-gradient(180deg, #475569 0%, #1e293b 100%);
       border: 1px solid #94a3b8;
       border-radius: 4px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: 6px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
-      transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+      padding: 4px;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.8);
+      transition: transform 0.25s ease-out;
       z-index: 2;
-    }
-    .car-ceiling {
-      height: 2px;
-      background: #94a3b8;
     }
     .car-interior {
       height: 100%;
-      border-left: 2px dashed #334155;
-      border-right: 2px dashed #334155;
+      border-left: 1px dashed #334155;
+      border-right: 1px dashed #334155;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
     }
-    .car-indicator {
+    .car-level-text {
       font-family: monospace;
       font-size: 0.65rem;
       color: #38bdf8;
       font-weight: bold;
     }
-    /* Kabinenschwelle (Bodenkante) */
+    .car-offset-text {
+      font-family: monospace;
+      font-size: 0.6rem;
+      color: #f59e0b;
+    }
     .car-sill {
       height: 3px;
       background: #38bdf8;
+      box-shadow: 0 0 6px rgba(56, 189, 248, 0.8);
       border-radius: 1px;
-      box-shadow: 0 0 5px rgba(56, 189, 248, 0.8);
     }
 
-    /* Edelstahl Taster */
+    /* Footer / Aktionen */
+    .actions {
+      display: flex;
+      gap: 10px;
+    }
     .tableau-btn {
-      width: 100%;
-      padding: 12px;
-      background: linear-gradient(180deg, #475569 0%, #1e293b 100%);
-      border: 1px solid #64748b;
-      border-radius: 8px;
-      color: #f8fafc;
-      font-size: 0.9rem;
-      font-weight: 700;
+      flex: 1;
+      padding: 10px;
+      background: linear-gradient(180deg, #374151 0%, #1f2937 100%);
+      border: 1px solid #4b5563;
+      border-radius: 6px;
+      color: #f3f4f6;
+      font-size: 0.8rem;
+      font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.05em;
       cursor: pointer;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.3);
-      transition: all 0.1s;
     }
     .tableau-btn:active {
-      transform: translateY(2px);
-      box-shadow: 0 1px 2px rgba(0,0,0,0.6), inset 0 2px 4px rgba(0,0,0,0.5);
+      transform: translateY(1px);
       border-color: #38bdf8;
       color: #38bdf8;
     }
-
-    /* Tabelle der Messwerte */
-    .table-section {
-      background: #0f1115;
-      border: 1px solid #334155;
-      border-radius: 8px;
-      padding: 10px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.8rem;
-    }
-    th {
-      text-align: left;
-      padding: 6px 4px;
-      color: #94a3b8;
-      border-bottom: 1px solid #1e293b;
-      text-transform: uppercase;
-      font-size: 0.7rem;
-    }
-    td {
-      padding: 8px 4px;
-      border-bottom: 1px solid #171920;
-    }
-    .badge {
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-size: 0.7rem;
-      font-weight: 700;
-      display: inline-block;
-    }
-    .b-ok { background: #064e3b; color: #34d399; border: 1px solid #059669; }
-    .b-warn { background: #78350f; color: #fde047; border: 1px solid #d97706; }
-    .b-err { background: #7f1d1d; color: #fca5a5; border: 1px solid #dc2626; }
-
-    .del-btn {
-      background: none;
-      border: none;
-      color: #64748b;
-      cursor: pointer;
-      font-size: 1rem;
-      padding: 0 4px;
-    }
-    .del-btn:hover { color: #f87171; }
   </style>
 </head>
 <body>
@@ -302,146 +301,140 @@
     <div class="screw s-bl"></div>
     <div class="screw s-br"></div>
 
-    <a href="index.html" class="nav-back">‹ Hauptmenü</a>
+    <a href="index.html" class="nav-back">‹ Übersicht</a>
 
-    <!-- Digitalanzeige oben -->
     <div class="display-bezel">
-      <div class="display-title">Bündigkeit EN 81-20</div>
-      <div class="dot-matrix" id="displayReadout">0 mm</div>
+      <div class="display-title">Bündigkeitsprüfung</div>
+      <div class="dot-matrix" id="activeStatus">EN 81-20</div>
     </div>
 
-    <!-- Hauptbereich: Formular & animierter Schacht -->
-    <div class="main-view">
-      <form class="form-panel" id="levellingForm" onsubmit="saveEntry(event)">
-        <div class="field">
-          <label for="floor">Etage</label>
-          <input type="text" id="floor" placeholder="z. B. EG" required>
-        </div>
+    <div class="inspection-layout">
+      <!-- Gesamtes Etagenraster auf einen Blick -->
+      <div class="floors-container" id="floorsList"></div>
 
-        <div class="field">
-          <label for="dir">Richtung</label>
-          <select id="dir">
-            <option value="▲ Auf">▲ Aufwärts</option>
-            <option value="▼ Ab">▼ Abwärts</option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label for="offset">Abweichung (mm)</label>
-          <input type="number" id="offset" value="0" step="1" oninput="updateAnimation(this.value)" required>
-        </div>
-
-        <button type="submit" class="tableau-btn">Speichern</button>
-      </form>
-
-      <!-- Schacht & Kabine Animation -->
+      <!-- Schacht mit fahrender Kabine -->
       <div class="shaft-frame">
         <div class="guide-rail rail-left"></div>
         <div class="guide-rail rail-right"></div>
-        <div class="landing-sill"></div>
-        <div class="sill-label">Schwelle</div>
+        <div class="sill-marker"></div>
+        <div class="sill-text">Schwelle</div>
 
         <div class="car-box" id="liftCar">
-          <div class="car-ceiling"></div>
           <div class="car-interior">
-            <span class="car-indicator" id="carFloorDisplay">KABINE</span>
+            <span class="car-level-text" id="carActiveFloor">EG</span>
+            <span class="car-offset-text" id="carActiveOffset">0 mm</span>
           </div>
           <div class="car-sill"></div>
         </div>
       </div>
     </div>
 
-    <!-- Protokoll / Messreihe -->
-    <div class="table-section">
-      <table>
-        <thead>
-          <tr>
-            <th>Etage</th>
-            <th>Richtung</th>
-            <th>Versatz</th>
-            <th>Status</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody id="logList"></tbody>
-      </table>
+    <div class="actions">
+      <button type="button" class="tableau-btn" onclick="addFloor()">+ Etage</button>
+      <button type="button" class="tableau-btn" onclick="resetValues()">Reset</button>
     </div>
   </div>
 
   <script>
-    let logData = JSON.parse(localStorage.getItem('buendigkeit_logs') || '[]');
+    // Standardmäßig typische Haltestellen mit beiden Richtungen
+    let floors = JSON.parse(localStorage.getItem('buendigkeit_config') || JSON.stringify([
+      { name: "3.OG", dir: "▲", val: "" },
+      { name: "3.OG", dir: "▼", val: "" },
+      { name: "2.OG", dir: "▲", val: "" },
+      { name: "2.OG", dir: "▼", val: "" },
+      { name: "1.OG", dir: "▲", val: "" },
+      { name: "1.OG", dir: "▼", val: "" },
+      { name: "EG",   dir: "▲", val: "" },
+      { name: "EG",   dir: "▼", val: "" }
+    ]));
 
-    function updateAnimation(val) {
-      const offset = parseFloat(val) || 0;
-      const display = document.getElementById('displayReadout');
-      const car = document.getElementById('liftCar');
+    function renderFloors() {
+      const container = document.getElementById('floorsList');
+      container.innerHTML = '';
 
-      display.innerText = (offset > 0 ? '+' : '') + offset + ' mm';
+      floors.forEach((item, idx) => {
+        const row = document.createElement('div');
+        row.className = 'floor-row';
 
-      // 1 mm Abweichung = ca. 1.8px Verschiebung (skaliert für Schachtansicht)
-      // Positiv (+) = Kabine steht zu hoch -> bewegt sich nach oben (-Y)
-      const shiftY = -(offset * 1.8);
-      // Begrenzung, damit die Kabine im Rahmen bleibt
-      const boundedY = Math.max(Math.min(shiftY, 65), -65);
-      car.style.transform = `translateY(${boundedY}px)`;
-    }
-
-    function renderLogs() {
-      const tbody = document.getElementById('logList');
-      tbody.innerHTML = '';
-
-      logData.forEach((item, idx) => {
-        const val = parseInt(item.offset, 10);
-        const absVal = Math.abs(val);
-
-        let badge = 'b-ok';
-        let status = 'Bündig';
-
-        if (absVal > 20) {
-          badge = 'b-err';
-          status = '> 20 mm';
-        } else if (absVal > 10) {
-          badge = 'b-warn';
-          status = '> 10 mm';
+        const numVal = parseFloat(item.val);
+        let statusClass = '';
+        if (!isNaN(numVal)) {
+          const abs = Math.abs(numVal);
+          if (abs <= 10) statusClass = 'st-ok';
+          else if (abs <= 20) statusClass = 'st-warn';
+          else statusClass = 'st-err';
         }
 
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td><strong>${item.floor}</strong></td>
-          <td>${item.dir}</td>
-          <td>${val > 0 ? '+' : ''}${val} mm</td>
-          <td><span class="badge ${badge}">${status}</span></td>
-          <td><button class="del-btn" onclick="removeEntry(${idx})">&times;</button></td>
+        row.innerHTML = `
+          <span class="floor-name">${item.name}</span>
+          <span class="dir-tag">${item.dir}</span>
+          <input type="number" class="val-input" value="${item.val}" placeholder="0" 
+                 onfocus="focusEntry(${idx})" 
+                 oninput="handleInput(${idx}, this.value)">
+          <span class="val-unit">mm</span>
+          <div class="status-indicator ${statusClass}"></div>
         `;
-        tbody.appendChild(tr);
+        container.appendChild(row);
       });
 
-      localStorage.setItem('buendigkeit_logs', JSON.stringify(logData));
+      localStorage.setItem('buendigkeit_config', JSON.stringify(floors));
     }
 
-    function saveEntry(e) {
-      e.preventDefault();
-      const floor = document.getElementById('floor').value.trim();
-      const dir = document.getElementById('dir').value;
-      const offset = document.getElementById('offset').value;
-
-      logData.push({ floor, dir, offset });
-      renderLogs();
-
-      document.getElementById('floor').value = '';
-      document.getElementById('offset').value = '0';
-      updateAnimation(0);
-      document.getElementById('floor').focus();
+    function handleInput(index, val) {
+      floors[index].val = val;
+      focusEntry(index);
+      renderFloors();
+      // Fokus im Input behalten
+      const inputs = document.querySelectorAll('.val-input');
+      if (inputs[index]) inputs[index].focus();
     }
 
-    function removeEntry(idx) {
-      logData.splice(idx, 1);
-      renderLogs();
+    function focusEntry(index) {
+      const item = floors[index];
+      const val = parseFloat(item.val) || 0;
+      
+      document.getElementById('carActiveFloor').innerText = `${item.name} ${item.dir}`;
+      document.getElementById('carActiveOffset').innerText = (val > 0 ? '+' : '') + val + ' mm';
+
+      const statusEl = document.getElementById('activeStatus');
+      const abs = Math.abs(val);
+      if (item.val === "") {
+        statusEl.innerText = `${item.name} ${item.dir}`;
+      } else if (abs <= 10) {
+        statusEl.innerText = "BÜNDIG (OK)";
+      } else if (abs <= 20) {
+        statusEl.innerText = "TOLERANZ (WARN)";
+      } else {
+        statusEl.innerText = "FEHLER (>20mm)";
+      }
+
+      // Animierte Kabinen-Verschiebung (1mm = ca. 2.5px für deutliche Sichtbarkeit)
+      const shiftY = -(val * 2.5);
+      const boundedY = Math.max(Math.min(shiftY, 150), -150);
+      document.getElementById('liftCar').style.transform = `translateY(${boundedY}px)`;
     }
 
-    // Initialisierung
-    renderLogs();
-    updateAnimation(0);
+    function addFloor() {
+      const name = prompt("Bezeichnung der neuen Etage:", "UG");
+      if (name) {
+        floors.unshift({ name, dir: "▼", val: "" });
+        floors.unshift({ name, dir: "▲", val: "" });
+        renderFloors();
+      }
+    }
+
+    function resetValues() {
+      if (confirm("Möchtest du alle Messwerte zurücksetzen?")) {
+        floors.forEach(f => f.val = "");
+        renderFloors();
+        document.getElementById('liftCar').style.transform = 'translateY(0)';
+        document.getElementById('carActiveFloor').innerText = 'KABINE';
+        document.getElementById('carActiveOffset').innerText = '0 mm';
+        document.getElementById('activeStatus').innerText = 'EN 81-20';
+      }
+    }
+
+    renderFloors();
   </script>
 </body>
 </html>
