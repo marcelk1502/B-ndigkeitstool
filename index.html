@@ -73,7 +73,7 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* Tableau-Hauptgehäuse mit vergrößertem Rand-Abstand (Padding) */
+  /* Tableau-Hauptgehäuse */
   .layout-wrap {
     max-width: 610px;
     margin: 0 auto;
@@ -81,7 +81,7 @@
     background: linear-gradient(135deg, #3d434f 0%, #262a32 30%, #3a404c 60%, #1f2229 100%);
     border: 2px solid var(--steel-light);
     border-radius: var(--radius-lg);
-    padding: 18px 16px 36px 16px; /* Großzügiger Abstand zu Schrauben und Gehäusekanten */
+    padding: 18px 16px 36px 16px;
     box-shadow: 
       inset 0 1px 2px var(--steel-bevel),
       inset 0 -2px 5px rgba(0,0,0,0.8),
@@ -166,7 +166,7 @@
     text-align: center;
   }
 
-  /* Zweispaltiges Layout: Links Scrollbereich (Liste), Rechts fester Schacht */
+  /* Zweispaltiges Layout */
   .inspection-split {
     display: grid;
     grid-template-columns: 1fr 42px;
@@ -469,13 +469,14 @@
   }
 
   /* ========================================================
-     ANIMIERTER EDELSTAHL-SCHACHT RECHTS (STICKY FIXIERT)
+     ANIMIERTER EDELSTAHL-SCHACHT RECHTS (IN DER MITTE STICKY)
      ======================================================== */
   .shaft-panel {
     position: sticky;
-    top: 68px;
+    top: 50%;
+    transform: translateY(-50%); /* Bleibt stets vertikal zentriert im Viewport */
     width: 38px;
-    max-height: calc(100vh - 170px);
+    max-height: calc(100vh - 180px);
     background: #090a0e;
     border: 2px solid var(--steel-mid);
     border-radius: var(--radius-md);
@@ -988,7 +989,7 @@
     </div>
   </header>
 
-  <!-- Zweispaltiges Layout: Links Etagen, rechts Schacht mit Abstand zu Kanten -->
+  <!-- Zweispaltiges Layout -->
   <div class="inspection-split">
     <div class="main-column">
       <!-- Spaltenköpfe -->
@@ -1008,7 +1009,7 @@
       <main class="floor-list" id="listContainer"></main>
     </div>
 
-    <!-- Rechts fixierter Schacht -->
+    <!-- Rechts: In der Bildschirmmitte sticky verankerter Schacht -->
     <aside class="shaft-panel" id="shaftPanel" aria-label="Schacht-Navigation">
       <div class="shaft-track" id="shaftTrack">
         <div class="shaft-rail-l"></div>
@@ -1114,7 +1115,7 @@
 <script>
   if ('serviceWorker' in navigator) {
     const swCode = `
-      const CACHE_NAME = 'buendigkeit-elev-v22';
+      const CACHE_NAME = 'buendigkeit-elev-v23';
       self.addEventListener('install', e => {
         e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll([self.location.href])));
         self.skipWaiting();
@@ -1127,7 +1128,7 @@
     navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
   }
 
-  const STORAGE_KEY = 'buendigkeit-elev-v22';
+  const STORAGE_KEY = 'buendigkeit-elev-v23';
   let state = {
     floorCount: 5,
     startFloor: 0,
