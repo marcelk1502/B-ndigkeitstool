@@ -57,7 +57,7 @@
   
   body {
     margin: 0;
-    padding: env(safe-area-inset-top, 8px) 8px calc(env(safe-area-inset-bottom, 10px) + 76px);
+    padding: env(safe-area-inset-top, 8px) 8px calc(env(safe-area-inset-bottom, 10px) + 74px);
     background: var(--bg-base);
     min-height: 100vh;
     color: var(--text);
@@ -70,15 +70,16 @@
     max-width: 600px;
     margin: 0 auto;
     position: relative;
-    padding-right: 44px; /* Space for fixed shaft navigation mini-map */
+    padding-right: 42px;
   }
 
+  /* Header */
   header.top-bar {
     position: sticky;
     top: 0;
     z-index: 20;
     background: rgba(10, 14, 23, 0.94);
-    padding: 8px 0 10px;
+    padding: 6px 0 8px;
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
   }
@@ -87,10 +88,143 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 12px;
+  }
+
+  /* ========================================================
+     ANIMIERTES AUFZUG-MODELL (TREIBSCHEIBE & GEGENGEWICHT)
+     ======================================================== */
+  .elevator-machinery {
+    width: 38px;
+    height: 44px;
+    position: relative;
+    background: #060910;
+    border: 1.5px solid var(--card-border);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-sunken);
+    overflow: hidden;
+    flex: none;
+  }
+
+  /* Treibscheibe */
+  .traction-sheave {
+    position: absolute;
+    top: 3px;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin-left: -10px;
+    border-radius: 50%;
+    border: 1.5px solid var(--accent);
+    background: #1e293b;
+    box-shadow: 0 0 6px var(--accent-glow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+  }
+  .traction-sheave::after {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .traction-sheave::before {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 2px;
+    background: #475569;
+  }
+
+  /* Tragseile */
+  .rope-left, .rope-right {
+    position: absolute;
+    top: 13px;
+    width: 1px;
+    background: #94a3b8;
+    z-index: 1;
+    transition: height 0.35s cubic-bezier(0.34, 1.3, 0.64, 1);
+  }
+  .rope-left { left: 8px; height: 16px; }
+  .rope-right { right: 8px; height: 10px; }
+
+  /* Fahrkorb (links) */
+  .mach-car {
+    position: absolute;
+    left: 4px;
+    top: 27px;
+    width: 9px;
+    height: 12px;
+    border-radius: 1.5px;
+    background: linear-gradient(135deg, #38bdf8, #0284c7);
+    border: 1px solid #7dd3fc;
+    box-shadow: 0 0 4px rgba(56, 189, 248, 0.5);
+    z-index: 2;
+    transition: top 0.35s cubic-bezier(0.34, 1.3, 0.64, 1);
+  }
+
+  /* Gegengewicht (rechts) */
+  .mach-counterweight {
+    position: absolute;
+    right: 5px;
+    top: 22px;
+    width: 7px;
+    height: 10px;
+    border-radius: 1px;
+    background: #f59e0b;
+    border: 1px solid #fde68a;
+    box-shadow: 0 0 4px var(--accent-glow);
+    z-index: 2;
+    transition: top 0.35s cubic-bezier(0.34, 1.3, 0.64, 1);
+  }
+
+  /* Drehungs-Animationen */
+  @keyframes rotateCW {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  @keyframes rotateCCW {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(-360deg); }
+  }
+
+  /* Zustände bei Aufwärts-/Abwärtsfahrt */
+  body[data-active-dir="up"] .traction-sheave {
+    animation: rotateCW 1.2s infinite linear;
+  }
+  body[data-active-dir="up"] .mach-car {
+    top: 18px;
+  }
+  body[data-active-dir="up"] .rope-left {
+    height: 7px;
+  }
+  body[data-active-dir="up"] .mach-counterweight {
+    top: 29px;
+  }
+  body[data-active-dir="up"] .rope-right {
+    height: 18px;
+  }
+
+  body[data-active-dir="down"] .traction-sheave {
+    animation: rotateCCW 1.2s infinite linear;
+  }
+  body[data-active-dir="down"] .mach-car {
+    top: 29px;
+  }
+  body[data-active-dir="down"] .rope-left {
+    height: 18px;
+  }
+  body[data-active-dir="down"] .mach-counterweight {
+    top: 18px;
+  }
+  body[data-active-dir="down"] .rope-right {
+    height: 7px;
   }
 
   .title-group h1 {
-    font-size: 1.65rem;
+    font-size: 1.55rem;
     font-weight: 900;
     letter-spacing: -0.02em;
     margin: 0;
@@ -99,9 +233,10 @@
     text-shadow: 0 2px 4px rgba(0,0,0,0.6);
   }
 
+  /* Spaltenköpfe */
   .grid-header {
     position: sticky;
-    top: 50px;
+    top: 54px;
     z-index: 15;
     display: grid;
     grid-template-columns: 46px 1fr 1fr;
@@ -141,6 +276,7 @@
   body[data-active-dir="up"] .header-pill.up .led-arrow { animation: pulseUp 0.8s infinite ease-in-out; }
   body[data-active-dir="down"] .header-pill.down .led-arrow { animation: pulseDown 0.8s infinite ease-in-out; }
 
+  /* Etagenliste */
   .floor-list {
     display: flex;
     flex-direction: column;
@@ -287,6 +423,7 @@
     box-shadow: 0 0 0 2px var(--down-glow), var(--shadow-sunken);
   }
 
+  /* Pegelanzeige */
   .gauge-container {
     flex: none;
     width: 12px;
@@ -354,6 +491,7 @@
   .cell-card.ok .gauge-pointer { display: block; background: #10b981; box-shadow: 0 0 6px #10b981; }
   .cell-card.bad .gauge-pointer { display: block; background: #ef4444; box-shadow: 0 0 6px #ef4444; }
 
+  /* Statustext */
   .status-text {
     font-size: 0.85rem;
     font-weight: 900;
@@ -383,6 +521,7 @@
     text-shadow: 0 1px 2px rgba(0,0,0,0.7);
   }
 
+  /* Schacht-Navigation (Mini-Map rechts) */
   .shaft-panel {
     position: fixed;
     right: max(6px, calc((100vw - 600px) / 2 + 6px));
@@ -475,6 +614,7 @@
     margin-right: -6px;
   }
 
+  /* Floating Bottom Bar */
   .bottom-bar {
     position: fixed;
     bottom: 0;
@@ -548,49 +688,39 @@
     flex: none;
   }
 
-  /* Gear settings button in bottom bar */
+  /* Zahnrad Button für Einstellungen */
   .btn-thumb-settings {
     height: 40px;
     width: 40px;
     border-radius: var(--radius-md);
     background: #1e293b;
     border: 1.5px solid var(--card-border);
-    color: var(--accent);
+    color: #fff;
     font-size: 1.15rem;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: transform 0.1s, border-color 0.15s, box-shadow 0.15s;
-    box-shadow: var(--shadow-raised);
-    padding: 0;
+    transition: transform 0.1s ease, border-color 0.2s;
   }
-
-  .btn-thumb-settings:active {
-    transform: translateY(2px) rotate(45deg);
-    border-color: var(--accent);
-    box-shadow: var(--shadow-sunken);
-  }
+  .btn-thumb-settings:active { transform: translateY(2px); border-color: var(--accent); }
 
   .btn-thumb-reset {
     height: 40px;
-    padding: 0 11px;
+    padding: 0 10px;
     border-radius: var(--radius-md);
     background: #1e293b;
     border: 1.5px solid var(--bad-border);
     color: var(--bad-text);
     font-weight: 900;
-    font-size: 0.76rem;
+    font-size: 0.78rem;
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 4px;
     text-transform: uppercase;
-    box-shadow: var(--shadow-raised);
   }
-
   .btn-thumb-reset:active { transform: translateY(2px); }
-
   .btn-thumb-reset.armed {
     background: #dc2626;
     border-color: #ef4444;
@@ -606,7 +736,7 @@
     border: 1.5px solid #b45309;
     color: #000;
     font-weight: 900;
-    font-size: 0.82rem;
+    font-size: 0.85rem;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -615,9 +745,9 @@
     text-transform: uppercase;
     letter-spacing: 0.02em;
   }
-
   .btn-thumb-protocol:active { transform: translateY(2px); }
 
+  /* Modals */
   .modal-overlay {
     position: fixed;
     inset: 0;
@@ -668,9 +798,6 @@
     margin: 0;
     color: #fff;
     text-transform: uppercase;
-    display: flex;
-    align-items: center;
-    gap: 8px;
   }
 
   .modal-close {
@@ -684,25 +811,23 @@
 
   .modal-body { padding: 12px 14px; overflow-y: auto; }
 
-  /* Settings Modal Elements */
-  .settings-form-grid {
+  .settings-grid-modal {
     display: grid;
     grid-template-columns: 1.2fr 0.8fr 1.2fr;
     gap: 8px;
-    margin-bottom: 12px;
   }
 
-  .setting-item {
+  .setting-item-modal {
     display: flex;
     flex-direction: column;
     gap: 4px;
-    font-size: 0.68rem;
+    font-size: 0.7rem;
     font-weight: 800;
     color: var(--text-muted);
     text-transform: uppercase;
   }
 
-  .setting-item input {
+  .setting-item-modal input {
     height: 38px;
     width: 100%;
     border: 1.5px solid var(--card-border);
@@ -716,112 +841,38 @@
     box-shadow: var(--shadow-sunken);
   }
 
-  .setting-toggle-row {
-    margin-bottom: 12px;
+  .setting-toggle-row-modal {
+    margin-top: 10px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: #070b14;
+    background: #090d16;
     border: 1.5px solid var(--card-border);
     border-radius: var(--radius-sm);
-    padding: 8px 12px;
+    padding: 8px 10px;
     box-shadow: var(--shadow-sunken);
   }
 
-  .toggle-label {
-    font-size: 0.75rem;
-    font-weight: 800;
-    color: var(--text-muted);
-    text-transform: uppercase;
-  }
-
-  .switch {
-    position: relative;
-    display: inline-block;
-    width: 40px;
-    height: 22px;
-  }
-
-  .switch input { opacity: 0; width: 0; height: 0; }
-
-  .slider {
-    position: absolute;
-    cursor: pointer;
-    inset: 0;
-    background-color: #1e293b;
-    border: 1px solid var(--card-border);
-    border-radius: 99px;
-    transition: .2s;
-  }
-
-  .slider:before {
-    position: absolute;
-    content: "";
-    height: 14px;
-    width: 14px;
-    left: 3px;
-    bottom: 3px;
-    background-color: var(--text-muted);
-    border-radius: 50%;
-    transition: .2s;
-  }
-
-  input:checked + .slider {
-    background-color: var(--accent);
-    border-color: #b45309;
-  }
-
-  input:checked + .slider:before {
-    transform: translateX(18px);
-    background-color: #000;
-  }
-
-  .presets-wrap {
+  .presets-wrap-modal {
+    margin-top: 12px;
     display: flex;
     flex-direction: column;
     gap: 6px;
-    margin-bottom: 8px;
   }
 
-  .presets-title {
+  .presets-title-modal {
     font-size: 0.68rem;
     font-weight: 800;
     color: var(--text-muted);
     text-transform: uppercase;
   }
 
-  .presets-grid {
+  .presets-grid-modal {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 6px;
   }
 
-  .btn-preset {
-    height: 32px;
-    border: 1px solid var(--card-border);
-    border-radius: var(--radius-sm);
-    background: #1e293b;
-    color: var(--text-muted);
-    font-family: var(--font-display);
-    font-size: 0.74rem;
-    font-weight: 800;
-    cursor: pointer;
-    box-shadow: var(--shadow-raised);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.15s;
-  }
-
-  .btn-preset:active { transform: translateY(1px); }
-  .btn-preset.active {
-    background: rgba(245, 158, 11, 0.15);
-    border-color: var(--accent);
-    color: var(--accent);
-    box-shadow: 0 0 6px var(--accent-glow);
-  }
-
-  /* Report Styles */
   .report-meta {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -957,16 +1008,24 @@
 <body data-active-dir="">
 
 <div class="layout-wrap">
-  <!-- Clean Header without Settings dropdown -->
+  <!-- Header mit animiertem Aufzug-Modell -->
   <header class="top-bar">
     <div class="nav-header">
+      <!-- Mechanisches Aufzug-Modell (Treibscheibe, Seil, Fahrkorb, Gegengewicht) -->
+      <div class="elevator-machinery" aria-hidden="true" title="Treibscheiben-Antrieb">
+        <div class="traction-sheave"></div>
+        <div class="rope-left"></div>
+        <div class="mach-car"></div>
+        <div class="rope-right"></div>
+        <div class="mach-counterweight"></div>
+      </div>
       <div class="title-group">
         <h1>Bündigkeiten</h1>
       </div>
     </div>
   </header>
 
-  <!-- Directional column pills -->
+  <!-- Spaltenköpfe -->
   <div class="grid-header">
     <div class="header-pill">Et.</div>
     <div class="header-pill up">
@@ -979,10 +1038,10 @@
     </div>
   </div>
 
-  <!-- Floor input list -->
+  <!-- Etagenliste -->
   <main class="floor-list" id="listContainer"></main>
 
-  <!-- Right fixed quick-navigation mini-map / shaft -->
+  <!-- Rechts fest verankerte Mini-Map / Schacht -->
   <aside class="shaft-panel" id="shaftPanel" aria-label="Schacht-Navigation">
     <div class="shaft-track" id="shaftTrack">
       <div class="shaft-cable"></div>
@@ -992,6 +1051,7 @@
   </aside>
 </div>
 
+<!-- Floating Bottom Bar mit Zahnrad-Button -->
 <nav class="bottom-bar">
   <div class="bottom-progress-edge" aria-hidden="true">
     <div class="bottom-progress-fill" id="bottomProgressBar"></div>
@@ -1002,7 +1062,7 @@
       <span class="bottom-info-val" id="bottomStatus">0 / 0 gemessen</span>
     </div>
     <div class="bottom-actions">
-      <!-- Dedicated settings gear icon button -->
+      <!-- ⚙️ Zahnrad Button -->
       <button type="button" class="btn-thumb-settings" id="openSettingsBtn" title="Einstellungen">
         ⚙️
       </button>
@@ -1016,29 +1076,30 @@
   </div>
 </nav>
 
-<div class="modal-overlay" id="settingsModal" onclick="closeModalOnOutsideClick(event, 'settingsModal')">
+<!-- Einstellungs-Modal -->
+<div class="modal-overlay" id="settingsModal" onclick="closeModalOnOutsideClick(event)">
   <div class="modal-card">
     <div class="modal-header">
-      <h2>⚙️ Einstellungen</h2>
+      <h2>⚙️ Parameter & Richtlinien</h2>
       <button type="button" class="modal-close" onclick="closeSettingsModal()">&times;</button>
     </div>
     <div class="modal-body">
-      <div class="settings-form-grid">
-        <label class="setting-item">
+      <div class="settings-grid-modal">
+        <label class="setting-item-modal">
           Etagen
           <input id="floorCount" type="number" min="1" max="50" inputmode="numeric" value="5">
         </label>
-        <label class="setting-item">
+        <label class="setting-item-modal">
           Start
           <input id="startFloor" type="number" inputmode="numeric" value="0">
         </label>
-        <label class="setting-item">
+        <label class="setting-item-modal">
           Toleranz ± mm
           <input id="tolerance" type="number" min="0" step="1" inputmode="numeric" value="10">
         </label>
       </div>
 
-      <div class="setting-toggle-row">
+      <div class="setting-toggle-row-modal">
         <span class="toggle-label">UG / EG Beschriftung (0=EG, -1=UG)</span>
         <label class="switch">
           <input type="checkbox" id="useEgUg">
@@ -1046,9 +1107,9 @@
         </label>
       </div>
 
-      <div class="presets-wrap">
-        <div class="presets-title">Richtwerte / Norm-Toleranz</div>
-        <div class="presets-grid">
+      <div class="presets-wrap-modal">
+        <div class="presets-title-modal">Richtwerte / Norm-Toleranz</div>
+        <div class="presets-grid-modal">
           <button type="button" class="btn-preset" data-tol="3">± 3 mm</button>
           <button type="button" class="btn-preset" data-tol="5">± 5 mm</button>
           <button type="button" class="btn-preset active" data-tol="10">± 10 mm</button>
@@ -1062,7 +1123,8 @@
   </div>
 </div>
 
-<div class="modal-overlay" id="reportModal" onclick="closeModalOnOutsideClick(event, 'reportModal')">
+<!-- Modal Pop-up Protokoll -->
+<div class="modal-overlay" id="reportModal" onclick="closeModalOnOutsideClick(event)">
   <div class="modal-card">
     <div class="modal-header">
       <h2>📋 Messprotokoll</h2>
@@ -1311,6 +1373,7 @@
 
   const container = $('listContainer');
 
+  /* Fokus & Fahrkorb-Animation */
   container.addEventListener('focusin', e => {
     const card = e.target.closest('.floor-card');
     if (!card) return;
@@ -1338,6 +1401,7 @@
     document.body.dataset.activeDir = '';
   });
 
+  /* Tastatur-Erkennung */
   if (window.visualViewport) {
     window.visualViewport.addEventListener('resize', () => {
       const panel = $('shaftPanel');
@@ -1471,16 +1535,7 @@
     $(id).addEventListener('input', renderList);
   });
 
-  const settingsModal = $('settingsModal');
-  $('openSettingsBtn').addEventListener('click', () => {
-    settingsModal.classList.add('active');
-  });
-
-  window.closeSettingsModal = function() {
-    settingsModal.classList.remove('active');
-  };
-
-  /* Two-step safety verification for reset */
+  /* Zweistufiger Daumen-Löschbutton */
   let armTimer = null;
   const resetBtn = $('resetBtn');
   const resetBtnText = $('resetBtnText');
@@ -1502,18 +1557,24 @@
     renderList();
   });
 
-  const reportModal = $('reportModal');
+  /* Einstellungs-Modal Steuerung */
+  const settingsModal = $('settingsModal');$('openSettingsBtn').addEventListener('click', () => {
+    settingsModal.classList.add('active');
+  });
+  window.closeSettingsModal = function() {
+    settingsModal.classList.remove('active');
+  };
 
-  $('openReportBtn').addEventListener('click', () => {
+  /* Protokoll-Modal */
+  const reportModal = $('reportModal');$('openReportBtn').addEventListener('click', () => {
     buildReportHtml();
     reportModal.classList.add('active');
   });
-
   window.closeReportModal = function() { reportModal.classList.remove('active'); };
 
-  window.closeModalOnOutsideClick = function(e, modalId) {
-    const m = $(modalId);
-    if (e.target === m) m.classList.remove('active');
+  window.closeModalOnOutsideClick = function(e) {
+    if (e.target === reportModal) closeReportModal();
+    if (e.target === settingsModal) closeSettingsModal();
   };
 
   function buildReportHtml() {
@@ -1661,8 +1722,8 @@
       }
     });
 
-    const upPath = pointsUp.length > 1 ? `d="M ${pointsUp.map(p => `${p.x} ${p.y}`).join(' L ')}"` : '';
-    const downPath = pointsDown.length > 1 ? `d="M ${pointsDown.map(p => `${p.x} ${p.y}`).join(' L ')}"` : '';
+    const upPath = pointsUp.length > 1 ? `d="M ${pointsUp.map(p => `${p.x}${p.y}`).join(' L ')}"` : '';
+    const downPath = pointsDown.length > 1 ? `d="M ${pointsDown.map(p => `${p.x}${p.y}`).join(' L ')}"` : '';
 
     return `
       <svg class="curve-chart-svg" viewBox="0 0 ${W} ${H}">
@@ -1703,7 +1764,6 @@
     }
   };
 
-  /* Initial bootstrap */
   loadState();
   $('floorCount').value = state.floorCount;
   $('startFloor').value = state.startFloor;
