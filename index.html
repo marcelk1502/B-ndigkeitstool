@@ -73,7 +73,15 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* Tableau-Hauptgehäuse */
+  body.numpad-active {
+    padding-bottom: calc(env(safe-area-inset-bottom, 10px) + 160px);
+  }
+
+  /* Laser-Gravur-Effekt */
+  .engraved-text {
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.15), 0 -1px 1px rgba(0, 0, 0, 0.9);
+  }
+
   .layout-wrap {
     max-width: 610px;
     margin: 0 auto;
@@ -88,7 +96,6 @@
       0 12px 30px rgba(0, 0, 0, 0.7);
   }
 
-  /* Tableau-Schrauben */
   .screw {
     position: absolute;
     width: 11px;
@@ -113,7 +120,6 @@
   .s-bl { bottom: 10px; left: 10px; }
   .s-br { bottom: 10px; right: 10px; }
 
-  /* Navigation zurück */
   .tableau-nav {
     display: flex;
     align-items: center;
@@ -134,7 +140,6 @@
   }
   .nav-back:active { color: #bae6fd; }
 
-  /* Header ohne Animation */
   header.top-bar {
     position: sticky;
     top: 0;
@@ -161,12 +166,10 @@
     margin: 0;
     text-transform: uppercase;
     color: #e2e8f0;
-    text-shadow: 0 0 10px rgba(255,255,255,0.3);
     font-family: var(--font-display);
     text-align: center;
   }
 
-  /* Zweispaltiges Layout */
   .inspection-split {
     display: grid;
     grid-template-columns: 1fr 42px;
@@ -176,11 +179,8 @@
     margin-bottom: 10px;
   }
 
-  .main-column {
-    min-width: 0;
-  }
+  .main-column { min-width: 0; }
 
-  /* Spaltenköpfe */
   .grid-header {
     position: sticky;
     top: 68px;
@@ -223,7 +223,6 @@
   body[data-active-dir="up"] .header-pill.up .led-arrow { animation: pulseUp 0.8s infinite ease-in-out; }
   body[data-active-dir="down"] .header-pill.down .led-arrow { animation: pulseDown 0.8s infinite ease-in-out; }
 
-  /* Etagenliste */
   .floor-list {
     display: flex;
     flex-direction: column;
@@ -274,12 +273,19 @@
     position: relative;
     background: transparent;
     transition: background 0.2s;
+    cursor: pointer;
   }
 
   .cell-card.dir-up { background: rgba(56, 189, 248, 0.03); }
   .cell-card.dir-down {
     border-left: 1.5px dashed rgba(245, 158, 11, 0.3);
     background: rgba(245, 158, 11, 0.03);
+  }
+
+  .cell-card.focused-cell {
+    outline: 2px solid #38bdf8;
+    outline-offset: -2px;
+    background: rgba(56, 189, 248, 0.08) !important;
   }
 
   .cell-card.ok { background: var(--ok-bg) !important; }
@@ -308,6 +314,7 @@
     align-items: center;
     justify-content: center;
     text-transform: uppercase;
+    cursor: default;
   }
 
   .cell-main { display: flex; align-items: center; gap: 5px; }
@@ -359,19 +366,11 @@
     outline: none;
     box-shadow: var(--shadow-sunken);
     letter-spacing: 0.02em;
-    transition: border-color 0.15s, box-shadow 0.15s;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
   }
 
-  .dir-up .val-input:focus {
-    border-color: var(--up-color);
-    box-shadow: 0 0 0 2px var(--up-glow), var(--shadow-sunken);
-  }
-  .dir-down .val-input:focus {
-    border-color: var(--down-color);
-    box-shadow: 0 0 0 2px var(--down-glow), var(--shadow-sunken);
-  }
-
-  /* Pegelanzeige */
   .gauge-container {
     flex: none;
     width: 12px;
@@ -381,7 +380,6 @@
     border-radius: 4px;
     position: relative;
     overflow: hidden;
-    cursor: pointer;
     box-shadow: var(--shadow-sunken);
   }
 
@@ -395,33 +393,11 @@
     padding: 3px 0;
     opacity: 0.35;
   }
-  .gauge-scale-ticks span {
-    display: block;
-    height: 1px;
-    width: 4px;
-    background: #94a3b8;
-  }
-  .gauge-scale-ticks span.mid-tick {
-    width: 8px;
-    background: #f59e0b;
-    opacity: 0.9;
-  }
+  .gauge-scale-ticks span { display: block; height: 1px; width: 4px; background: #94a3b8; }
+  .gauge-scale-ticks span.mid-tick { width: 8px; background: #f59e0b; opacity: 0.9; }
 
-  .gauge-tolerance {
-    position: absolute;
-    left: 0; right: 0;
-    background: #10b981;
-    opacity: 0.35;
-  }
-
-  .gauge-center-line {
-    position: absolute;
-    left: 0; right: 0;
-    top: calc(50% - 0.5px);
-    height: 1.5px;
-    background: #f59e0b;
-    opacity: 0.8;
-  }
+  .gauge-tolerance { position: absolute; left: 0; right: 0; background: #10b981; opacity: 0.35; }
+  .gauge-center-line { position: absolute; left: 0; right: 0; top: calc(50% - 0.5px); height: 1.5px; background: #f59e0b; opacity: 0.8; }
 
   .gauge-pointer {
     position: absolute;
@@ -439,7 +415,6 @@
   .cell-card.ok .gauge-pointer { display: block; background: #10b981; box-shadow: 0 0 6px #10b981; }
   .cell-card.bad .gauge-pointer { display: block; background: #ef4444; box-shadow: 0 0 6px #ef4444; }
 
-  /* Statustext */
   .status-text {
     font-size: 0.82rem;
     font-weight: 800;
@@ -468,13 +443,11 @@
     text-shadow: 0 1px 2px rgba(0,0,0,0.7);
   }
 
-  /* ========================================================
-     ANIMIERTER EDELSTAHL-SCHACHT RECHTS (IN DER MITTE STICKY)
-     ======================================================== */
+  /* Animierter Schacht sticky in Bildschirmmitte */
   .shaft-panel {
     position: sticky;
     top: 50%;
-    transform: translateY(-50%); /* Bleibt stets vertikal zentriert im Viewport */
+    transform: translateY(-50%);
     width: 38px;
     max-height: calc(100vh - 180px);
     background: #090a0e;
@@ -554,7 +527,6 @@
   .shaft-node.bad { background: #7f1d1d; border-color: #ef4444; color: #fff; box-shadow: 0 0 6px rgba(239, 68, 68, 0.6); }
   .shaft-node.partial { background: #1e3a8a; border-color: #3b82f6; color: #fff; }
 
-  /* KABINE */
   .elevator-car {
     position: absolute;
     left: 2px;
@@ -586,7 +558,6 @@
     z-index: 1;
   }
 
-  /* TÜREN */
   .car-door {
     position: absolute;
     top: 0;
@@ -608,11 +579,61 @@
     box-shadow: inset -1px 0 0 rgba(255,255,255,0.2);
   }
 
-  .elevator-car.doors-open .car-door-left {
-    transform: translateX(-88%);
+  .elevator-car.doors-open .car-door-left { transform: translateX(-88%); }
+  .elevator-car.doors-open .car-door-right { transform: translateX(88%); }
+
+  /* Virtuelles Vor-Ort Tastenfeld (verhindert Handy-Tastatur) */
+  .numpad-drawer {
+    position: fixed;
+    bottom: 60px;
+    left: 0;
+    right: 0;
+    background: linear-gradient(180deg, #2d333e 0%, #171a22 100%);
+    border-top: 2px solid var(--steel-light);
+    border-bottom: 1px solid #333a47;
+    padding: 8px 12px;
+    z-index: 29;
+    box-shadow: 0 -8px 24px rgba(0,0,0,0.85);
+    display: none;
   }
-  .elevator-car.doors-open .car-door-right {
-    transform: translateX(88%);
+  .numpad-drawer.active { display: block; }
+
+  .numpad-grid {
+    max-width: 610px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 6px;
+  }
+
+  .num-key {
+    height: 38px;
+    background: linear-gradient(180deg, #3a4252 0%, #20252e 100%);
+    border: 1px solid var(--steel-light);
+    border-radius: var(--radius-sm);
+    color: #fff;
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: var(--shadow-raised);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+  }
+  .num-key:active {
+    transform: translateY(1px);
+    border-color: #38bdf8;
+    background: #11151c;
+  }
+  .num-key.zero { color: #34d399; font-size: 1rem; }
+  .num-key.clear { color: #f87171; }
+  .num-key.next {
+    grid-column: span 2;
+    background: linear-gradient(180deg, #0284c7 0%, #0369a1 100%);
+    border-color: #38bdf8;
+    color: #fff;
   }
 
   /* Floating Bottom Bar */
@@ -969,53 +990,46 @@
 <body data-active-dir="">
 
 <div class="layout-wrap">
-  <!-- Gehäuse-Schrauben -->
   <div class="screw s-tl"></div>
   <div class="screw s-tr"></div>
   <div class="screw s-bl"></div>
   <div class="screw s-br"></div>
 
-  <!-- Navigation -->
   <div class="tableau-nav">
-    <a href="index.html" class="nav-back">‹ Hauptmenü</a>
+    <a href="index.html" class="nav-back engraved-text">‹ Hauptmenü</a>
   </div>
 
-  <!-- Header ohne Animation -->
   <header class="top-bar">
     <div class="nav-header">
       <div class="title-group">
-        <h1>Bündigkeiten</h1>
+        <h1 class="engraved-text">Bündigkeiten</h1>
       </div>
     </div>
   </header>
 
-  <!-- Zweispaltiges Layout -->
   <div class="inspection-split">
     <div class="main-column">
-      <!-- Spaltenköpfe -->
       <div class="grid-header">
-        <div class="header-pill">Et.</div>
-        <div class="header-pill up">
+        <div class="header-pill engraved-text">Et.</div>
+        <div class="header-pill up engraved-text">
           <span class="led-arrow">▲</span>
           <span>Auf</span>
         </div>
-        <div class="header-pill down">
+        <div class="header-pill down engraved-text">
           <span class="led-arrow">▼</span>
           <span>Ab</span>
         </div>
       </div>
 
-      <!-- Etagenliste -->
       <main class="floor-list" id="listContainer"></main>
     </div>
 
-    <!-- Rechts: In der Bildschirmmitte sticky verankerter Schacht -->
+    <!-- Schacht sticky zentriert -->
     <aside class="shaft-panel" id="shaftPanel" aria-label="Schacht-Navigation">
       <div class="shaft-track" id="shaftTrack">
         <div class="shaft-rail-l"></div>
         <div class="shaft-rail-r"></div>
         
-        <!-- Kabine mit Türen & Etagenanzeige -->
         <div class="elevator-car" id="elevatorCar" style="display:none;">
           <span class="car-interior-label" id="carFloorText">EG</span>
           <div class="car-door car-door-left"></div>
@@ -1028,6 +1042,24 @@
   </div>
 </div>
 
+<!-- Vor-Ort Industrie Schnell-Tastenfeld -->
+<div class="numpad-drawer" id="numpadDrawer">
+  <div class="numpad-grid">
+    <button type="button" class="num-key" onclick="numpadAdd(1)">+1</button>
+    <button type="button" class="num-key" onclick="numpadAdd(2)">+2</button>
+    <button type="button" class="num-key" onclick="numpadAdd(5)">+5</button>
+    <button type="button" class="num-key" onclick="numpadAdd(10)">+10</button>
+    <button type="button" class="num-key zero" onclick="numpadSet(0)">0 mm</button>
+    <button type="button" class="num-key clear" onclick="numpadClear()">C</button>
+
+    <button type="button" class="num-key" onclick="numpadAdd(-1)">-1</button>
+    <button type="button" class="num-key" onclick="numpadAdd(-2)">-2</button>
+    <button type="button" class="num-key" onclick="numpadAdd(-5)">-5</button>
+    <button type="button" class="num-key" onclick="numpadAdd(-10)">-10</button>
+    <button type="button" class="num-key next" onclick="numpadNext()">Weiter ▾</button>
+  </div>
+</div>
+
 <!-- Floating Bottom Bar -->
 <nav class="bottom-bar">
   <div class="bottom-progress-edge" aria-hidden="true">
@@ -1035,7 +1067,7 @@
   </div>
   <div class="bottom-bar-inner">
     <div class="bottom-info">
-      <span class="bottom-info-title">Status</span>
+      <span class="bottom-info-title engraved-text">Status</span>
       <span class="bottom-info-val" id="bottomStatus">0 / 0 gemessen</span>
     </div>
     <div class="bottom-actions">
@@ -1115,7 +1147,7 @@
 <script>
   if ('serviceWorker' in navigator) {
     const swCode = `
-      const CACHE_NAME = 'buendigkeit-elev-v23';
+      const CACHE_NAME = 'buendigkeit-elev-v24';
       self.addEventListener('install', e => {
         e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll([self.location.href])));
         self.skipWaiting();
@@ -1128,7 +1160,7 @@
     navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
   }
 
-  const STORAGE_KEY = 'buendigkeit-elev-v23';
+  const STORAGE_KEY = 'buendigkeit-elev-v24';
   let state = {
     floorCount: 5,
     startFloor: 0,
@@ -1139,8 +1171,19 @@
 
   let doorTimer = null;
   let currentElevatorFloor = null;
+  let activeCard = null;
 
   const $ = id => document.getElementById(id);
+
+  /* Haptisches Feedback */
+  function vibrate(type = 'tap') {
+    if (!('vibrate' in navigator)) return;
+    try {
+      if (type === 'tap') navigator.vibrate(25);
+      else if (type === 'warn') navigator.vibrate([40, 60, 40]);
+      else if (type === 'success') navigator.vibrate(50);
+    } catch (e) {}
+  }
 
   function loadState() {
     try {
@@ -1190,20 +1233,20 @@
     const dirClass = dir === 'down' ? 'dir-down' : 'dir-up';
 
     if ((dir === 'up' && isBottom) || (dir === 'down' && isTop)) {
-      return `<div class="cell-card ${dirClass} na">Endhalt</div>`;
+      return `<div class="cell-card ${dirClass} na engraved-text">Endhalt</div>`;
     }
 
     const key = `${floor}:${dir}`;
     const val = state.values[key] ?? '';
 
     return `
-      <form class="cell-card ${dirClass}" data-key="${key}" data-floor="${floor}" data-dir="${dir}" onsubmit="event.preventDefault(); handleMobileNext(this);">
+      <div class="cell-card ${dirClass}" data-key="${key}" data-floor="${floor}" data-dir="${dir}" onclick="selectCell(this, event)">
         <div class="cell-main">
           <div class="input-wrapper">
-            <button type="button" class="sign-quick-toggle" tabindex="-1" title="Vorzeichen wechseln">±</button>
-            <input type="text" class="val-input" inputmode="decimal" pattern="[0-9\\-+]*" placeholder="0" value="${val}" enterkeyhint="next">
+            <button type="button" class="sign-quick-toggle" tabindex="-1" onclick="toggleSign('${key}', event)">±</button>
+            <input type="text" class="val-input engraved-text" placeholder="0" value="${val}" readonly>
           </div>
-          <div class="gauge-container" title="Doppelklick für 0 mm">
+          <div class="gauge-container">
             <div class="gauge-scale-ticks">
               <span></span><span></span><span class="mid-tick"></span><span></span><span></span>
             </div>
@@ -1212,8 +1255,8 @@
             <div class="gauge-pointer"></div>
           </div>
         </div>
-        <div class="status-text"></div>
-      </form>
+        <div class="status-text engraved-text"></div>
+      </div>
     `;
   }
 
@@ -1222,19 +1265,18 @@
     let html = '';
     for (let f = state.startFloor + state.floorCount - 1; f >= state.startFloor; f--) {
       const label = getFloorLabel(f);
-      html += `<div class="shaft-node" id="shaft-node-${f}" onclick="scrollToFloor(${f})">${label}</div>`;
+      html += `<div class="shaft-node engraved-text" id="shaft-node-${f}" onclick="scrollToFloor(${f})">${label}</div>`;
     }
     shaft.innerHTML = html;
   }
 
   window.scrollToFloor = function(floor) {
+    vibrate('tap');
     const el = document.getElementById(`floor-card-${floor}`);
     if (el) {
       el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      const firstInput = el.querySelector('.val-input');
-      if (firstInput) {
-        setTimeout(() => firstInput.focus(), 250);
-      }
+      const firstCell = el.querySelector('.cell-card[data-key]');
+      if (firstCell) selectCell(firstCell);
     }
   };
 
@@ -1247,7 +1289,7 @@
       const label = getFloorLabel(f);
       html += `
         <div class="floor-card" id="floor-card-${f}" data-floor="${f}">
-          <div class="floor-label">${label}</div>
+          <div class="floor-label engraved-text">${label}</div>
           ${renderCell(f, 'up')}
           ${renderCell(f, 'down')}
         </div>
@@ -1348,18 +1390,27 @@
     }
   }
 
-  const container = $('listContainer');
+  /* Zelle auswählen & Aufzug steuern */
+  window.selectCell = function(card, event) {
+    if (event && event.target.closest('.sign-quick-toggle')) return;
+    if (card.classList.contains('na')) return;
 
-  /* Fokus & ruhige Fahrt */
-  container.addEventListener('focusin', e => {
-    const card = e.target.closest('.floor-card');
-    if (!card) return;
+    vibrate('tap');
+
+    document.querySelectorAll('.cell-card.focused-cell').forEach(c => c.classList.remove('focused-cell'));
+    card.classList.add('focused-cell');
+    activeCard = card;
+
+    const floorCard = card.closest('.floor-card');
     document.querySelectorAll('.floor-card.active-floor').forEach(c => c.classList.remove('active-floor'));
-    card.classList.add('active-floor');
+    floorCard.classList.add('active-floor');
 
-    const cell = e.target.closest('.cell-card');
-    const dir = cell ? cell.dataset.dir : '';
+    const dir = card.dataset.dir;
     document.body.dataset.activeDir = dir;
+
+    // NumPad anzeigen & Body-Abstand anpassen
+    $('numpadDrawer').classList.add('active');
+    document.body.classList.add('numpad-active');
 
     const floor = parseInt(card.dataset.floor, 10);
     const shaftNode = $(`shaft-node-${floor}`);
@@ -1390,133 +1441,101 @@
         elevatorCar.classList.add('doors-open');
       }, 1350);
     }
-  });
+  };
 
-  container.addEventListener('focusout', () => {
-    document.body.dataset.activeDir = '';
-    const elevatorCar = $('elevatorCar');
-    setTimeout(() => {
-      if (!document.activeElement || !document.activeElement.classList.contains('val-input')) {
-        if (elevatorCar) elevatorCar.classList.remove('doors-open');
-        currentElevatorFloor = null;
-      }
-    }, 300);
-  });
+  /* Vorzeichen umschalten */
+  window.toggleSign = function(key, e) {
+    e.stopPropagation();
+    vibrate('tap');
+    const current = state.values[key];
+    if (current == null || current === '') return;
+    const n = parseInt(current, 10);
+    if (isNaN(n) || n === 0) return;
+    setValueForActive(-n);
+  };
 
-  container.addEventListener('click', e => {
-    const signBtn = e.target.closest('.sign-quick-toggle');
-    if (signBtn) {
-      const input = signBtn.closest('.input-wrapper').querySelector('.val-input');
-      let val = input.value.trim();
-      if (val.startsWith('-')) {
-        input.value = val.substring(1);
-      } else if (val !== '') {
-        input.value = '-' + val;
-      } else {
-        input.value = '-';
-      }
-      input.dispatchEvent(new Event('input', { bubbles: true }));
-      input.focus();
-    }
-  });
+  /* NumPad Eingabeaktionen */
+  window.numpadSet = function(num) {
+    if (!activeCard) return;
+    setValueForActive(num);
+  };
 
-  container.addEventListener('dblclick', e => {
-    const card = e.target.closest('.cell-card');
-    if (!card || card.classList.contains('na')) return;
-    const input = card.querySelector('.val-input');
-    if (input) {
-      input.value = '0';
-      input.dispatchEvent(new Event('input', { bubbles: true }));
-      
-      card.classList.remove('success-pulse');
-      void card.offsetWidth;
-      card.classList.add('success-pulse');
-      
-      advanceDirectional(card);
-    }
-  });
+  window.numpadAdd = function(delta) {
+    if (!activeCard) return;
+    const key = activeCard.dataset.key;
+    const current = parseVal(state.values[key]) || 0;
+    setValueForActive(current + delta);
+  };
 
-  window.handleMobileNext = function(card) { advanceDirectional(card); };
+  window.numpadClear = function() {
+    if (!activeCard) return;
+    vibrate('tap');
+    const key = activeCard.dataset.key;
+    delete state.values[key];
+    const input = activeCard.querySelector('.val-input');
+    input.value = '';
+    applyCellStyles(activeCard);
+    updateMetrics();
+    saveState();
+  };
 
-  container.addEventListener('keydown', e => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      const card = e.target.closest('.cell-card');
-      if (card) advanceDirectional(card);
-    }
-  });
+  function setValueForActive(num) {
+    if (!activeCard) return;
+    const key = activeCard.dataset.key;
+    state.values[key] = String(num);
 
-  function advanceDirectional(currentCard) {
-    const floor = parseInt(currentCard.dataset.floor, 10);
-    const dir = currentCard.dataset.dir;
-    let targetCard = null;
+    const input = activeCard.querySelector('.val-input');
+    input.value = (num > 0 ? '+' : '') + num;
 
-    if (dir === 'up') {
-      const nextFloor = floor + 1;
-      targetCard = container.querySelector(`.cell-card[data-key="${nextFloor}:up"]`);
-    } else if (dir === 'down') {
-      const nextFloor = floor - 1;
-      targetCard = container.querySelector(`.cell-card[data-key="${nextFloor}:down"]`);
-    }
+    applyCellStyles(activeCard);
 
-    if (targetCard) {
-      const nextInput = targetCard.querySelector('.val-input');
-      if (nextInput) {
-        setTimeout(() => {
-          nextInput.focus();
-          nextInput.select();
-          targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }, 50);
-      }
+    if (Math.abs(num) > state.tolerance) {
+      vibrate('warn');
+      activeCard.classList.remove('shake');
+      void activeCard.offsetWidth;
+      activeCard.classList.add('shake');
     } else {
-      const currentInput = currentCard.querySelector('.val-input');
-      if (currentInput) currentInput.blur();
-    }
-  }
-
-  container.addEventListener('input', e => {
-    const input = e.target;
-    if (!input.classList.contains('val-input')) return;
-
-    let val = input.value.trim();
-    let prefix = '';
-    if (val.startsWith('-')) {
-      prefix = '-';
-    } else if (val.startsWith('+')) {
-      prefix = '+';
-    }
-
-    val = val.replace(/[^0-9]/g, '');
-    input.value = prefix + val;
-
-    const card = input.closest('.cell-card');
-    const key = card.dataset.key;
-
-    if (input.value === '' || input.value === '-' || input.value === '+') {
-      delete state.values[key];
-    } else {
-      state.values[key] = input.value;
-    }
-
-    applyCellStyles(card);
-
-    const num = parseVal(input.value);
-    if (num !== null && Math.abs(num) > state.tolerance) {
-      card.classList.remove('shake');
-      void card.offsetWidth;
-      card.classList.add('shake');
-    } else if (num === 0) {
-      card.classList.remove('success-pulse');
-      void card.offsetWidth;
-      card.classList.add('success-pulse');
+      vibrate('success');
+      activeCard.classList.remove('success-pulse');
+      void activeCard.offsetWidth;
+      activeCard.classList.add('success-pulse');
     }
 
     updateMetrics();
     saveState();
-  });
+  }
+
+  /* Weiter-Button: springt zur nächsten Haltestelle */
+  window.numpadNext = function() {
+    if (!activeCard) return;
+    vibrate('tap');
+    const floor = parseInt(activeCard.dataset.floor, 10);
+    const dir = activeCard.dataset.dir;
+    let targetCard = null;
+
+    if (dir === 'up') {
+      const nextFloor = floor + 1;
+      targetCard = document.querySelector(`.cell-card[data-key="${nextFloor}:up"]`);
+    } else if (dir === 'down') {
+      const nextFloor = floor - 1;
+      targetCard = document.querySelector(`.cell-card[data-key="${nextFloor}:down"]`);
+    }
+
+    if (targetCard) {
+      selectCell(targetCard);
+      targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+      // Wenn Endhalt erreicht: Tastatur schließen
+      $('numpadDrawer').classList.remove('active');
+      document.body.classList.remove('numpad-active');
+      if (activeCard) activeCard.classList.remove('focused-cell');
+      activeCard = null;
+    }
+  };
 
   document.querySelectorAll('.btn-preset').forEach(btn => {
     btn.addEventListener('click', () => {
+      vibrate('tap');
       $('tolerance').value = btn.dataset.tol;
       renderList();
     });
@@ -1533,6 +1552,7 @@
   const resetBtnText = $('resetBtnText');
 
   resetBtn.addEventListener('click', function () {
+    vibrate('warn');
     if (!resetBtn.classList.contains('armed')) {
       resetBtn.classList.add('armed');
       resetBtnText.textContent = 'Sicher?';
@@ -1549,20 +1569,25 @@
     renderList();
   });
 
-  /* Einstellungen Modal */
+  /* Modal-Steuerung */
   const settingsModal = $('settingsModal');$('openSettingsBtn').addEventListener('click', () => {
+    vibrate('tap');
     settingsModal.classList.add('active');
   });
   window.closeSettingsModal = function() {
+    vibrate('tap');
     settingsModal.classList.remove('active');
   };
 
-  /* Protokoll Modal */
   const reportModal = $('reportModal');$('openReportBtn').addEventListener('click', () => {
+    vibrate('tap');
     buildReportHtml();
     reportModal.classList.add('active');
   });
-  window.closeReportModal = function() { reportModal.classList.remove('active'); };
+  window.closeReportModal = function() {
+    vibrate('tap');
+    reportModal.classList.remove('active');
+  };
 
   window.closeModalOnOutsideClick = function(e) {
     if (e.target === reportModal) closeReportModal();
@@ -1579,7 +1604,6 @@
     let measuredCount = 0;
     let totalCells = 0;
     let tableRows = '';
-
     const chartData = [];
 
     for (let f = state.startFloor + state.floorCount - 1; f >= state.startFloor; f--) {
@@ -1738,6 +1762,7 @@
   }
 
   window.copyReportText = async function() {
+    vibrate('tap');
     let report = `BÜNDIGKEITSMESSUNG PROTOKOLL\n`;
     report += `Datum: ${new Date().toLocaleDateString('de-DE')} | Grenz-Toleranz: ±${state.tolerance} mm\n`;
     report += `------------------------------------\n`;
