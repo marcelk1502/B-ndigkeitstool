@@ -558,7 +558,7 @@
   }
 
   /* ========================================================
-     ANIMIERTER EDELSTAHL-SCHACHT RECHTS (LANGSAMERE FAHRT & TÜREN)
+     ANIMIERTER EDELSTAHL-SCHACHT RECHTS (KABINE & TÜREN)
      ======================================================== */
   .shaft-panel {
     position: absolute;
@@ -643,7 +643,7 @@
   .shaft-node.bad { background: #7f1d1d; border-color: #ef4444; color: #fff; box-shadow: 0 0 6px rgba(239, 68, 68, 0.6); }
   .shaft-node.partial { background: #1e3a8a; border-color: #3b82f6; color: #fff; }
 
-  /* KABINE: Verlangsamte, gedämpfte Fahrzeit (0.9s ease-in-out) */
+  /* KABINE: Verlangsamte Fahrzeit */
   .elevator-car {
     position: absolute;
     left: 2px;
@@ -675,7 +675,7 @@
     z-index: 1;
   }
 
-  /* TÜREN: Weiches und deutlich langsameres Öffnen & Schließen (0.65s) */
+  /* TÜREN */
   .car-door {
     position: absolute;
     top: 0;
@@ -1101,7 +1101,7 @@
   <!-- Etagenliste -->
   <main class="floor-list" id="listContainer"></main>
 
-  <!-- Animierter Schacht mit gedämpfter Kabinen- & Türfahrt -->
+  <!-- Animierter Schacht mit intelligenter Türsteuerung -->
   <aside class="shaft-panel" id="shaftPanel" aria-label="Schacht-Navigation">
     <div class="shaft-track" id="shaftTrack">
       <div class="shaft-rail-l"></div>
@@ -1206,7 +1206,7 @@
 <script>
   if ('serviceWorker' in navigator) {
     const swCode = `
-      const CACHE_NAME = 'buendigkeit-elev-v18';
+      const CACHE_NAME = 'buendigkeit-elev-v19';
       self.addEventListener('install', e => {
         e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll([self.location.href])));
         self.skipWaiting();
@@ -1219,7 +1219,7 @@
     navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
   }
 
-  const STORAGE_KEY = 'buendigkeit-elev-v18';
+  const STORAGE_KEY = 'buendigkeit-elev-v19';
   let state = {
     floorCount: 5,
     startFloor: 0,
@@ -1229,6 +1229,7 @@
   };
 
   let doorTimer = null;
+  let currentElevatorFloor = null; // Speichert aktuelle Haltestelle der Kabine
 
   const $ = id => document.getElementById(id);
 
@@ -1440,7 +1441,7 @@
 
   const container = $('listContainer');
 
-  /* Fokus & ruhige Fahrkorb-Animation mit verzögertem sanftem Öffnen */
+  /* Fokus & Fahrkorb-Animation mit Etagen-Prüfung */
   container.addEventListener('focusin', e => {
     const card = e.target.closest('.floor-card');
     if (!card) return;
@@ -1459,8 +1460,17 @@
 
     if (shaftNode && elevatorCar && shaftPanel) {
       elevatorCar.style.display = 'flex';
-      
-      // Türen schließen während der Fahrt
+
+      // WENN WIR AUF DER GLEICHEN ETAGE SIND: Keine Türbewegung!
+      if (currentElevatorFloor === floor) {
+        if (!elevatorCar.classList.contains('doors-open')) {
+          elevatorCar.classList.add('doors-open');
+        }
+        return;
+      }
+
+      // ANDERE ETAGE: Kabine fährt -> Türen schließen, Fahrt starten, sanft öffnen
+      currentElevatorFloor = floor;
       elevatorCar.classList.remove('doors-open');
       carFloorText.textContent = getFloorLabel(floor);
 
@@ -1468,7 +1478,6 @@
       elevatorCar.style.top = `${offsetTop - 1}px`;
       shaftNode.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
-      // Türen öffnen sich erst ruhig, nachdem der Fahrkorb eingefahren ist (850ms)
       if (doorTimer) clearTimeout(doorTimer);
       doorTimer = setTimeout(() => {
         elevatorCar.classList.add('doors-open');
@@ -1480,8 +1489,10 @@
     document.body.dataset.activeDir = '';
     const elevatorCar = $('elevatorCar');
     setTimeout(() => {
+      // Wenn der Anwender ganz aus der Tabelle wegklickt
       if (!document.activeElement || !document.activeElement.classList.contains('val-input')) {
         if (elevatorCar) elevatorCar.classList.remove('doors-open');
+        currentElevatorFloor = null;
       }
     }, 250);
   });
